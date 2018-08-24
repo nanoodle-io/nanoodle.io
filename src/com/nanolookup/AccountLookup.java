@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.nano.client.AccountHistory;
-import org.nano.client.BlockCount;
 import org.nano.client.History;
 import org.nano.client.NanoClient;
 
