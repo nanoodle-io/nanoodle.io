@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="web"/>
 	<classpathentry kind="lib" path="jars/gson-2.8.2.jar"/>
 	<classpathentry kind="lib" path="jars/hamcrest-core-1.3.jar"/>
 	<classpathentry kind="lib" path="jars/junit-4.12.jar"/>
