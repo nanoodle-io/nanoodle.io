@@ -10,17 +10,22 @@ import { AccountService }  from '../account.service';
 
 export class AccountComponentComponent implements OnInit {
   transactions: transaction[];
+  account: string;
+  sub: any;
   constructor(private route: ActivatedRoute, private accountService: AccountService) {}
 
   ngOnInit(): void {
-        // get account address
-        const url = this.route.snapshot.url;
-        console.log(url);
-       // this.getAccount(this.id);
+    this.sub = this.route.params.subscribe(sub => {this.account = sub['id']});
+
+    this.getAccount(this.account);
   }
 
   getAccount(account: string): void {
       this.accountService.getTransactions(account).subscribe(transactions => this.transactions = transactions);
+      }
+
+      ngOnDestroy() {
+        this.sub.unsubscribe();
       }
 }
 
