@@ -1,0 +1,30 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-primary navbar-default fixed-top">
+  <img width="120" src="../assets/nanoodle_logo.svg" routerLink="home"/>
+  <button class="navbar-toggler hidden-sm-up" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed" data-target="#navbarsDefault" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarsDefault">
+    <ul class="nav navbar-nav mr-auto mt-2 mt-lg-0" routerLinkActive="active">
+      <li class="nav-item dropdown" ngbDropdown>
+        <a class="nav-link dropdown-toggle" id="id1" ngbDropdownToggle>Block-Lattice</a>
+        <div class="dropdown-menu" aria-labelledby="id1.1" ngbDropdownMenu>
+          <a class="dropdown-item" routerLink="live">Nano Live</a>
+          <a class="dropdown-item" routerLink="stats">Statistics</a>
+          <a class="dropdown-item" routerLink="reps">Representatives</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown" ngbDropdown>
+        <a class="nav-link dropdown-toggle" id="id2" ngbDropdownToggle>Premium</a>
+        <div class="dropdown-menu" aria-labelledby="id2.1" ngbDropdownMenu>
+          <a class="dropdown-item" routerLink="accounting">Accounting</a>
+        </div>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+        <div class="input-group mb-3">
+          <input type="text" #accountSearch class="form-control" placeholder="Enter Account Address" aria-label="Recipient's username" aria-describedby="basic-addon2">
+          <input type="submit" routerLinkActive="active" [routerLink]="['/account', accountSearch.value]" style="position: absolute; left: -9999px; width: 1px; height: 1px;" tabindex="-1" />
+        </div>
+    </form>
+  </div>
+</nav>
