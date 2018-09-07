@@ -26,7 +26,7 @@ export class App {
 const appRoutes: Routes = [
   { path: '',   redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponentComponent },
-  { path: 'account/:id', component: AccountComponentComponent,
+  { path: 'account/:id', component: AccountComponentComponent},
   { path: 'live', component: LiveComponentComponent },
   { path: 'stats', component: StatsComponentComponent },
   { path: 'reps', component: RepsComponentComponent },
