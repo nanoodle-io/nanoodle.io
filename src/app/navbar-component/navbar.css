@@ -12,6 +12,4 @@
 
 img:focus { outline: none; } 
 
-input[type=search] {
-  width: 368px;
-}
+.nav-link { font-family: 'Tw Cen MT'; font-size: '22px';}
