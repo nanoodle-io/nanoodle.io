@@ -29,7 +29,7 @@ export class AccountService implements OnDestroy {
       "count": "-1"});
 
       this.http.post('http://localhost:7076', body, options).subscribe(data => {
-      //console.log("Account Service Transaction JSON: "+data['history']);
+      console.log("Account Service Transaction JSON: "+data['history']);
       this.transactions$ = data['history'];
       //console.log("Account Service Transaction Objects: "+this.transactions);
       }, error => console.log('There was an error: '));

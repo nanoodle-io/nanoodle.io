@@ -17,7 +17,10 @@ export class AccountComponentComponent implements OnInit {
   constructor(private route: ActivatedRoute, private accountService: AccountService) {}
 
   ngOnInit(): void {
-    this.paramsub = this.route.paramMap.subscribe(params =>{this.account = params.get['id']});
+    this.paramsub = this.route.params.subscribe(sub => {
+    this.account = sub['id'];
+    console.log(this.account);
+    });
     this.getAccount(this.account);
   }
 
