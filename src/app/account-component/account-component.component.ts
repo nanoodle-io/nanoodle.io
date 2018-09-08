@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 @Component({
   selector: "app-account",
   templateUrl: "./account-component.component.html"
-  
 })
 
 export class AccountComponentComponent implements OnInit {
@@ -18,8 +17,7 @@ export class AccountComponentComponent implements OnInit {
   constructor(private route: ActivatedRoute, private accountService: AccountService) {}
 
   ngOnInit(): void {
-    this.paramsub = this.route.params.subscribe(sub => {this.account = sub['id']});
-
+    this.paramsub = this.route.paramMap.subscribe(params =>{this.account = params.get['id']});
     this.getAccount(this.account);
   }
 

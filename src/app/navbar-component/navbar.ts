@@ -8,4 +8,9 @@ import { Component} from '@angular/core';
 
 export class navbar {
   isNavbarCollapsed=true;  
+
+  myFunction()
+  {
+    console.log("test");
+  }
 }
