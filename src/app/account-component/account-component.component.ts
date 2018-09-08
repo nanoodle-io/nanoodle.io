@@ -10,10 +10,10 @@ import { Observable } from 'rxjs';
 })
 
 export class AccountComponentComponent implements OnInit {
-  transactions$: Observable<transaction[]>;
-  account: string;
-  paramsub: any;
-  responsesub: any;
+  private transactions$: Observable<transaction[]>;
+  private account: string;
+  private paramsub: any;
+  private responsesub: any;
 
   constructor(private route: ActivatedRoute, private accountService: AccountService) {}
 
