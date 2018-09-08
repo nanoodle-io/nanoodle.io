@@ -10,7 +10,7 @@ import { HttpHeaders } from '@angular/common/http';
 
 export class AccountService implements OnDestroy {
   private sub: any;
-  private transactions: transaction[];
+  private transactions$: Observable<transaction[]>;
  
   constructor(private messageService: MessageService, private http: HttpClient) { }
  
@@ -30,11 +30,11 @@ export class AccountService implements OnDestroy {
 
       this.http.post('http://localhost:7076', body, options).subscribe(data => {
       //console.log("Account Service Transaction JSON: "+data['history']);
-      this.transactions = data['history'];
+      this.transactions$ = data['history'];
       //console.log("Account Service Transaction Objects: "+this.transactions);
       }, error => console.log('There was an error: '));
         
-      return of(this.transactions); 
+      return of(this.transactions$); 
     };
 
    ngOnDestroy() {

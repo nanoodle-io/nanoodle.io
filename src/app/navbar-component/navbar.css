@@ -7,5 +7,11 @@
 }
 
 .navbar-toggler:focus { 
-  outline: 1px none;
+  outline: none;
+}
+
+img:focus { outline: none; } 
+
+input[type=search] {
+  width: 368px;
 }

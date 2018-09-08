@@ -36,7 +36,7 @@ const appRoutes: Routes = [
 
 @NgModule({
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(),RouterModule.forRoot(
-    appRoutes,{ enableTracing: true } // <-- debugging purposes only
+    appRoutes//,{ enableTracing: true } // <-- debugging purposes only
   )], 
   declarations: [App, navbar, AccountComponentComponent, HomeComponentComponent, LiveComponentComponent, StatsComponentComponent, RepsComponentComponent, AccountingComponentComponent, PageNotFoundComponent, MessagesComponent],
   bootstrap: [App]

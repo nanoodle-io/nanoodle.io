@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AccountService }  from '../account.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: "app-account",
@@ -9,23 +10,26 @@ import { AccountService }  from '../account.service';
 })
 
 export class AccountComponentComponent implements OnInit {
-  transactions: transaction[];
+  transactions$: Observable<transaction[]>;
   account: string;
-  sub: any;
+  paramsub: any;
+  responsesub: any;
+
   constructor(private route: ActivatedRoute, private accountService: AccountService) {}
 
   ngOnInit(): void {
-    this.sub = this.route.params.subscribe(sub => {this.account = sub['id']});
+    this.paramsub = this.route.params.subscribe(sub => {this.account = sub['id']});
 
     this.getAccount(this.account);
   }
 
   getAccount(account: string): void {
-      this.accountService.getTransactions(account).subscribe(transactions => this.transactions = transactions);
+      this.responsesub = this.accountService.getTransactions(account).subscribe(transactions$ => this.transactions$ = transactions$);
       }
 
       ngOnDestroy() {
-        this.sub.unsubscribe();
+        this.paramsub.unsubscribe();
+        this.responsesub.unsubscribe();
       }
 }
 
