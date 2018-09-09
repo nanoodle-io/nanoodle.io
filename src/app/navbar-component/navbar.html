@@ -1,22 +1,27 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-primary navbar-default fixed-top">
-  <img width="20" src="../assets/nanoodle_logo_slim.svg" routerLink="home"/>
-  <button class="navbar-toggler hidden-sm-up" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed" data-target="#navbarsDefault" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarsDefault">
-    <ul class="nav navbar-nav mr-auto mt-2 mt-lg-0" routerLinkActive="active">
-      <li class="nav-item dropdown" ngbDropdown>
-        <a class="nav-link dropdown-toggle" id="id1" ngbDropdownToggle>NANOODLE</a>
-        <div class="dropdown-menu" aria-labelledby="id1.1" ngbDropdownMenu>
-          <a class="dropdown-item" routerLink="live">Nano Live</a>
-          <a class="dropdown-item" routerLink="stats">Statistics</a>
-          <a class="dropdown-item" routerLink="reps">Representatives</a>
-        </div>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2 modules" [(ngModel)]="address" name="address" type="search" placeholder="Account, Block or Hash" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit" routerLinkActive="active" [routerLink]="['/account', address]" hidden="true">Search</button>
-    </form>
-  </div>
-</nav>
+                <!-- Navigation -->
+                <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+                    <div class="container">
+                      <a class="navbar-brand js-scroll-trigger" routerLink="home"><img width="20" src="../assets/nanoodle_logo_slim.svg"/></a>
+                      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                        Menu
+                        <i class="fa fa-bars"></i>
+                      </button>
+                      <div class="collapse navbar-collapse" id="navbarResponsive">
+                        <ul class="navbar-nav ml-auto" routerLinkActive="active">
+                          <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" routerLink="live">Nano Live</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" routerLink="stats">Statistics</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" routerLink="reps">Representatives</a>
+                          </li>
+                        </ul>
+                        <form class="form-inline my-2 my-lg-0">
+                            <input class="form-control mr-sm-2 modules" [(ngModel)]="address" name="address" type="search" placeholder="Account, Block or Hash" aria-label="Search">
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" routerLinkActive="active" [routerLink]="['/account', address]" hidden="true">Search</button>
+                          </form>
+                      </div>
+                    </div>
+                  </nav>
