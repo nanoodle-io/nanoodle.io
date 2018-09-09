@@ -19,7 +19,7 @@ export class AccountComponentComponent implements OnInit {
   ngOnInit(): void {
     this.paramsub = this.route.params.subscribe(sub => {
     this.account = sub['id'];
-    console.log(this.account);
+    //console.log(this.account);
     });
     this.getAccount(this.account);
   }
@@ -27,6 +27,30 @@ export class AccountComponentComponent implements OnInit {
   getAccount(account: string): void {
       this.responsesub = this.accountService.getTransactions(account).subscribe(transactions$ => this.transactions$ = transactions$);
       }
+
+  formatAmount (mRai: number, type: string): string
+  {
+    if (type == "receive")
+    {
+      return "+" + (mRai / 1000000000000000000000000000000);
+    }
+    else
+    {
+      return "-" + (mRai / 1000000000000000000000000000000);
+    }
+  }
+
+  formatAccount (account: string, type: string): string
+  {
+    if (type == "receive")
+    {
+      return "from " + account;
+    }
+    else
+    {
+      return "to " + account;
+    }
+  }
 
       ngOnDestroy() {
         this.paramsub.unsubscribe();
@@ -37,6 +61,6 @@ export class AccountComponentComponent implements OnInit {
 interface transaction {
   type: string;
   account: string;
-  amount: string;
+  amount: number;
   hash: string;
  }

@@ -7,4 +7,5 @@ table {
     font-size: 14px;
     width: 100%;
   }
-  
+
+  body {margin:20px;padding:0}

@@ -1,22 +1,23 @@
-{{account}}
-
-<table class="table table-hover table-fixed">
-      <thead>
-        <tr>
-          <th scope="col">Date</th>
-          <th scope="col">Amount</th>
-          <th scope="col">Type</th>
-          <th scope="col">Account</th>
-          <th scope="col">Hash</th>
-        </tr>
-      </thead>
-      <tbody>            
-            <tr  *ngFor="let transaction of transactions$">
-                  <th scope="row">1</th>
-                  <td>{{ transaction.amount }}</td>
-                  <td>{{ transaction.type }}</td>
-                  <td>{{ transaction.account }}</td>
-                  <td>{{ transaction.hash }}</td> 
+<head>
+</head>
+<body>
+      <h3>Account {{account}}</h3>
+      <br>
+      <h4>Transaction</h4>
+      <table class="table table-hover">
+            <thead>
+            <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Associated Account</th>
             </tr>
-      </tbody>
-</table>
+            </thead>
+            <tbody>            
+                  <tr  *ngFor="let transaction of transactions$">
+                        <th scope="row">01/01/2001 01:01:01</th>
+                        <td>{{ formatAmount(transaction.amount, transaction.type) }}</td>
+                        <td>{{ formatAccount(transaction.account, transaction.type) }}</td>
+                  </tr>
+            </tbody>
+      </table>
+</body>
