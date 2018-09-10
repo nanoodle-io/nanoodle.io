@@ -135,6 +135,7 @@ section h2 {
   #mainNav.navbar-shrink .navbar-brand {
     color: #222222;
   }
+
   #mainNav.navbar-shrink .navbar-brand:hover, #mainNav.navbar-shrink .navbar-brand:focus {
     color: #fdcc52;
   }

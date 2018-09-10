@@ -14,6 +14,7 @@ import { RepsComponentComponent } from './reps-component/reps-component.componen
 import { AccountingComponentComponent } from './accounting-component/accounting-component.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { MessagesComponent } from './messages/messages.component';
+import { FooterComponent } from './footer/footer.component';
 
 @Component({
   selector: 'my-app',
@@ -38,7 +39,7 @@ const appRoutes: Routes = [
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(),RouterModule.forRoot(
     appRoutes//,{ enableTracing: true } // <-- debugging purposes only
   )], 
-  declarations: [App, navbar, AccountComponentComponent, HomeComponentComponent, LiveComponentComponent, StatsComponentComponent, RepsComponentComponent, AccountingComponentComponent, PageNotFoundComponent, MessagesComponent],
+  declarations: [App, navbar, AccountComponentComponent, HomeComponentComponent, LiveComponentComponent, StatsComponentComponent, RepsComponentComponent, AccountingComponentComponent, PageNotFoundComponent, MessagesComponent, FooterComponent],
   bootstrap: [App]
 }) 
 export class AppModule {}

@@ -28,11 +28,22 @@
 
   // Collapse Navbar
   var navbarCollapse = function() {
-    if ($("#mainNav").offset().top > 100) {
-      $("#mainNav").addClass("navbar-shrink");
-    } else {
-      $("#mainNav").removeClass("navbar-shrink");
+    //check its ready
+    var nav = $('#mainNav')
+    if (!nav.length) {
+        $("#mainNav").removeClass("navbar-shrink");
     }
+    else
+    {
+      //console.log($("#mainNav").offset().top);
+      if ($("#mainNav").offset().top > 18) {
+        $("#mainNav").addClass("navbar-shrink");
+        $("#logoNav").attr('src', '../assets/nanoodle_logo_slim_black.svg');
+      } else {
+        $("#mainNav").removeClass("navbar-shrink");
+        $("#logoNav").attr('src', '../assets/nanoodle_logo_slim_white.svg');
+      }
+    } 
   };
   // Collapse now if page is not at top
   navbarCollapse();
