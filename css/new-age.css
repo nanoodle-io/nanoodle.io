@@ -73,6 +73,10 @@ section h2 {
   letter-spacing: 1px;
 }
 
+#logoNav > img {
+  content:url("../src/assets/nanoodle_logo_slim_black.svg");
+}
+
 #mainNav .navbar-brand:hover, #mainNav .navbar-brand:focus {
   color: #fcbd20;
 }
@@ -120,6 +124,7 @@ section h2 {
   #mainNav .navbar-brand:hover, #mainNav .navbar-brand:focus {
     color: white;
   }
+
   #mainNav .navbar-nav > li > a,
   #mainNav .navbar-nav > li > a:focus {
     color: rgba(255, 255, 255, 0.7);
@@ -132,6 +137,16 @@ section h2 {
     border-color: rgba(34, 34, 34, 0.1);
     background-color: white;
   }
+
+  #logoNav > img {
+    content:url("../src/assets/nanoodle_logo_slim_white.svg");
+  }
+
+   #logoNav.logo-black {
+    content:url("../src/assets/nanoodle_logo_slim_black.svg");
+    width: 20px;
+  }
+
   #mainNav.navbar-shrink .navbar-brand {
     color: #222222;
   }

@@ -35,13 +35,12 @@
     }
     else
     {
-      //console.log($("#mainNav").offset().top);
       if ($("#mainNav").offset().top > 18) {
         $("#mainNav").addClass("navbar-shrink");
-        $("#logoNav").attr('src', '../assets/nanoodle_logo_slim_black.svg');
+        $("#logoNav").addClass("logo-black");
       } else {
         $("#mainNav").removeClass("navbar-shrink");
-        $("#logoNav").attr('src', '../assets/nanoodle_logo_slim_white.svg');
+        $("#logoNav").removeClass("logo-black");
       }
     } 
   };
