@@ -22,12 +22,12 @@ import { FooterComponent } from './footer/footer.component';
   styleUrls: ['app.module.css']
 })
 export class App {
-}   
+}
 
 const appRoutes: Routes = [
-  { path: '',   redirectTo: 'home', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponentComponent },
-  { path: 'account/:id', component: AccountComponentComponent},
+  { path: 'account/:id', component: AccountComponentComponent },
   { path: 'live', component: LiveComponentComponent },
   { path: 'stats', component: StatsComponentComponent },
   { path: 'reps', component: RepsComponentComponent },
@@ -36,10 +36,10 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(),RouterModule.forRoot(
+  imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
     appRoutes//,{ enableTracing: true } // <-- debugging purposes only
-  )], 
+  )],
   declarations: [App, navbar, AccountComponentComponent, HomeComponentComponent, LiveComponentComponent, StatsComponentComponent, RepsComponentComponent, AccountingComponentComponent, PageNotFoundComponent, MessagesComponent, FooterComponent],
   bootstrap: [App]
-}) 
-export class AppModule {}
+})
+export class AppModule { }

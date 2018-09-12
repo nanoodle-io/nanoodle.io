@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
@@ -7,10 +7,9 @@ import { Component} from '@angular/core';
 })
 
 export class navbar {
-  isNavbarCollapsed=true;  
+  isNavbarCollapsed = true;
 
-  myFunction()
-  {
+  myFunction() {
     console.log("test");
   }
 }

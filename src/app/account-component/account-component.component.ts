@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AccountService }  from '../account.service';
+import { AccountService } from '../account.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -14,48 +14,42 @@ export class AccountComponentComponent implements OnInit {
   private paramsub: any;
   private responsesub: any;
 
-  constructor(private route: ActivatedRoute, private accountService: AccountService) {}
+  constructor(private route: ActivatedRoute, private accountService: AccountService) { }
 
   ngOnInit(): void {
     this.paramsub = this.route.params.subscribe(sub => {
-    this.account = sub['id'];
-    //console.log(this.account);
+      this.account = sub['id'];
+      //console.log(this.account);
     });
     this.getAccount(this.account);
   }
 
   getAccount(account: string): void {
-      this.responsesub = this.accountService.getTransactions(account).subscribe(transactions$ => this.transactions$ = transactions$);
-      }
+    this.responsesub = this.accountService.getTransactions(account).subscribe(transactions$ => this.transactions$ = transactions$);
+  }
 
-  formatAmount (mRai: number, type: string): string
-  {
-    if (type == "receive")
-    {
+  formatAmount(mRai: number, type: string): string {
+    if (type == "receive") {
       return "+" + (mRai / 1000000000000000000000000000000);
     }
-    else
-    {
+    else {
       return "-" + (mRai / 1000000000000000000000000000000);
     }
   }
 
-  formatAccount (account: string, type: string): string
-  {
-    if (type == "receive")
-    {
+  formatAccount(account: string, type: string): string {
+    if (type == "receive") {
       return "from " + account;
     }
-    else
-    {
+    else {
       return "to " + account;
     }
   }
 
-      ngOnDestroy() {
-        this.paramsub.unsubscribe();
-        this.responsesub.unsubscribe();
-      }
+  ngOnDestroy() {
+    this.paramsub.unsubscribe();
+    this.responsesub.unsubscribe();
+  }
 }
 
 interface transaction {
@@ -63,4 +57,4 @@ interface transaction {
   account: string;
   amount: number;
   hash: string;
- }
+}

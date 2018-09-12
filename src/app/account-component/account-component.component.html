@@ -1,37 +1,35 @@
-
-              
-          <header class="masthead">
-            <div class="container h-100">
-              <div class="row h-100">
-                <div class="col-lg-7 my-auto">
-                  <div class="header-content mx-auto">
-                    <h1 class="mb-5">Account Details</h1>
-                  </div>
-                </div>
-              </div>
-            </div>
-            </header>
-            <section class="download bg-primary text-center" id="download">
-              <div class="container">
-                <div class="row">
-                  <div class="col-md-8 mx-auto">
-                    <table class="table table-hover">
-                      <thead>
-                      <tr>
-                      <th scope="col">Date</th>
-                      <th scope="col">Amount</th>
-                      <th scope="col">Associated Account</th>
-                      </tr>
-                      </thead>
-                      <tbody>            
-                            <tr  *ngFor="let transaction of transactions$">
-                                  <th scope="row">01/01/2001 01:01:01</th>
-                                  <td>{{ formatAmount(transaction.amount, transaction.type) }}</td>
-                                  <td>{{ formatAccount(transaction.account, transaction.type) }}</td>
-                            </tr>
-                      </tbody>
-                </table>
-                  </div>
-                </div>
-              </div>
-            </section>
+<header class="masthead">
+  <div class="container h-100">
+    <div class="row h-100">
+      <div class="col-lg-7 my-auto">
+        <div class="header-content mx-auto">
+          <h1 class="mb-5">Account Details</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<section class="download bg-primary text-center" id="download">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 mx-auto">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Associated Account</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let transaction of transactions$">
+              <th scope="row">01/01/2001 01:01:01</th>
+              <td>{{ formatAmount(transaction.amount, transaction.type) }}</td>
+              <td>{{ formatAccount(transaction.account, transaction.type) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

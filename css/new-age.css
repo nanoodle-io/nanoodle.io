@@ -75,7 +75,7 @@ section h2 {
 
 #logoNav > img {
   content:url("../src/assets/nanoodle_logo_slim_black.svg");
-  height: 70px;
+  height: 50px;
 }
 
 #mainNav .navbar-brand:hover, #mainNav .navbar-brand:focus {
@@ -146,12 +146,12 @@ section h2 {
 
   #logoNav > img {
     content:url("../src/assets/nanoodle_logo_slim_white.svg");
-    height: 70px;
+    height: 50px;
   }
 
   #logoNav.logo-black > img {
     content:url("../src/assets/nanoodle_logo_slim_black.svg");
-    height: 70px;
+    height: 50px;
   }
 
   #mainNav.navbar-shrink .navbar-brand {
