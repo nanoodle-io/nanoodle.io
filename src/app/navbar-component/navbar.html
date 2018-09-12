@@ -1,7 +1,7 @@
                 <!-- Navigation -->
                 <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
                     <div class="container">
-                      <a class="navbar-brand js-scroll-trigger" routerLink="home" id="logoNav"><img width="20"/></a>
+                      <a class="navbar-brand js-scroll-trigger" routerLink="home" id="logoNav"><img/></a>
                       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                         MENU
                         <i class="fa fa-bars"></i>
@@ -10,7 +10,7 @@
                         <ul class="navbar-nav ml-auto" routerLinkActive="active">
                           <br>
                           <li class="nav-item">
-                            <a class="nav-link js-scroll-trigger" routerLink="live">Nano Live</a>
+                            <a class="nav-link js-scroll-trigger" routerLink="live">Live!</a>
                           </li>
                           <li class="nav-item">
                             <a class="nav-link js-scroll-trigger" routerLink="stats">Statistics</a>
@@ -20,8 +20,8 @@
                           </li>
                         </ul>
                         <form>
-                            <input type="search" [(ngModel)]="address" name="address"  placeholder="Search" placeholder="Account or Hash">
-                            <button type="submit" routerLinkActive="active" [routerLink]="['/account', address]" hidden="true">Search</button>
+                          <input type="search" [(ngModel)]="address" name="address"  placeholder="Search" autocomplete="off" placeholder="Account or Hash">
+                          <button type="submit" routerLinkActive="active" [routerLink]="['/account', address]" hidden="true">Search</button>
                         </form>
                       </div>
                     </div>

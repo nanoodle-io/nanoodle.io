@@ -12,12 +12,18 @@ input::-webkit-search-cancel-button {
 	display: none; 
 }
 
-
 input[type=search] {
 	background: #ededed url(https://static.tumblr.com/ftv85bp/MIXmud4tx/search-icon.png) no-repeat 9px center;
 	border: solid 1px #ccc;
 	padding: 9px 10px 9px 32px;
-	width: 110px;
+	width: 135px;
+	height: 13px;
+	font-size: 11px;
+	font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	background-color: #fff;
+	border-color: #fff;
 	
 	-webkit-border-radius: 10em;
 	-moz-border-radius: 10em;
@@ -27,8 +33,15 @@ input[type=search] {
 	-moz-transition: all .5s;
 	transition: all .5s;
 }
+
 input[type=search]:focus {
-	width: 500px;
+	background: #ededed url(https://static.tumblr.com/ftv85bp/MIXmud4tx/search-icon.png) no-repeat 9px center;
+	width: 590px;
+	height: 13px;
+	font-size: 11px;
+	font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+	letter-spacing: 2px;
+	text-transform: uppercase;
 	background-color: #fff;
 	border-color: #fff;
 	
@@ -36,7 +49,6 @@ input[type=search]:focus {
 	-moz-box-shadow: 0 0 5px rgb(255, 255, 255);
 	box-shadow: 0 0 5px rgb(255, 255, 255);
 }
-
 
 input:-moz-placeholder {
 	color: #999;

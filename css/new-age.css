@@ -5,7 +5,7 @@ body {
 }
 
 body {
-  font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
+
 }
 
 a {
@@ -75,6 +75,7 @@ section h2 {
 
 #logoNav > img {
   content:url("../src/assets/nanoodle_logo_slim_black.svg");
+  height: 70px;
 }
 
 #mainNav .navbar-brand:hover, #mainNav .navbar-brand:focus {
@@ -85,6 +86,10 @@ section h2 {
   font-size: 12px;
   padding: 8px 10px;
   color: #222222;
+  border: none;
+  outline: none;
+  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+  letter-spacing: 2px;
 }
 
 #mainNav .navbar-nav > li > a {
@@ -118,6 +123,7 @@ section h2 {
     border-color: transparent;
     background-color: transparent;
   }
+
   #mainNav .navbar-brand {
     color: fade(white, 70%);
   }
@@ -140,11 +146,12 @@ section h2 {
 
   #logoNav > img {
     content:url("../src/assets/nanoodle_logo_slim_white.svg");
+    height: 70px;
   }
 
-   #logoNav.logo-black {
+  #logoNav.logo-black > img {
     content:url("../src/assets/nanoodle_logo_slim_black.svg");
-    width: 20px;
+    height: 70px;
   }
 
   #mainNav.navbar-shrink .navbar-brand {
