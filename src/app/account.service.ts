@@ -3,18 +3,18 @@ import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
+import { catchError, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 
-export class AccountService implements OnDestroy {
+export class AccountService {
   private sub: any;
-  private transactions$: Observable<transaction[]>;
 
   constructor(private messageService: MessageService, private http: HttpClient) { }
 
-  getTransactions(params: string) {
+  getAccount(params: string): Observable<Account> {
     let httpHeaders = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -30,26 +30,41 @@ export class AccountService implements OnDestroy {
       "count": "-1"
     });
 
-    this.http.post('http://localhost:7076', body, options).subscribe(data => {
-      //console.log("Account Service Transaction JSON: "+data['history']);
-      this.transactions$ = data['history'];
-      //console.log("Account Service Transaction Objects: "+this.transactions);
-    }, error => console.log('There was an error: '));
-
-    return of(this.transactions$);
+    return this.http.post<Account>('http://localhost:7076', body, options).pipe(
+      //tap(_ => this.log(`found account matching "${params}"`)),
+      catchError(this.handleError<Account>('getAccount', null))
+    );
   };
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+  private handleError<T> (operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+ 
+      // TODO: send the error to remote logging infrastructure
+      console.error(error); // log to console instead
+ 
+      // TODO: better job of transforming error for user consumption
+      this.log(`${operation} failed: ${error.message}`);
+ 
+      // Let the app keep running by returning an empty result.
+      return of(result as T);
+    };
+  }
+  private log(message: string) {
+    this.messageService.add(`Account Service: ${message}`);
   }
 }
 
-interface transaction {
+interface Transaction {
   type: string;
   account: string;
   amount: number;
   hash: string;
 }
 
+interface Account {
+  account: string;
+  history: Transaction[];
+  previous: string;
+}
 
 

@@ -12,7 +12,7 @@
 <section class="download bg-primary text-center" id="download">
   <div class="container">
     <div class="row">
-      <div class="col-md-8 mx-auto">
+      <div class="col-md-8 mx-auto" *ngIf="account">
         <table class="table table-hover">
           <thead>
             <tr>
@@ -22,7 +22,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let transaction of transactions$">
+            <tr *ngFor="let transaction of transactions">
               <th scope="row">01/01/2001 01:01:01</th>
               <td>{{ formatAmount(transaction.amount, transaction.type) }}</td>
               <td>{{ formatAccount(transaction.account, transaction.type) }}</td>
@@ -33,3 +33,4 @@
     </div>
   </div>
 </section>
+<li *ngFor="let hero of heroes"></li>

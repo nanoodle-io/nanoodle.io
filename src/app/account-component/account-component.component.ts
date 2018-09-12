@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AccountService } from '../account.service';
-import { Observable } from 'rxjs';
+import { MessageService } from '../message.service';
 
 @Component({
   selector: "app-account",
@@ -9,23 +9,26 @@ import { Observable } from 'rxjs';
 })
 
 export class AccountComponentComponent implements OnInit {
-  private transactions$: Observable<transaction[]>;
-  private account: string;
-  private paramsub: any;
-  private responsesub: any;
+  transactions: Transaction[];
+  account: Account;
+  paramsub: any;
 
-  constructor(private route: ActivatedRoute, private accountService: AccountService) { }
+  constructor(private messageService: MessageService, private route: ActivatedRoute, private accountService: AccountService) { }
 
   ngOnInit(): void {
     this.paramsub = this.route.params.subscribe(sub => {
-      this.account = sub['id'];
-      //console.log(this.account);
+      this.getAccount(sub['id']);
     });
-    this.getAccount(this.account);
   }
 
-  getAccount(account: string): void {
-    this.responsesub = this.accountService.getTransactions(account).subscribe(transactions$ => this.transactions$ = transactions$);
+  getAccount(accountParam: string): void {
+    this.accountService.getAccount(accountParam)
+    .subscribe(data => {
+    this.account = data;
+    //this.log(`found account matching "${JSON.stringify(this.account)}"`);
+    this.transactions = this.account['history'];
+    //this.log(`found account transactions matching "${JSON.stringify(this.transactions)}"`);
+    });
   }
 
   formatAmount(mRai: number, type: string): string {
@@ -46,15 +49,24 @@ export class AccountComponentComponent implements OnInit {
     }
   }
 
+  private log(message: string) {
+    this.messageService.add(`Account Component: ${message}`);
+  }
+
   ngOnDestroy() {
     this.paramsub.unsubscribe();
-    this.responsesub.unsubscribe();
   }
 }
 
-interface transaction {
+interface Transaction {
   type: string;
   account: string;
   amount: number;
   hash: string;
+}
+
+interface Account {
+  account: string;
+  history: Transaction[];
+  previous: string;
 }
