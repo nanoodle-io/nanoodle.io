@@ -5,13 +5,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule, Routes } from '@angular/router';
-import { navbar } from './navbar-component/navbar';
-import { AccountComponentComponent } from './account-component/account-component.component';
-import { HomeComponentComponent } from './home-component/home-component.component';
-import { LiveComponentComponent } from './live-component/live-component.component';
-import { StatsComponentComponent } from './stats-component/stats-component.component';
-import { RepsComponentComponent } from './reps-component/reps-component.component';
-import { AccountingComponentComponent } from './accounting-component/accounting-component.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { AccountComponent } from './account/account.component';
+import { HomeComponent } from './home/home.component';
+import { LiveComponent } from './live/live.component';
+import { StatsComponent } from './stats/stats.component';
+import { RepsComponent } from './reps/reps.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { MessagesComponent } from './messages/messages.component';
 import { FooterComponent } from './footer/footer.component';
@@ -26,12 +25,11 @@ export class App {
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponentComponent },
-  { path: 'account/:id', component: AccountComponentComponent },
-  { path: 'live', component: LiveComponentComponent },
-  { path: 'stats', component: StatsComponentComponent },
-  { path: 'reps', component: RepsComponentComponent },
-  { path: 'accounting', component: AccountingComponentComponent },
+  { path: 'home', component: HomeComponent },
+  { path: 'account/:id', component: AccountComponent },
+  { path: 'live', component: LiveComponent },
+  { path: 'stats', component: StatsComponent },
+  { path: 'reps', component: RepsComponent },
   { path: '**', component: PageNotFoundComponent }
 ];
 
@@ -39,7 +37,7 @@ const appRoutes: Routes = [
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
     appRoutes//,{ enableTracing: true } // <-- debugging purposes only
   )],
-  declarations: [App, navbar, AccountComponentComponent, HomeComponentComponent, LiveComponentComponent, StatsComponentComponent, RepsComponentComponent, AccountingComponentComponent, PageNotFoundComponent, MessagesComponent, FooterComponent],
+  declarations: [App, NavbarComponent, AccountComponent, HomeComponent, LiveComponent, StatsComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent],
   bootstrap: [App]
 })
 export class AppModule { }

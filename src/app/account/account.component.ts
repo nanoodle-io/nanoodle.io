@@ -5,10 +5,10 @@ import { MessageService } from '../message.service';
 
 @Component({
   selector: "app-account",
-  templateUrl: "./account-component.component.html"
+  templateUrl: "./account.component.html"
 })
 
-export class AccountComponentComponent implements OnInit {
+export class AccountComponent implements OnInit {
   transactions: Transaction[];
   account: Account;
   paramsub: any;

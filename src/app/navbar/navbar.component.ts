@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
-  templateUrl: 'navbar.html',
-  styleUrls: ['navbar.css']
+  templateUrl: 'navbar.component.html',
+  styleUrls: ['navbar.component.css']
 })
 
-export class navbar {
+export class NavbarComponent {
   isNavbarCollapsed = true;
 
   myFunction() {
