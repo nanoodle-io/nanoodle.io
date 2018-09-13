@@ -1,6 +1,10 @@
 /* Structure */
 table {
     width: 100%;
+    font-size: 11px;
+	  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+    letter-spacing: 1px;
+    text-transform: uppercase;
   }
   
   .mat-form-field {
@@ -8,4 +12,10 @@ table {
     width: 100%;
   }
 
-  body {margin:20px;padding:0}
+  h3 {
+    width: 100%;
+    font-size: 15px;
+	  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }

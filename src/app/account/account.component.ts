@@ -5,7 +5,8 @@ import { MessageService } from '../message.service';
 
 @Component({
   selector: "app-account",
-  templateUrl: "./account.component.html"
+  templateUrl: "./account.component.html",
+  styleUrls: ['./account.component.css']
 })
 
 export class AccountComponent implements OnInit {
@@ -31,21 +32,19 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  formatAmount(mRai: number, type: string): string {
-    if (type == "receive") {
-      return "+" + (mRai / 1000000000000000000000000000000);
-    }
-    else {
-      return "-" + (mRai / 1000000000000000000000000000000);
-    }
+  formatAmount(mRai: number): string {
+    const dec = 2;
+    const raw = 1000000000000000000000000000000;
+    var temp = mRai / raw ;
+    return temp.toFixed(dec);
   }
 
-  formatAccount(account: string, type: string): string {
+  formatType(type: string): string {
     if (type == "receive") {
-      return "from " + account;
+      return "+";
     }
     else {
-      return "to " + account;
+      return "-";
     }
   }
 

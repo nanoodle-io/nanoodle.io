@@ -14,6 +14,8 @@ import { RepsComponent } from './reps/reps.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { MessagesComponent } from './messages/messages.component';
 import { FooterComponent } from './footer/footer.component';
+import { SocialComponent } from './social/social.component';
+import { HashComponent } from './hash/hash.component';
 
 @Component({
   selector: 'my-app',
@@ -27,6 +29,7 @@ const appRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'account/:id', component: AccountComponent },
+  { path: 'hash/:id', component: AccountComponent },
   { path: 'live', component: LiveComponent },
   { path: 'stats', component: StatsComponent },
   { path: 'reps', component: RepsComponent },
@@ -37,7 +40,7 @@ const appRoutes: Routes = [
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
     appRoutes//,{ enableTracing: true } // <-- debugging purposes only
   )],
-  declarations: [App, NavbarComponent, AccountComponent, HomeComponent, LiveComponent, StatsComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent],
+  declarations: [App, NavbarComponent, AccountComponent, HomeComponent, LiveComponent, StatsComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, HashComponent],
   bootstrap: [App]
 })
 export class AppModule { }

@@ -75,7 +75,7 @@ section h2 {
 
 #logoNav > img {
   content:url("../src/assets/nanoodle_logo_slim_black.svg");
-  height: 50px;
+  height: 55px;
 }
 
 #mainNav .navbar-brand:hover, #mainNav .navbar-brand:focus {
@@ -146,12 +146,12 @@ section h2 {
 
   #logoNav > img {
     content:url("../src/assets/nanoodle_logo_slim_white.svg");
-    height: 50px;
+    height: 55;
   }
 
   #logoNav.logo-black > img {
     content:url("../src/assets/nanoodle_logo_slim_black.svg");
-    height: 50px;
+    height: 55;
   }
 
   #mainNav.navbar-shrink .navbar-brand {
@@ -174,8 +174,9 @@ section h2 {
 header.masthead {
   position: relative;
   width: 100%;
-  padding-top: 0px;
-  padding-bottom: 100px;
+  height: 40vh;
+  min-height: 200px;
+  padding-top: 50px;
   color: white;
   background: url("../img/bg-pattern.png"), #7b4397;
   background: url("../img/bg-pattern.png"), -webkit-linear-gradient(to left, #7b4397, #dc2430);
@@ -203,11 +204,10 @@ header.masthead .device-container .screen img {
 }
 
 @media (min-width: 992px) {
+  
   header.masthead {
-    height: 100vh;
-    min-height: 775px;
-    padding-top: 0;
-    padding-bottom: 0;
+    height: 40vh;
+    padding-top: 50px;
   }
   header.masthead .header-content {
     margin-bottom: 0;
@@ -286,7 +286,7 @@ section.features .device-container {
 }
 
 section.features .feature-item {
-  padding-top: 50px;
+  padding-top: 25px;
   padding-bottom: 50px;
   text-align: center;
 }

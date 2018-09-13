@@ -27,7 +27,7 @@ export class AccountService {
     let body = JSON.stringify({
       "action": "account_history",
       "account": "" + params + "",
-      "count": "-1"
+      "count": "100"
     });
 
     return this.http.post<Account>('http://localhost:7076', body, options).pipe(
