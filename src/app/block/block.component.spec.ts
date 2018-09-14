@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HashComponent } from './hash.component';
+import { BlockComponent } from './block.component';
 
-describe('HashComponent', () => {
-  let component: HashComponent;
-  let fixture: ComponentFixture<HashComponent>;
+describe('BlockComponent', () => {
+  let component: BlockComponent;
+  let fixture: ComponentFixture<BlockComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HashComponent ]
+      declarations: [ BlockComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HashComponent);
+    fixture = TestBed.createComponent(BlockComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

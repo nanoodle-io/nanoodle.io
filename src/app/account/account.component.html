@@ -26,9 +26,9 @@
           </thead>
           <tbody>
             <tr *ngFor="let transaction of transactions">
-              <th scope="row">01/01/2001 01:01:01</th>
+              <th title="Click to see block details" data-toggle="popover" data-content="Some content inside the popover" scope="row"><a [routerLink]="['/block',transaction.hash]">01/01/2001 15:01</a></th>
               <td>{{ formatType(transaction.type) }}{{formatAmount(transaction.amount) }}</td>
-              <td><a [routerLink]="['/account',transaction.account]">{{ transaction.account }}</a></td>
+              <td title="Click to see account details" data-toggle="popover" data-content="Some content inside the popover"><a [routerLink]="['/account',transaction.account]">{{ transaction.account }}</a></td>
             </tr>
           </tbody>
         </table>
