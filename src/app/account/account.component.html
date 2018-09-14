@@ -12,7 +12,14 @@
   <ng-template #loaded>
     <div class="container">
       <h3>Account</h3>
-      <p>{{ account['account'] }}</p>
+      <br>
+      <p>
+        <qrcode [qrdata]="account['account']" [size]="128" [level]="'M'"></qrcode>
+      </p>
+      <p> {{ account['account'] }}</p>
+      <h3>Unprocessed Blocks</h3>
+      <br>
+      <p> Text</p>
       <h3>Transactions</h3>
       <br>
       <div class="row">
@@ -21,7 +28,7 @@
             <thead>
               <tr>
                 <th scope="col">Date</th>
-                <th scope="col"><img src="../../assets/nano_logo.svg" width="30px"></th>
+                <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
                 <th scope="col">Associated Account</th>
               </tr>
             </thead>

@@ -4,10 +4,6 @@ body {
   height: 100%;
 }
 
-body {
-
-}
-
 a {
   color: #fdcc52;
   -webkit-transition: all .35s;
@@ -351,7 +347,7 @@ section.contact {
 
 section.contact h2 {
   margin-top: 0;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 }
 
 section.contact h2 i {
@@ -431,6 +427,7 @@ footer ul li a:hover, footer ul li a:focus, footer ul li a:active, footer ul li 
 
 .bg-primary {
   background: #fdcc52;
+  height: 100px;
   background: -webkit-linear-gradient(#fdcc52, #fdc539);
   background: linear-gradient(#fdcc52, #fdc539);
 }

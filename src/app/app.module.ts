@@ -16,6 +16,7 @@ import { MessagesComponent } from './messages/messages.component';
 import { FooterComponent } from './footer/footer.component';
 import { SocialComponent } from './social/social.component';
 import { BlockComponent } from './block/block.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 @Component({
   selector: 'my-app',
@@ -38,7 +39,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
+  imports: [BrowserModule, FormsModule, QRCodeModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
     appRoutes//,{ enableTracing: true } // <-- debugging purposes only
   )],
   declarations: [App, NavbarComponent, AccountComponent, HomeComponent, LiveComponent, BusinessComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],

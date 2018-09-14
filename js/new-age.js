@@ -35,7 +35,7 @@
     }
     else
     {
-      if ($("#mainNav").offset().top > 18) {
+      if ($("#mainNav").offset().top > 38) {
         $("#mainNav").addClass("navbar-shrink");
         $("#logoNav").addClass("logo-black");
       } else {
