@@ -12,4 +12,8 @@ export class NavbarComponent {
   myFunction() {
     console.log("test");
   }
+
+  scroll(el) {
+    el.scrollIntoView();
+  }
 }

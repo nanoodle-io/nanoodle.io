@@ -1,23 +1,30 @@
 <header class="masthead">
-  <div class="container h-100">
-    <div class="row h-100">
-    </div>
+  <div class="section-heading text-center">
+    <img src="../../assets/nano_logo.svg" width="200px" class="img-fluid" alt="">
+    <br>
+    <br>
+    <h3>Block Overview</h3>
   </div>
 </header>
 <section class="features" id="features">
-  <div class="container">
-    <div class="section-heading text-center">
-      <img src="../../assets/nano_logo.svg" width="200px" class="img-fluid" alt="">
+  <ng-container *ngIf="block; then loaded; else loading">
+  </ng-container>
+  <ng-template #loaded>
+    <div class="container">
+      <h3>Block Details</h3>
       <br>
-      <br>
-      <h3>Block</h3>
-    </div>
-    <h3>Block Details</h3>
-    <br>
-    <div class="row">
-      <div class="col-lg-12 my-auto">
-        <h3 *ngIf="block">{{block}}</h3>
+      <div class="row">
+        <div class="col-lg-12 my-auto">
+          <h3>{{block}}</h3>
+        </div>
       </div>
     </div>
-  </div>
+  </ng-template>
+  <ng-template #loading>
+    <div class="container">
+      <div>
+        <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+      </div>
+    </div>
+  </ng-template>
 </section>

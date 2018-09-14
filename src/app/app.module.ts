@@ -9,7 +9,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { AccountComponent } from './account/account.component';
 import { HomeComponent } from './home/home.component';
 import { LiveComponent } from './live/live.component';
-import { StatsComponent } from './stats/stats.component';
+import { BusinessComponent } from './business/business.component';
 import { RepsComponent } from './reps/reps.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { MessagesComponent } from './messages/messages.component';
@@ -32,7 +32,7 @@ const appRoutes: Routes = [
   { path: 'hash/:id', component: AccountComponent },
   { path: 'block/:id', component: BlockComponent },
   { path: 'live', component: LiveComponent },
-  { path: 'stats', component: StatsComponent },
+  { path: 'business', component: BusinessComponent },
   { path: 'reps', component: RepsComponent },
   { path: '**', component: PageNotFoundComponent }
 ];
@@ -41,7 +41,7 @@ const appRoutes: Routes = [
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
     appRoutes//,{ enableTracing: true } // <-- debugging purposes only
   )],
-  declarations: [App, NavbarComponent, AccountComponent, HomeComponent, LiveComponent, StatsComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
+  declarations: [App, NavbarComponent, AccountComponent, HomeComponent, LiveComponent, BusinessComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
   bootstrap: [App]
 })
 export class AppModule { }

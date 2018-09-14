@@ -19,3 +19,11 @@ table {
     letter-spacing: 2px;
     text-transform: uppercase;
   }
+
+  h4 {
+    width: 100%;
+    font-size: 13px;
+	  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
