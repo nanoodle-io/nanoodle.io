@@ -54,19 +54,85 @@ export class AccountService {
 
     return this.http.post<Blocks>('http://localhost:7076', body, options).pipe(
       //tap(_ => this.log(`found blocks matching "${params}"`)),
-      catchError(this.handleError<Blocks>('getUnprocessedBlcosk', null))
+      catchError(this.handleError<Blocks>('getUnprocessedBlock', null))
     );
   };
 
-  private handleError<T> (operation = 'operation', result?: T) {
+  getBalance(params: string): Observable<Balance> {
+    let httpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    let options = {
+      headers: httpHeaders
+    };
+
+    //console.log("Account Service Parameters: "+params);
+    let body = JSON.stringify(
+    {  
+      "action": "account_balance",  
+      "account": "" +params + ""  
+    }
+    );
+
+    return this.http.post<Balance>('http://localhost:7076', body, options).pipe(
+      //tap(_ => this.log(`found balance matching "${params}"`)),
+      catchError(this.handleError<Balance>('getBalance', null))
+    );
+  };
+
+  getRepresentative(params: string): Observable<Representative> {
+    let httpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    let options = {
+      headers: httpHeaders
+    };
+
+    //console.log("Account Service Parameters: "+params);
+    let body = JSON.stringify({
+      "action": "account_representative",
+      "account": "" + params + ""
+    });
+
+
+    return this.http.post<Representative>('http://localhost:7076', body, options).pipe(
+      //tap(_ => this.log(`found representative matching "${params}"`)),
+      catchError(this.handleError<Representative>('getRepresentative', null))
+    );
+  };
+
+  getWeight(params: string): Observable<Weight> {
+    let httpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    let options = {
+      headers: httpHeaders
+    };
+
+    //console.log("Account Service Parameters: "+params);
+    let body = JSON.stringify({
+      "action": "account_weight",
+      "account": "" + params + ""
+    });
+
+    return this.http.post<Weight>('http://localhost:7076', body, options).pipe(
+      //tap(_ => this.log(`found weight matching "${params}"`)),
+      catchError(this.handleError<Weight>('getWeight', null))
+    );
+  };
+
+  private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
- 
+
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
- 
+
       // TODO: better job of transforming error for user consumption
       this.log(`${operation} failed: ${error.message}`);
- 
+
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
@@ -93,4 +159,16 @@ interface Blocks {
   hash: string[];
 }
 
+interface Representative {
+  representative: string;
+}
+
+interface Weight {
+  weight: string;
+}
+
+interface Balance {
+  balance: string;
+  pending: string;
+}
 
