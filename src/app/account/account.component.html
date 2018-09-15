@@ -118,7 +118,7 @@
     <ng-container *ngIf="representative; then representativeLoaded; else representativeLoading">
     </ng-container>
     <ng-template #representativeLoaded>
-      <p>This accounts representative is <a [routerLink]="['/account',representative]">{{ representative }}.</a>
+      <p>This account's representative is <a [routerLink]="['/account',representative]">{{ representative }}.</a>
         <p>
     </ng-template>
     <ng-template #representativeLoading>

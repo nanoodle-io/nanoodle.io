@@ -79,7 +79,7 @@ export class AccountComponent implements OnInit {
     this.accountService.getBalance(accountParam)
       .subscribe(data => {
         this.BalanceResults = data;
-        //this.log(`found account matching "${JSON.stringify(this.representative)}"`);
+        //this.log(JSON.stringify(this.BalanceResults);
         this.balance = this.BalanceResults['balance'];
         this.pending = this.BalanceResults['pending'];
         //this.log(`found account transactions matching "${JSON.stringify(this.transactions)}"`);

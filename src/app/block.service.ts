@@ -11,10 +11,12 @@ import { catchError } from 'rxjs/operators';
 
 export class BlockService {
   private sub: any;
+  temp: string;
 
   constructor(private messageService: MessageService, private http: HttpClient) { }
 
-  getBlock(params: string): Observable<string> {
+  getBlock(params: string): Observable<Block> {
+    
     let httpHeaders = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -29,9 +31,9 @@ export class BlockService {
         "hash": "" + params + ""
     });
 
-    return this.http.post<string>('http://localhost:7076', body, options).pipe(
+    return this.http.post<Block>('http://localhost:7076', body, options).pipe(
       //tap(_ => this.log(`found account matching "${params}"`)),
-      catchError(this.handleError<string>('getBlock', null))
+      catchError(this.handleError<Block>('getBlock', null))
     );
   };
 
@@ -53,3 +55,20 @@ export class BlockService {
   }
 }
 
+interface Block
+{
+    contents: Content;
+}
+
+interface Content
+{
+  type: string;
+  account: string;
+  previous: string;
+  representative: string;
+  balance: string;
+  link: string;
+  link_as_account: string;
+  signature: string;
+  work: string;
+}

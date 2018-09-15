@@ -7,7 +7,7 @@
   </div>
 </header>
 <section class="features" id="features">
-  <ng-container *ngIf="block; then loaded; else loading">
+  <ng-container *ngIf="type; then loaded; else loading">
   </ng-container>
   <ng-template #loaded>
     <div class="container">
@@ -15,7 +15,16 @@
       <br>
       <div class="row">
         <div class="col-lg-12 my-auto">
-          <h3>{{block}}</h3>
+          <p>Type: {{type}}</p>
+          <p>Account: <a [routerLink]="['/account',account]">{{ account }}</a></p>
+          <p>Previous: <a [routerLink]="['/block',previous]">{{ previous }}</a></p>
+          <p>Representative: <a [routerLink]="['/account',representative]">{{ representative }}</a></p>
+          <p>Link: <a [routerLink]="['/block',link]">{{ link }}</a></p>
+          <p>Link as Account: <a [routerLink]="['/account',link_as_account]">{{ link_as_account }}</a></p>
+          <p>Signature: {{signature}}</p>
+          <p>Work: {{work}}</p>
+
+
         </div>
       </div>
     </div>
