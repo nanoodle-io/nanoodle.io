@@ -36,6 +36,28 @@ export class AccountService {
     );
   };
 
+  getUnprocessedBlocks(params: string): Observable<Blocks> {
+    let httpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    let options = {
+      headers: httpHeaders
+    };
+
+    //console.log("Account Service Parameters: "+params);
+    let body = JSON.stringify({
+      "action": "pending",
+      "account": "" + params + "",
+      "count": "100"
+    });
+
+    return this.http.post<Blocks>('http://localhost:7076', body, options).pipe(
+      //tap(_ => this.log(`found blocks matching "${params}"`)),
+      catchError(this.handleError<Blocks>('getUnprocessedBlcosk', null))
+    );
+  };
+
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
  
@@ -65,6 +87,10 @@ interface Account {
   account: string;
   history: Transaction[];
   previous: string;
+}
+
+interface Blocks {
+  hash: string[];
 }
 
 

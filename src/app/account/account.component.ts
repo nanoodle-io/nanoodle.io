@@ -11,7 +11,11 @@ import { MessageService } from '../message.service';
 
 export class AccountComponent implements OnInit {
   transactions: Transaction[];
+  hashes: string[];
+  //results
   account: Account;
+  blocks: Blocks;
+  //param
   paramsub: any;
 
   constructor(private messageService: MessageService, private route: ActivatedRoute, private accountService: AccountService) { }
@@ -19,6 +23,7 @@ export class AccountComponent implements OnInit {
   ngOnInit(): void {
     this.paramsub = this.route.params.subscribe(sub => {
       this.getAccount(sub['id']);
+      this.getUnprocessedBlocks(sub['id']);
     });
   }
 
@@ -28,6 +33,16 @@ export class AccountComponent implements OnInit {
     this.account = data;
     //this.log(`found account matching "${JSON.stringify(this.account)}"`);
     this.transactions = this.account['history'];
+    //this.log(`found account transactions matching "${JSON.stringify(this.transactions)}"`);
+    });
+  }
+
+  getUnprocessedBlocks(accountParam: string): void {
+    this.accountService.getUnprocessedBlocks(accountParam)
+    .subscribe(data => {
+    this.blocks = data;
+    //this.log(`found account matching "${JSON.stringify(this.account)}"`);
+    this.hashes = this.blocks['blocks'];
     //this.log(`found account transactions matching "${JSON.stringify(this.transactions)}"`);
     });
   }
@@ -68,4 +83,8 @@ interface Account {
   account: string;
   history: Transaction[];
   previous: string;
+}
+
+interface Blocks {
+  hash: string[];
 }
