@@ -26,7 +26,7 @@ export class BlockComponent implements OnInit {
     this.blockService.getBlock(blockParam)
     .subscribe(data => {
     this.block = JSON.stringify(data);
-    //this.log(`found block matching "${JSON.stringify(block)}"`);
+    this.log(`found block matching "${JSON.stringify(this.block)}"`);
     });
   }
 

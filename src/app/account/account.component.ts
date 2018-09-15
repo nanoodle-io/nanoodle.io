@@ -22,6 +22,8 @@ export class AccountComponent implements OnInit {
 
   ngOnInit(): void {
     this.paramsub = this.route.params.subscribe(sub => {
+      this.account = null;
+      this.blocks = null;
       this.getAccount(sub['id']);
       this.getUnprocessedBlocks(sub['id']);
     });

@@ -44,7 +44,7 @@ p {
 }
 
 section {
-  padding: 100px 0;
+  padding: 30px 0;
 }
 
 section h2 {
@@ -427,7 +427,6 @@ footer ul li a:hover, footer ul li a:focus, footer ul li a:active, footer ul li 
 
 .bg-primary {
   background: #fdcc52;
-  height: 100px;
   background: -webkit-linear-gradient(#fdcc52, #fdc539);
   background: linear-gradient(#fdcc52, #fdc539);
 }
