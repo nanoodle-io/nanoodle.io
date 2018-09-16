@@ -7,134 +7,144 @@
   </div>
 </header>
 <section class="features" id="features">
-  <div class="container">
-    <h3>Address</h3>
-    <br>
-    <ng-container *ngIf="account; then accountLoaded; else accountLoading">
-    </ng-container>
-    <ng-template #accountLoaded>
-      <p>
-        <qrcode [qrdata]="account['account']" [size]="128" [level]="'M'"></qrcode>
-      </p>
-      <p>{{ account['account'] }}</p>
-    </ng-template>
-    <ng-template #accountLoading>
-      <div>
-        <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-      </div>
-    </ng-template>
-  </div>
-
-  <div class="container">
-    <h3>Balance</h3>
-    <br>
-    <ng-container *ngIf="balance; then balanceLoaded; else balanceLoading">
-    </ng-container>
-    <ng-template #balanceLoaded>
-      <p>{{ formatAmount(balance) }} (excluding {{formatAmount(pending)}} pending)</p>
-    </ng-template>
-    <ng-template #balanceLoading>
-      <div>
-        <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-      </div>
-    </ng-template>
-  </div>
-
-
-  <div class="container">
-    <h3>Unprocessed Blocks</h3>
-    <br>
-    <p>Incoming blocks for which the account has not yet published a block to complete the transaction.</p>
-    <ng-container *ngIf="hashes; then hashloaded; else hashloading">
-    </ng-container>
-    <ng-template #hashloaded>
-      <div class="row">
-        <div class="col-lg-12 my-auto">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col">Date</th>
-                <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
-                <th scope="col">Associated Account</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let hash of hashes">
-                <th title="Click to see block details" data-toggle="popover" data-content="Some content inside the popover"
-                  scope="row"><a [routerLink]="['/block',hash]">01/01/2001 15:01</a></th>
-                <td>a</td>
-                <td>temp1</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template #hashloading>
-      <div>
-        <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-      </div>
-    </ng-template>
-  </div>
-
-  <div class="container">
-    <h3>Transactions</h3>
-    <br>
-    <ng-container *ngIf="account; then transactionLoaded; else transactionLoading">
-    </ng-container>
-    <ng-template #transactionLoaded>
-      <div class="row">
-        <div class="col-lg-12 my-auto">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col">Date</th>
-                <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
-                <th scope="col">Associated Account</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let transaction of transactions">
-                <th title="Click to see block details" data-toggle="popover" data-content="Some content inside the popover"
-                  scope="row"><a [routerLink]="['/block',transaction.hash]">01/01/2001 15:01</a></th>
-                <td>{{ formatType(transaction.type) }}{{formatAmount(transaction.amount) }}</td>
-                <td title="Click to see account details" data-toggle="popover" data-content="Some content inside the popover"><a
-                    [routerLink]="['/account',transaction.account]">{{ transaction.account }}</a></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template #transactionLoading>
-      <div>
-        <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-      </div>
-    </ng-template>
-  </div>
-  <div class="container">
-    <h3>Voting</h3>
-    <br>
-    <ng-container *ngIf="representative; then representativeLoaded; else representativeLoading">
-    </ng-container>
-    <ng-template #representativeLoaded>
-      <p>This account's representative is <a [routerLink]="['/account',representative]">{{ representative }}.</a>
+  <ng-container *ngIf="error; then errorPresent; else results">
+  </ng-container>
+  <ng-template #errorPresent>
+    <div class="container">
+      <h3>Address</h3>
+      <br>
+      <p>Error: {{ error }}</p>
+    </div>
+  </ng-template>
+  <ng-template #results>
+    <div class="container">
+      <h3>Address</h3>
+      <br>
+      <ng-container *ngIf="accountResults; then accountLoaded; else accountLoading">
+      </ng-container>
+      <ng-template #accountLoaded>
         <p>
-    </ng-template>
-    <ng-template #representativeLoading>
-      <div>
-        <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-      </div>
-    </ng-template>
-    <ng-container *ngIf="weight; then weightLoaded; else weightloading">
-    </ng-container>
-    <ng-template #weightLoaded>
-      <p>This account has {{formatAmount(weight)}} voting weight</p>
-    </ng-template>
-    <ng-template #weightloading>
-      <div>
-        <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-      </div>
-    </ng-template>
-  </div>
+          <qrcode [qrdata]="accountResults['account']" [size]="128" [level]="'M'"></qrcode>
+        </p>
+        <p>{{ accountResults['account'] }}</p>
+      </ng-template>
+      <ng-template #accountLoading>
+        <div>
+          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+        </div>
+      </ng-template>
+    </div>
+    <div class="container">
+      <h3>Balance</h3>
+      <br>
+      <ng-container *ngIf="balanceResults; then balanceLoaded; else balanceLoading">
+      </ng-container>
+      <ng-template #balanceLoaded>
+        <p>{{ formatAmount(balanceResults['balance']) }} (excluding {{formatAmount(balanceResults['pending'])}}
+          pending)</p>
+      </ng-template>
+      <ng-template #balanceLoading>
+        <div>
+          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+        </div>
+      </ng-template>
+    </div>
+    <div class="container">
+      <h3>Unprocessed Blocks</h3>
+      <br>
+      <p>Incoming blocks for which the account has not yet published a block to complete the transaction.</p>
+      <ng-container *ngIf="unprocessedBlocksResults; then blocksloaded; else blocksloading">
+      </ng-container>
+      <ng-template #blocksloaded>
+        <div class="row">
+          <div class="col-lg-12 my-auto">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
+                  <th scope="col">Associated Account</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let block of unprocessedBlocksResults['hash']">
+                  <th title="Click to see block details" data-toggle="popover" data-content="Some content inside the popover"
+                    scope="row"><a [routerLink]="['/block',block]">01/01/2001 15:01</a></th>
+                  <td>a</td>
+                  <td>temp1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template #blocksloading>
+        <div>
+          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="container">
+      <h3>Transactions</h3>
+      <br>
+      <ng-container *ngIf="accountResults; then transactionLoaded; else transactionLoading">
+      </ng-container>
+      <ng-template #transactionLoaded>
+        <div class="row">
+          <div class="col-lg-12 my-auto">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
+                  <th scope="col">Associated Account</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let transaction of accountResults['history']">
+                  <th title="Click to see block details" data-toggle="popover" data-content="Some content inside the popover"
+                    scope="row"><a [routerLink]="['/block',transaction.hash]">01/01/2001 15:01</a></th>
+                  <td>{{ formatType(transaction.type) }}{{formatAmount(transaction.amount) }}</td>
+                  <td title="Click to see account details" data-toggle="popover" data-content="Some content inside the popover"><a
+                      [routerLink]="['/account',transaction.account]">{{ transaction.account }}</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template #transactionLoading>
+        <div>
+          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+        </div>
+      </ng-template>
+    </div>
+    <div class="container">
+      <h3>Voting</h3>
+      <br>
+      <ng-container *ngIf="representativeResults; then representativeLoaded; else representativeLoading">
+      </ng-container>
+      <ng-template #representativeLoaded>
+        <p>This account's representative is <a [routerLink]="['/account',representativeResults['representative']]">{{
+            representativeResults['representative'] }}.</a>
+          <p>
+      </ng-template>
+      <ng-template #representativeLoading>
+        <div>
+          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+        </div>
+      </ng-template>
+      <ng-container *ngIf="weightResults; then weightLoaded; else weightloading">
+      </ng-container>
+      <ng-template #weightLoaded>
+        <p>This account has {{formatAmount(weightResults['weight'])}} voting weight</p>
+      </ng-template>
+      <ng-template #weightloading>
+        <div>
+          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
 </section>

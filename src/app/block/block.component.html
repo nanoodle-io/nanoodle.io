@@ -1,39 +1,50 @@
 <header class="masthead">
   <div class="section-heading text-center">
-      <img src="../../assets/nano_logo_white.svg" width="200px" class="img-fluid" alt="">
-      <br>
+    <img src="../../assets/nano_logo_white.svg" width="200px" class="img-fluid" alt="">
+    <br>
     <br>
     <h3>Block Overview</h3>
   </div>
 </header>
 <section class="features" id="features">
-  <ng-container *ngIf="type; then loaded; else loading">
+  <ng-container *ngIf="error; then errorPresent; else results">
   </ng-container>
-  <ng-template #loaded>
+  <ng-template #errorPresent>
     <div class="container">
       <h3>Block Details</h3>
       <br>
-      <div class="row">
-        <div class="col-lg-12 my-auto">
-          <p>Type: {{type}}</p>
-          <p>Account: <a [routerLink]="['/account',account]">{{ account }}</a></p>
-          <p>Previous: <a [routerLink]="['/block',previous]">{{ previous }}</a></p>
-          <p>Representative: <a [routerLink]="['/account',representative]">{{ representative }}</a></p>
-          <p>Link: <a [routerLink]="['/block',link]">{{ link }}</a></p>
-          <p>Link as Account: <a [routerLink]="['/account',link_as_account]">{{ link_as_account }}</a></p>
-          <p>Signature: {{signature}}</p>
-          <p>Work: {{work}}</p>
-
-
-        </div>
-      </div>
+      <p>Error: {{ error }}</p>
     </div>
   </ng-template>
-  <ng-template #loading>
-    <div class="container">
-      <div>
-        <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+  <ng-template #results>
+    <ng-container *ngIf="contentResults; then loaded; else loading">
+    </ng-container>
+    <ng-template #loaded>
+      <div class="container">
+        <h3>Block Details</h3>
+        <br>
+        <div class="row">
+          <div class="col-lg-12 my-auto">
+            <p>Type: {{contentResults['type']}}</p>
+            <p>Account: <a [routerLink]="['/account',contentResults['account']]">{{ contentResults['account'] }}</a></p>
+            <p>Previous: <a [routerLink]="['/block',contentResults['previous']]">{{ contentResults['previous'] }}</a></p>
+            <p>Representative: <a [routerLink]="['/account',contentResults['representative']]">{{
+                contentResults['representative'] }}</a></p>
+            <p>Link: {{ contentResults['link'] }}</p>
+            <p>Link as Account: <a [routerLink]="['/account',contentResults['link_as_account']]">{{
+                contentResults['link_as_account'] }}</a></p>
+            <p>Signature: {{contentResults['signature']}}</p>
+            <p>Work: {{contentResults['work']}}</p>
+          </div>
+        </div>
       </div>
-    </div>
+    </ng-template>
+    <ng-template #loading>
+      <div class="container">
+        <div>
+          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+        </div>
+      </div>
+    </ng-template>
   </ng-template>
 </section>

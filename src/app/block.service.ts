@@ -16,7 +16,7 @@ export class BlockService {
   constructor(private messageService: MessageService, private http: HttpClient) { }
 
   getBlock(params: string): Observable<Block> {
-    
+
     let httpHeaders = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -71,4 +71,8 @@ interface Content
   link_as_account: string;
   signature: string;
   work: string;
+}
+
+interface Block {
+  error: string;
 }

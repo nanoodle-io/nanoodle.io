@@ -11,32 +11,27 @@ import { MessageService } from '../message.service';
 
 export class AccountComponent implements OnInit {
 
-  //display/extracted values
-  transactions: Transaction[];
-  hashes: string[];
-  representative: string;
-  weight: string;
-  balance: string;
-  pending: string;
   //raw results
-  account: Account;
-  blocks: Blocks;
+  accountResults: Account;
+  unprocessedBlocksResults: Blocks;
   representativeResults: Representative;
   weightResults: Weight;
-  BalanceResults: Balance;
+  balanceResults: Balance;
   //param
   paramsub: any;
+  error: string;
+  reg = new RegExp('"error"');
 
   constructor(private messageService: MessageService, private route: ActivatedRoute, private accountService: AccountService) { }
 
   ngOnInit(): void {
     this.paramsub = this.route.params.subscribe(sub => {
-      this.account = null;
-      this.blocks = null;
-      this.representative = null;
-      this.weight = null;
-      this.balance = null;
-      this.pending = null;
+      this.accountResults = null;
+      this.unprocessedBlocksResults = null;
+      this.representativeResults = null;
+      this.weightResults = null;
+      this.error = null;
+      this.balanceResults = null;
       this.getAccount(sub['id']);
       this.getUnprocessedBlocks(sub['id']);
       this.getRepresentative(sub['id']);
@@ -48,20 +43,17 @@ export class AccountComponent implements OnInit {
   getAccount(accountParam: string): void {
     this.accountService.getAccount(accountParam)
       .subscribe(data => {
-        this.account = data;
-        //this.log(`found account matching "${JSON.stringify(this.account)}"`);
-        this.transactions = this.account['history'];
-        //this.log(`found account transactions matching "${JSON.stringify(this.transactions)}"`);
+        this.accountResults = data;
+        if (this.reg.test(JSON.stringify(this.accountResults))) {
+          this.error = JSON.stringify(this.accountResults['error']);
+        }
       });
   }
 
   getUnprocessedBlocks(accountParam: string): void {
     this.accountService.getUnprocessedBlocks(accountParam)
       .subscribe(data => {
-        this.blocks = data;
-        //this.log(`found account matching "${JSON.stringify(this.account)}"`);
-        this.hashes = this.blocks['blocks'];
-        //this.log(`found account transactions matching "${JSON.stringify(this.transactions)}"`);
+        this.unprocessedBlocksResults = data;
       });
   }
 
@@ -69,20 +61,13 @@ export class AccountComponent implements OnInit {
     this.accountService.getWeight(accountParam)
       .subscribe(data => {
         this.weightResults = data;
-        //this.log(`found account matching "${JSON.stringify(this.representative)}"`);
-        this.weight = this.weightResults['weight'];
-        //this.log(`found account transactions matching "${JSON.stringify(this.transactions)}"`);
       });
   }
 
   getBalance(accountParam: string): void {
     this.accountService.getBalance(accountParam)
       .subscribe(data => {
-        this.BalanceResults = data;
-        //this.log(JSON.stringify(this.BalanceResults);
-        this.balance = this.BalanceResults['balance'];
-        this.pending = this.BalanceResults['pending'];
-        //this.log(`found account transactions matching "${JSON.stringify(this.transactions)}"`);
+        this.balanceResults = data;
       });
   }
 
@@ -90,9 +75,6 @@ export class AccountComponent implements OnInit {
     this.accountService.getRepresentative(accountParam)
       .subscribe(data => {
         this.representativeResults = data;
-        //this.log(`found account matching "${JSON.stringify(this.representative)}"`);
-        this.representative = this.representativeResults['representative'];
-        //this.log(`found account transactions matching "${JSON.stringify(this.transactions)}"`);
       });
   }
 

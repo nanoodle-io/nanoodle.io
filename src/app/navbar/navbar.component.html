@@ -21,8 +21,8 @@
         </li>
       </ul>
       <form>
-        <input type="search" [(ngModel)]="address" name="address" placeholder="Search" autocomplete="off" placeholder="Account or Block">
-        <button type="submit" routerLinkActive="active" [routerLink]="['/account', address]" hidden="true">Search</button>
+        <input type="search" [(ngModel)]="searchTerm" name="searchTerm" autocomplete="off" placeholder="Account or Block">
+        <button (click)="this.search(searchTerm)" hidden="true"></button>
       </form>
     </div>
   </div>
