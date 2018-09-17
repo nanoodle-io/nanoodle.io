@@ -15,7 +15,7 @@ export class BlockService {
 
   constructor(private messageService: MessageService, private http: HttpClient) { }
 
-  getBlock(params: string): Observable<Block> {
+  getBlock(params: string): Observable<BlockResults> {
 
     let httpHeaders = new HttpHeaders({
       'Content-Type': 'application/json'
@@ -25,15 +25,36 @@ export class BlockService {
       headers: httpHeaders
     };
 
-    //console.log("Account Service Parameters: "+params);
     let body = JSON.stringify({
-        "action": "block",  
-        "hash": "" + params + ""
+        "action": "blocks_info",  
+        "hashes": [ params ]
     });
 
-    return this.http.post<Block>('http://localhost:7076', body, options).pipe(
+    return this.http.post<BlockResults>('http://localhost:7076', body, options).pipe(
       //tap(_ => this.log(`found account matching "${params}"`)),
-      catchError(this.handleError<Block>('getBlock', null))
+      catchError(this.handleError<BlockResults>('getBlock', null))
+    );
+  };
+
+  getBlocks(params: string[]): Observable<BlockResults> {
+
+    let httpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    let options = {
+      headers: httpHeaders
+    };
+
+    let body = JSON.stringify({
+        "action": "blocks_info",  
+        "hashes": params
+    });
+
+
+    return this.http.post<BlockResults>('http://localhost:7076', body, options).pipe(
+      //tap(_ => this.log(`found account matching "${params}"`)),
+      catchError(this.handleError<BlockResults>('getBlock', null))
     );
   };
 
@@ -51,17 +72,29 @@ export class BlockService {
     };
   }
   private log(message: string) {
-    this.messageService.add(`Account Service: ${message}`);
+    this.messageService.add(`Block Service: ${message}`);
   }
 }
 
-interface Block
-{
-    contents: Content;
+interface BlockResults {
+  error?: string;
+  blocks?: Block[];
 }
 
-interface Content
-{
+interface Block {
+  [detail: string]: Detail;
+}
+
+interface UnprocessedBlocks {
+  blocks: string[];
+}
+
+interface Detail {
+  block_account: string;
+  amount: string;
+  contents: Content;
+}
+interface Content {
   type: string;
   account: string;
   previous: string;
@@ -71,8 +104,4 @@ interface Content
   link_as_account: string;
   signature: string;
   work: string;
-}
-
-interface Block {
-  error: string;
 }

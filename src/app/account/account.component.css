@@ -33,3 +33,11 @@ table {
     letter-spacing: 1px;
     text-transform: uppercase;
   }
+
+  .positive {
+    color: green;
+}
+
+.negative {
+    color: red;
+}

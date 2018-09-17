@@ -17,7 +17,7 @@
     </div>
   </ng-template>
   <ng-template #results>
-    <ng-container *ngIf="contentResults; then loaded; else loading">
+    <ng-container *ngIf="blockResults; then loaded; else loading">
     </ng-container>
     <ng-template #loaded>
       <div class="container">
@@ -25,16 +25,18 @@
         <br>
         <div class="row">
           <div class="col-lg-12 my-auto">
-            <p>Type: {{contentResults['type']}}</p>
-            <p>Account: <a [routerLink]="['/account',contentResults['account']]">{{ contentResults['account'] }}</a></p>
-            <p>Previous: <a [routerLink]="['/block',contentResults['previous']]">{{ contentResults['previous'] }}</a></p>
-            <p>Representative: <a [routerLink]="['/account',contentResults['representative']]">{{
-                contentResults['representative'] }}</a></p>
-            <p>Link: {{ contentResults['link'] }}</p>
-            <p>Link as Account: <a [routerLink]="['/account',contentResults['link_as_account']]">{{
-                contentResults['link_as_account'] }}</a></p>
-            <p>Signature: {{contentResults['signature']}}</p>
-            <p>Work: {{contentResults['work']}}</p>
+            <p>Hash: {{ key }}</p>
+            <p>Time: 12/12/12 10:10</p>
+            <p>Block Account: <a [routerLink]="['/account',detail['block_account']]">{{ detail['block_account'] }}</a></p>
+            <p>Amount: {{ formatAmount(detail['amount']) }}</p>
+            <p>Type: {{ contents['type'] }}</p>
+            <p>Previous: <a [routerLink]="['/block',contents['previous']]">{{ contents['previous'] }}</a></p>
+            <p>Representative: <a [routerLink]="['/account',contents['representative']]">{{ contents['representative'] }}</a></p>
+            <p>Balance: {{ formatAmount(contents['balance']) }}</p>
+            <p>Link: {{ contents['link'] }}</p>
+            <p>Link As Account: <a [routerLink]="['/account',contents['link_as_account']]">{{ contents['link_as_account'] }}</a></p>
+            <p>Signature: {{ contents['signature'] }}</p>
+            <p>Work: {{ contents['work'] }}</p>
           </div>
         </div>
       </div>

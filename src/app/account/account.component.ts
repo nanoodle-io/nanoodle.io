@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AccountService } from '../account.service';
+import { BlockService } from '../block.service';
 import { MessageService } from '../message.service';
 
 @Component({
@@ -13,25 +14,29 @@ export class AccountComponent implements OnInit {
 
   //raw results
   accountResults: Account;
-  unprocessedBlocksResults: Blocks;
+  unprocessedBlocksResults: UnprocessedBlocks;
+  blockResults: BlockResults;
   representativeResults: Representative;
   weightResults: Weight;
   balanceResults: Balance;
+  keys: string[];
   //param
   paramsub: any;
   error: string;
   reg = new RegExp('"error"');
 
-  constructor(private messageService: MessageService, private route: ActivatedRoute, private accountService: AccountService) { }
+  constructor(private messageService: MessageService, private route: ActivatedRoute, private accountService: AccountService, private blockService: BlockService) { }
 
   ngOnInit(): void {
     this.paramsub = this.route.params.subscribe(sub => {
       this.accountResults = null;
-      this.unprocessedBlocksResults = null;
       this.representativeResults = null;
       this.weightResults = null;
+      this.keys = null;
       this.error = null;
       this.balanceResults = null;
+      this.blockResults = null;
+      this.unprocessedBlocksResults = null;
       this.getAccount(sub['id']);
       this.getUnprocessedBlocks(sub['id']);
       this.getRepresentative(sub['id']);
@@ -50,10 +55,23 @@ export class AccountComponent implements OnInit {
       });
   }
 
+  //RPC block results have a bunch of extra characters that need removing before a parse
+  formatContents(jsonRepParam: string): string {
+    return jsonRepParam.replace(/\\n/g, "").replace(/\\/g, "").replace(/\"{/g, "{").replace(/}\"/g, "}");
+  }
+
   getUnprocessedBlocks(accountParam: string): void {
     this.accountService.getUnprocessedBlocks(accountParam)
       .subscribe(data => {
         this.unprocessedBlocksResults = data;
+        this.blockService.getBlocks(this.unprocessedBlocksResults['blocks'])
+          .subscribe(data => {
+            this.blockResults = JSON.parse(this.formatContents(JSON.stringify(data)));
+            if (this.reg.test(JSON.stringify(this.blockResults))) {
+              this.error = JSON.stringify(this.blockResults['error']);
+            }
+            this.keys = Object.keys(this.blockResults['blocks']);
+          });
       });
   }
 
@@ -85,11 +103,13 @@ export class AccountComponent implements OnInit {
     return temp.toFixed(dec);
   }
 
-  formatType(type: string): string {
+  formatType(type: string, cellID: string): string {
     if (type == "receive") {
+      document.getElementById(cellID).classList.add('positive');
       return "+";
     }
     else {
+      document.getElementById(cellID).classList.add('negative');
       return "-";
     }
   }
@@ -111,13 +131,14 @@ interface Transaction {
 }
 
 interface Account {
-  account: string;
-  history: Transaction[];
-  previous: string;
+  account?: string;
+  history?: Transaction[];
+  previous?: string;
+  error?: string;
 }
 
-interface Blocks {
-  hash: string[];
+interface UnprocessedBlocks {
+  blocks: string[];
 }
 
 interface Representative {
@@ -131,4 +152,30 @@ interface Weight {
 interface Balance {
   balance: string;
   pending: string;
+}
+
+interface BlockResults {
+  error?: string;
+  blocks?: Block[];
+}
+
+interface Block {
+  [detail: string]: Detail;
+}
+
+interface Detail {
+  block_account: string;
+  amount: string;
+  contents: Content;
+}
+interface Content {
+  type: string;
+  account: string;
+  previous: string;
+  representative: string;
+  balance: string;
+  link: string;
+  link_as_account: string;
+  signature: string;
+  work: string;
 }

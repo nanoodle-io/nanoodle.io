@@ -12,16 +12,19 @@ import { MessageService } from '../message.service';
 export class BlockComponent implements OnInit {
   paramsub: any;
   //Results
-  contentResults: Content;
-  blockResults: Block;
+  blockResults: BlockResults;
+  detail: Detail;
+  contents: Content;
+  key: string;
   error: string;
   reg = new RegExp('"error"');
-
 
   constructor(private messageService: MessageService, private route: ActivatedRoute, private blockService: BlockService) { }
 
   ngOnInit(): void {
-    this.contentResults = null;
+    this.key = null;
+    this.detail = null;
+    this.contents = null;
     this.blockResults = null;
     this.error = null;
     this.paramsub = this.route.params.subscribe(sub => {
@@ -32,17 +35,21 @@ export class BlockComponent implements OnInit {
   getBlock(blockParam: string): void {
     this.blockService.getBlock(blockParam)
       .subscribe(data => {
-        this.blockResults = data;
-        if (this.reg.test(JSON.stringify(this.blockResults)))
-        {
+        this.blockResults = JSON.parse(this.formatContents(JSON.stringify(data)));
+        if (this.reg.test(JSON.stringify(this.blockResults))) {
           this.error = JSON.stringify(this.blockResults['error']);
-          //this.log(this.error);
         }
-        else
-        {
-          this.contentResults = JSON.parse(this.formatContents(JSON.stringify(this.blockResults['contents'])));
-        }
+        this.key = JSON.stringify(Object.keys(this.blockResults['blocks'])[0]).replace(/\"/g, '');
+        this.detail = this.blockResults['blocks'][this.key];
+        this.contents = this.detail['contents'];
       });
+  }
+
+  formatAmount(mRai: number): string {
+    const dec = 4;
+    const raw = 1000000000000000000000000000000;
+    var temp = mRai / raw;
+    return temp.toFixed(dec);
   }
 
   //RPC block results have a bunch of extra characters that need removing before a parse
@@ -59,14 +66,20 @@ export class BlockComponent implements OnInit {
   }
 }
 
+interface BlockResults {
+  error?: string;
+  blocks?: Block[];
+}
+
 interface Block {
+  [detail: string]: Detail;
+}
+
+interface Detail {
+  block_account: string;
+  amount: string;
   contents: Content;
 }
-
-interface Block {
-  error: string;
-}
-
 interface Content {
   type: string;
   account: string;

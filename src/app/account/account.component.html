@@ -52,31 +52,40 @@
     <div class="container">
       <h3>Unprocessed Blocks</h3>
       <br>
-      <p>Incoming blocks for which the account has not yet published a block to complete the transaction.</p>
-      <ng-container *ngIf="unprocessedBlocksResults; then blocksloaded; else blocksloading">
+      <ng-container *ngIf="keys; then blocksloaded; else blocksloading">
       </ng-container>
       <ng-template #blocksloaded>
-        <div class="row">
-          <div class="col-lg-12 my-auto">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th scope="col">Date</th>
-                  <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
-                  <th scope="col">Associated Account</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let block of unprocessedBlocksResults['hash']">
-                  <th title="Click to see block details" data-toggle="popover" data-content="Some content inside the popover"
-                    scope="row"><a [routerLink]="['/block',block]">01/01/2001 15:01</a></th>
-                  <td>a</td>
-                  <td>temp1</td>
-                </tr>
-              </tbody>
-            </table>
+        <ng-container *ngIf="keys.length > 0; then blocksShow; else blocksEmpty">
+        </ng-container>
+        <ng-template #blocksShow>
+          <p>Incoming blocks for which the account has not yet published a block to complete the transaction.</p>
+          <div class="row">
+            <div class="col-lg-12 my-auto">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
+                    <th scope="col">Associated Account</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let key of keys; let u = index">
+                    <td title="Click to see block details" data-toggle="popover" scope="row"><a [routerLink]="['/block',key]">01/01/2001
+                        15:01</a></td>
+                    <td [attr.id]="'unprocessedAmount' + u">{{ formatType('receive', 'unprocessedAmount'+u)}}{{
+                      formatAmount(blockResults.blocks[key].amount) }}</td>
+                    <td title="Click to see account details" data-toggle="popover"><a [routerLink]="['/account',blockResults.blocks[key].block_account]">{{
+                        blockResults.blocks[key].block_account }}</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+        </ng-template>
+      </ng-template>
+      <ng-template #blocksEmpty>
+          <p>No incoming blocks.</p>
       </ng-template>
       <ng-template #blocksloading>
         <div>
@@ -102,12 +111,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let transaction of accountResults['history']">
-                  <th title="Click to see block details" data-toggle="popover" data-content="Some content inside the popover"
-                    scope="row"><a [routerLink]="['/block',transaction.hash]">01/01/2001 15:01</a></th>
-                  <td>{{ formatType(transaction.type) }}{{formatAmount(transaction.amount) }}</td>
-                  <td title="Click to see account details" data-toggle="popover" data-content="Some content inside the popover"><a
-                      [routerLink]="['/account',transaction.account]">{{ transaction.account }}</a></td>
+                <tr *ngFor="let transaction of accountResults['history']; let i = index">
+                  <td title="Click to see block details" data-toggle="popover" scope="row"><a [routerLink]="['/block',transaction.hash]">01/01/2001
+                      15:01</a></td>
+                  <td [attr.id]="'transactionAmount' + i">{{ formatType(transaction.type, 'transactionAmount'+i)
+                    }}{{formatAmount(transaction.amount) }}</td>
+                  <td title="Click to see account details" data-toggle="popover"><a [routerLink]="['/account',transaction.account]">{{
+                      transaction.account }}</a></td>
                 </tr>
               </tbody>
             </table>

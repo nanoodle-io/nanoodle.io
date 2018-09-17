@@ -36,7 +36,7 @@ export class AccountService {
     );
   };
 
-  getUnprocessedBlocks(params: string): Observable<Blocks> {
+  getUnprocessedBlocks(params: string): Observable<UnprocessedBlocks> {
     let httpHeaders = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -49,12 +49,12 @@ export class AccountService {
     let body = JSON.stringify({
       "action": "pending",
       "account": "" + params + "",
-      "count": "100"
+      "count": "20"
     });
 
-    return this.http.post<Blocks>('http://localhost:7076', body, options).pipe(
+    return this.http.post<UnprocessedBlocks>('http://localhost:7076', body, options).pipe(
       //tap(_ => this.log(`found blocks matching "${params}"`)),
-      catchError(this.handleError<Blocks>('getUnprocessedBlock', null))
+      catchError(this.handleError<UnprocessedBlocks>('getUnprocessedBlock', null))
     );
   };
 
@@ -155,8 +155,8 @@ interface Account {
   previous: string;
 }
 
-interface Blocks {
-  hash: string[];
+interface UnprocessedBlocks {
+  blocks: string[];
 }
 
 interface Representative {
