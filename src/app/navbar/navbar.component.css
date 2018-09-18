@@ -1,6 +1,7 @@
 input {
 	outline: none;
 }
+
 input[type=search] {
 	-webkit-appearance: textfield;
 	-webkit-box-sizing: content-box;
@@ -58,3 +59,9 @@ input::-webkit-input-placeholder {
 }
 
 
+.hidden {
+    position: absolute;
+    height: 0px;
+    width: 0px;
+    right: -1000px;
+}

@@ -22,7 +22,7 @@
       </ul>
       <form>
         <input type="search" [(ngModel)]="searchTerm" name="searchTerm" autocomplete="off" placeholder="Account or Block">
-        <button (click)="this.search(searchTerm)" hidden="true"></button>
+        <button class="hidden" (click)="this.search(searchTerm)"></button>
       </form>
     </div>
   </div>

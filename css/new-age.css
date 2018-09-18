@@ -171,11 +171,11 @@ header.masthead {
   position: relative;
   width: 100%;
   height: 40vh;
-  padding-top: 140px;
+  padding-top: 100px;
   color: white;
-  background: url("../img/bg-pattern.png"), #7b4397;
-  background: url("../img/bg-pattern.png"), -webkit-linear-gradient(to bottom, #7b4397, #dc2430);
-  background: url("../img/bg-pattern.png"), linear-gradient(to bottom, #7b4397, #dc2430);
+  background: url("../img/bg-pattern.png"), #CFDBE0;
+  background: url("../img/bg-pattern.png"), -webkit-linear-gradient(to bottom, #CFDBE0, #55A3B7);
+  background: url("../img/bg-pattern.png"), linear-gradient(to bottom, #CFDBE0, #55A3B7);
 }
 
 header.masthead .header-content {
@@ -203,8 +203,8 @@ header.masthead .device-container .screen img {
   header.masthead {
     position: relative;
     width: 100%;
-    height: 40vh;
-    padding-top: 140px;
+    height: 30vh;
+    padding-top: 100px;
   }
   header.masthead .header-content {
     margin-bottom: 0;
@@ -426,9 +426,9 @@ footer ul li a:hover, footer ul li a:focus, footer ul li a:active, footer ul li 
 }
 
 .bg-primary {
-  background: url("../img/bg-pattern.png"), #dc2430;
-  background: url("../img/bg-pattern.png"), -webkit-linear-gradient(to bottom, #dc2430, #7b4397);
-  background: url("../img/bg-pattern.png"), linear-gradient(to bottom, #dc2430, #7b4397);
+  background: url("../img/bg-pattern.png"), #55A3B7;
+  background: url("../img/bg-pattern.png"), -webkit-linear-gradient(to bottom, #55A3B7, #CFDBE0);
+  background: url("../img/bg-pattern.png"), linear-gradient(to bottom, #55A3B7, #CFDBE0);
 }
 
 .text-primary {
