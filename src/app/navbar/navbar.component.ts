@@ -11,14 +11,13 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class NavbarComponent {
   title = 'app';
   isNavbarCollapsed = true;
-  searchForm = new FormGroup({
-    searchTerm: new FormControl()
-  });
+  searchTerm: string;
 
   //in your constructor
   constructor(public router: Router) { }
 
   search(param: string) {
+    this.searchTerm = null;
     var reg = new RegExp('^(xrb_|nano_|XRB_|NANO_)[a-zA-Z0-9]{60}$');
     if (reg.test(param)) {
       this.router.navigate(['/account', param]);
