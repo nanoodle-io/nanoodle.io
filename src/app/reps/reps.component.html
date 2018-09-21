@@ -1,32 +1,48 @@
 <header class="masthead">
-    <div class="section-heading text-center">
-        <img src="../../assets/nanoodle_logo.svg" width="50px" class="img-fluid" alt="">
-        <br>
-        <br>
-        <h3>Representatives</h3>
-        <br>
-      </div>
+  <div class="section-heading text-center">
+    <img src="../../assets/nanoodle_logo.svg" width="50px" class="img-fluid" alt="">
+    <br>
+    <br>
+    <h3>Representatives</h3>
+    <br>
+  </div>
 </header>
 <section class="features" id="features">
-        <div class="container h-100">
-          <div class="row h-100">
-            <div class="col-lg-7 my-auto">
-              <div class="header-content mx-auto">
-                <h3 class="mb-5">Nanoodle representative details and representative scoring</h3>
-              </div>
-            </div>
-            <div class="col-lg-5 my-auto">
-              <div class="device-container">
-                <div class="device-mockup iphone6_plus portrait white">
-                  <div class="device">
-                    <div class="screen">
-                      <!-- Demo image for screen mockup, you can put an image here, some HTML, an animation, video, or anything else! -->
-                      <img src="../../assets/nano_wallet.png" class="img-fluid" alt="">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+  <div class="container h-100">
+    <div class="row h-100">
+      <div class="col-lg-7 my-auto">
+        <div class="header-content mx-auto">
+          <h3 class="mb-5">Nanoodle representative details and representative scoring</h3>
         </div>
-      </section>
+      </div>
+      <div class="col-lg-5 my-auto">
+        <ng-container *ngIf="error; then errorPresent; else results">
+        </ng-container>
+        <ng-template #errorPresent>
+          <div class="container">
+            <h3>Address</h3>
+            <br>
+            <p>Error: {{ error }}</p>
+          </div>
+        </ng-template>
+        <ng-template #results>
+          <ng-container *ngIf="blockCountResults; then resultsLoaded; else resultsLoaded">
+          </ng-container>
+          <ng-template #resultsLoaded>
+            <div class="container">
+              <h3>Representative Stats</h3>
+              <br>
+              <p>Blocks: {{ blockCountResults['count'] }} </p>
+              <p>Unchecked Blocks: {{ blockCountResults['unchecked'] }}</p>
+            </div>
+          </ng-template>
+          <ng-template #resultsLoading>
+            <div>
+              <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+            </div>
+          </ng-template>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</section>

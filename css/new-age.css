@@ -170,7 +170,7 @@ section h2 {
 header.masthead {
   position: relative;
   width: 100%;
-  height: 40vh;
+  height: 200px;
   padding-top: 100px;
   color: white;
   background: url("../img/bg-pattern.png"), #CFDBE0;
@@ -203,7 +203,7 @@ header.masthead .device-container .screen img {
   header.masthead {
     position: relative;
     width: 100%;
-    height: 30vh;
+    height: 200px;
     padding-top: 100px;
   }
   header.masthead .header-content {

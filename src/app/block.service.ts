@@ -4,6 +4,7 @@ import { MessageService } from './message.service';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
+import {environment} from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +31,7 @@ export class BlockService {
         "hashes": [ params ]
     });
 
-    return this.http.post<BlockResults>('http://localhost:7076', body, options).pipe(
+    return this.http.post<BlockResults>(environment.serverUrl, body, options).pipe(
       //tap(_ => this.log(`found account matching "${params}"`)),
       catchError(this.handleError<BlockResults>('getBlock', null))
     );
@@ -52,7 +53,7 @@ export class BlockService {
     });
 
 
-    return this.http.post<BlockResults>('http://localhost:7076', body, options).pipe(
+    return this.http.post<BlockResults>(environment.serverUrl, body, options).pipe(
       //tap(_ => this.log(`found account matching "${params}"`)),
       catchError(this.handleError<BlockResults>('getBlock', null))
     );

@@ -4,6 +4,8 @@ import { MessageService } from './message.service';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
+import {environment} from '../environments/environment';
+
 
 @Injectable({
   providedIn: 'root',
@@ -27,10 +29,10 @@ export class AccountService {
     let body = JSON.stringify({
       "action": "account_history",
       "account": "" + params + "",
-      "count": "100"
+      "count": "50"
     });
 
-    return this.http.post<Account>('http://localhost:7076', body, options).pipe(
+    return this.http.post<Account>(environment.serverUrl, body, options).pipe(
       //tap(_ => this.log(`found account matching "${params}"`)),
       catchError(this.handleError<Account>('getAccount', null))
     );
@@ -52,7 +54,7 @@ export class AccountService {
       "count": "20"
     });
 
-    return this.http.post<UnprocessedBlocks>('http://localhost:7076', body, options).pipe(
+    return this.http.post<UnprocessedBlocks>(environment.serverUrl, body, options).pipe(
       //tap(_ => this.log(`found blocks matching "${params}"`)),
       catchError(this.handleError<UnprocessedBlocks>('getUnprocessedBlock', null))
     );
@@ -75,7 +77,7 @@ export class AccountService {
     }
     );
 
-    return this.http.post<Balance>('http://localhost:7076', body, options).pipe(
+    return this.http.post<Balance>(environment.serverUrl, body, options).pipe(
       //tap(_ => this.log(`found balance matching "${params}"`)),
       catchError(this.handleError<Balance>('getBalance', null))
     );
@@ -97,7 +99,7 @@ export class AccountService {
     });
 
 
-    return this.http.post<Representative>('http://localhost:7076', body, options).pipe(
+    return this.http.post<Representative>(environment.serverUrl, body, options).pipe(
       //tap(_ => this.log(`found representative matching "${params}"`)),
       catchError(this.handleError<Representative>('getRepresentative', null))
     );
@@ -118,7 +120,7 @@ export class AccountService {
       "account": "" + params + ""
     });
 
-    return this.http.post<Weight>('http://localhost:7076', body, options).pipe(
+    return this.http.post<Weight>(environment.serverUrl, body, options).pipe(
       //tap(_ => this.log(`found weight matching "${params}"`)),
       catchError(this.handleError<Weight>('getWeight', null))
     );
