@@ -1,15 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { RepresentativeService } from './representative.service';
+import { NodeService } from './node.service';
 
 describe('RepresentativeService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RepresentativeService]
+      providers: [NodeService]
     });
   });
 
-  it('should be created', inject([RepresentativeService], (service: RepresentativeService) => {
+  it('should be created', inject([NodeService], (service: NodeService) => {
     expect(service).toBeTruthy();
   }));
 });

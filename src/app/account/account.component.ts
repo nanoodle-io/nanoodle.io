@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AccountService } from '../account.service';
 import { BlockService } from '../block.service';
 import { MessageService } from '../message.service';
+import { NodeService } from '../node.service';
 
 @Component({
   selector: "app-account",
@@ -19,13 +20,14 @@ export class AccountComponent implements OnInit {
   representativeResults: Representative;
   weightResults: Weight;
   balanceResults: Balance;
+  blockCountResults: BlockCountResults;
   keys: string[];
   //param
   paramsub: any;
   error: string;
   reg = new RegExp('"error"');
 
-  constructor(private messageService: MessageService, private route: ActivatedRoute, private accountService: AccountService, private blockService: BlockService) { }
+  constructor(private messageService: MessageService, private NodeService: NodeService, private route: ActivatedRoute, private accountService: AccountService, private blockService: BlockService) { }
 
   ngOnInit(): void {
     this.paramsub = this.route.params.subscribe(sub => {
@@ -37,6 +39,8 @@ export class AccountComponent implements OnInit {
       this.balanceResults = null;
       this.blockResults = null;
       this.unprocessedBlocksResults = null;
+      this.blockCountResults = null;
+      this.getBlockCount();
       this.getAccount(sub['id']);
       this.getUnprocessedBlocks(sub['id']);
       this.getRepresentative(sub['id']);
@@ -55,6 +59,21 @@ export class AccountComponent implements OnInit {
       });
   }
 
+  getBlockCount(): void {
+    this.NodeService.getBlockCount()
+      .subscribe(data => {
+        this.blockCountResults = data;
+        if (this.reg.test(JSON.stringify(this.blockCountResults))) {
+          this.error = JSON.stringify(this.blockCountResults['error']);
+        }
+      });
+  }
+
+  formatDecimals(input: number): string {
+    const dec = 3;
+    return input.toFixed(dec);
+  }
+  
   //RPC block results have a bunch of extra characters that need removing before a parse
   formatContents(jsonRepParam: string): string {
     return jsonRepParam.replace(/\\n/g, "").replace(/\\/g, "").replace(/\"{/g, "{").replace(/}\"/g, "}");
@@ -178,4 +197,11 @@ interface Content {
   link_as_account: string;
   signature: string;
   work: string;
+}
+
+
+interface BlockCountResults {
+  error?: string;
+  count?: number;
+  unchecked?: number;  
 }

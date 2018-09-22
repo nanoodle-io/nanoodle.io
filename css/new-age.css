@@ -170,8 +170,8 @@ section h2 {
 header.masthead {
   position: relative;
   width: 100%;
-  height: 200px;
-  padding-top: 100px;
+  height: 340px;
+  padding-top: 145px;
   color: white;
   background: url("../img/bg-pattern.png"), #CFDBE0;
   background: url("../img/bg-pattern.png"), -webkit-linear-gradient(to bottom, #CFDBE0, #55A3B7);
@@ -203,8 +203,8 @@ header.masthead .device-container .screen img {
   header.masthead {
     position: relative;
     width: 100%;
-    height: 200px;
-    padding-top: 100px;
+    height: 340px;
+    padding-top: 145px;
   }
   header.masthead .header-content {
     margin-bottom: 0;

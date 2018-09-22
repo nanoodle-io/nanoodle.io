@@ -12,36 +12,40 @@
     <div class="row h-100">
       <div class="col-lg-7 my-auto">
         <div class="header-content mx-auto">
-          <h3 class="mb-5">Nanoodle representative details and representative scoring</h3>
+          <h3 class="mb-5">Decentralise Nano</h3>
+          <p>Transactions on the Nano network are voted on to ensure they are legitimate and protect the network
+            against bad actors. This voting is conducted by a Nano node, software that can be run by anybody wishing to
+            participate in the network. See <a href="https://github.com/nanocurrency/raiblocks/wiki/Docker-node">here</a>
+            for details on how to run a Nano node and help decentralise the nano network.</p>
+          <p>Nano nodes are associated with 1 or more accounts (within a wallet), all of which can be nominated as a
+            Representative by other accounts. This is an efficient way for accounts to ensure that they can participate
+            in the network voting, even if they aren't going to be consistenly online; The nominated representative
+            will vote on their behalf. A representative will vote on behalf of all accounts that have nominated the
+            account.</p>
+          <p>A representative's voting power is related to the amount of Nano that is assigned to the representative
+            from accounts. In many cases, individuals will keep a default representative on their account and this can
+            result in a more centralised Nano network. To support Nano decentralisation, individuals should change
+            their representative based on an assessment of:
+            <ul>
+            <li>Node Availability</li>
+            <li>Reputation</li>
+            <li>Diversity</li>
+            <li>Version</li>
+            <li>Voting Weight</li>
+            <li>Syncrhonisation</li>
+          </ul>
+          <p>Increasing the number of good representatives increases network resiliency.</p>
+          <br>
+          <h3 class="mb-5">NANOODLE Representative</h3>
+          <p>Nominate the NANOODLE representative at:</p>
+          <p>xrb_abcdef123455</p>
         </div>
       </div>
       <div class="col-lg-5 my-auto">
-        <ng-container *ngIf="error; then errorPresent; else results">
-        </ng-container>
-        <ng-template #errorPresent>
-          <div class="container">
-            <h3>Address</h3>
-            <br>
-            <p>Error: {{ error }}</p>
-          </div>
-        </ng-template>
-        <ng-template #results>
-          <ng-container *ngIf="blockCountResults; then resultsLoaded; else resultsLoaded">
-          </ng-container>
-          <ng-template #resultsLoaded>
-            <div class="container">
-              <h3>Representative Stats</h3>
-              <br>
-              <p>Blocks: {{ blockCountResults['count'] }} </p>
-              <p>Unchecked Blocks: {{ blockCountResults['unchecked'] }}</p>
-            </div>
-          </ng-template>
-          <ng-template #resultsLoading>
-            <div>
-              <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-            </div>
-          </ng-template>
-        </ng-template>
+        <iframe src="https://www.youtube.com/embed/l8AGmcApD44?rel=0&amp;showinfo=0" frameborder="0"
+          webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="">
+        </iframe>
+        <p>The above video was created by <a href="https://twitter.com/Thunder_Draws">Thunder Draws</a></p>
       </div>
     </div>
   </div>

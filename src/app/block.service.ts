@@ -37,6 +37,7 @@ export class BlockService {
     );
   };
 
+
   getBlocks(params: string[]): Observable<BlockResults> {
 
     let httpHeaders = new HttpHeaders({
@@ -75,6 +76,13 @@ export class BlockService {
   private log(message: string) {
     this.messageService.add(`Block Service: ${message}`);
   }
+
+    
+  formatDecimals(input: number): string {
+    const dec = 3;
+    return input.toFixed(dec);
+  }
+
 }
 
 interface BlockResults {
@@ -105,4 +113,11 @@ interface Content {
   link_as_account: string;
   signature: string;
   work: string;
+}
+
+
+interface BlockCountResults {
+  error?: string;
+  count?: number;
+  unchecked?: number;  
 }

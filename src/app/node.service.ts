@@ -10,7 +10,7 @@ import {environment} from '../environments/environment';
   providedIn: 'root',
 })
 
-export class RepresentativeService {
+export class NodeService {
   private sub: any;
   temp: string;
 
@@ -57,6 +57,6 @@ export class RepresentativeService {
 
 interface BlockCountResults {
   error?: string;
-  count?: string;
-  unchecked?: string;  
+  count?: number;
+  unchecked?: number;  
 }

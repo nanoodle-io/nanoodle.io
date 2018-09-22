@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BlockService } from '../block.service';
 import { MessageService } from '../message.service';
+import { NodeService } from '../node.service';
 
 @Component({
   selector: "app-block",
@@ -14,12 +15,13 @@ export class BlockComponent implements OnInit {
   //Results
   blockResults: BlockResults;
   detail: Detail;
+  blockCountResults: BlockCountResults;
   contents: Content;
   key: string;
   error: string;
   reg = new RegExp('"error"');
 
-  constructor(private messageService: MessageService, private route: ActivatedRoute, private blockService: BlockService) { }
+  constructor(private messageService: MessageService, private NodeService: NodeService, private route: ActivatedRoute, private blockService: BlockService) { }
 
   ngOnInit(): void {
     this.key = null;
@@ -27,6 +29,8 @@ export class BlockComponent implements OnInit {
     this.contents = null;
     this.blockResults = null;
     this.error = null;
+    this.blockCountResults = null;
+    this.getBlockCount();
     this.paramsub = this.route.params.subscribe(sub => {
       this.getBlock(sub['id']);
     });
@@ -45,6 +49,21 @@ export class BlockComponent implements OnInit {
       });
   }
 
+  getBlockCount(): void {
+    this.NodeService.getBlockCount()
+      .subscribe(data => {
+        this.blockCountResults = data;
+        if (this.reg.test(JSON.stringify(this.blockCountResults))) {
+          this.error = JSON.stringify(this.blockCountResults['error']);
+        }
+      });
+  }
+
+  formatDecimals(input: number): string {
+    const dec = 3;
+    return input.toFixed(dec);
+  }
+  
   formatAmount(mRai: number): string {
     const dec = 4;
     const raw = 1000000000000000000000000000000;
@@ -90,4 +109,11 @@ interface Content {
   link_as_account: string;
   signature: string;
   work: string;
+}
+
+
+interface BlockCountResults {
+  error?: string;
+  count?: number;
+  unchecked?: number;  
 }

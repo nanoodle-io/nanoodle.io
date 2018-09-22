@@ -142,6 +142,13 @@ export class AccountService {
   private log(message: string) {
     this.messageService.add(`Account Service: ${message}`);
   }
+
+    
+  formatDecimals(input: number): string {
+    const dec = 3;
+    return input.toFixed(dec);
+  }
+
 }
 
 interface Transaction {
@@ -174,3 +181,9 @@ interface Balance {
   pending: string;
 }
 
+
+interface BlockCountResults {
+  error?: string;
+  count?: number;
+  unchecked?: number;  
+}

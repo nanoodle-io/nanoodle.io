@@ -19,6 +19,14 @@
   </ng-template>
   <ng-template #results>
     <div class="container">
+        <ng-container *ngIf="blockCountResults; then blockCountLoaded; else blockCountLoading">
+          </ng-container>
+          <ng-template #blockCountLoaded>
+            <p>Nanoodle node is {{ formatDecimals(+(+blockCountResults['count']/(+blockCountResults['count']++blockCountResults['unchecked']))*100) }}% in sync with the Nano network.</p>
+          </ng-template>
+          <ng-template #blockCountLoading>
+              <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+          </ng-template>
       <h3>Address</h3>
       <br>
       <ng-container *ngIf="accountResults; then accountLoaded; else accountLoading">
