@@ -106,29 +106,36 @@
       <ng-container *ngIf="accountResults; then transactionLoaded; else transactionLoading">
       </ng-container>
       <ng-template #transactionLoaded>
-        <div class="row">
-          <div class="col-lg-12 my-auto">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th scope="col">Date</th>
-                  <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
-                  <th scope="col">Associated Account</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let transaction of accountResults['history']; let i = index">
-                  <td title="Click to see block details" data-toggle="popover" scope="row"><a [routerLink]="['/block',transaction.hash]">01/01/2001
-                      15:01</a></td>
-                  <td [attr.id]="'transactionAmount' + i">{{ formatType(transaction.type, 'transactionAmount'+i)
-                    }}{{formatAmount(transaction.amount) }}</td>
-                  <td title="Click to see account details" data-toggle="popover"><a class=account [routerLink]="['/account',transaction.account]">{{
-                      transaction.account }}</a></td>
-                </tr>
-              </tbody>
-            </table>
+        <ng-container *ngIf="accountResults['history'].length > 0; then transactionsShow; else transactionsEmpty">
+        </ng-container>
+        <ng-template #transactionsShow>
+          <div class="row">
+            <div class="col-lg-12 my-auto">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
+                    <th scope="col">Associated Account</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let transaction of accountResults['history']; let i = index">
+                    <td title="Click to see block details" data-toggle="popover" scope="row"><a [routerLink]="['/block',transaction.hash]">01/01/2001
+                        15:01</a></td>
+                    <td [attr.id]="'transactionAmount' + i">{{ formatType(transaction.type, 'transactionAmount'+i)
+                      }}{{formatAmount(transaction.amount) }}</td>
+                    <td title="Click to see account details" data-toggle="popover"><a class=account [routerLink]="['/account',transaction.account]">{{
+                        transaction.account }}</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+        </ng-template>
+        <ng-template #transactionsEmpty>
+          <p>No transactions in account history</p>
+        </ng-template>
       </ng-template>
       <ng-template #transactionLoading>
         <div>
@@ -141,11 +148,25 @@
       <ng-container *ngIf="representativeResults; then representativeLoaded; else representativeLoading">
       </ng-container>
       <ng-template #representativeLoaded>
-        <p>This account's representative is:
-          <a class=account [routerLink]="['/account',representativeResults['representative']]">{{
-            representativeResults['representative'] }}</a>
-          <p>
+
+        <ng-container *ngIf="representativeResults['representative']; then representativeShow; else representativeEmpty">
+        </ng-container>
+
+        <ng-template #representativeShow>
+
+          <p>This account's representative is:
+            <a class=account [routerLink]="['/account',representativeResults['representative']]">{{
+              representativeResults['representative'] }}</a>
+            <p>
+        </ng-template>
+
+        <ng-template #representativeEmpty>
+          <p>This account has no representative set.</p>
+        </ng-template>
+
+
       </ng-template>
+
       <ng-template #representativeLoading>
         <div>
           <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
