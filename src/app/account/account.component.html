@@ -100,7 +100,6 @@
         </div>
       </ng-template>
     </div>
-
     <div class="container">
       <h3>Transactions</h3>
       <ng-container *ngIf="accountResults; then transactionLoaded; else transactionLoading">
@@ -148,25 +147,18 @@
       <ng-container *ngIf="representativeResults; then representativeLoaded; else representativeLoading">
       </ng-container>
       <ng-template #representativeLoaded>
-
         <ng-container *ngIf="representativeResults['representative']; then representativeShow; else representativeEmpty">
         </ng-container>
-
         <ng-template #representativeShow>
-
           <p>This account's representative is:
             <a class=account [routerLink]="['/account',representativeResults['representative']]">{{
               representativeResults['representative'] }}</a>
             <p>
         </ng-template>
-
         <ng-template #representativeEmpty>
-          <p>This account has no representative set.</p>
+          <p>This account has no representative set</p>
         </ng-template>
-
-
       </ng-template>
-
       <ng-template #representativeLoading>
         <div>
           <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>

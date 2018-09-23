@@ -14,24 +14,61 @@
         <div class="header-content mx-auto">
           <br>
           <h3>NANOODLE Representative</h3>
-          <p>Nominate the NANOODLE representative at:</p>
           <p><a class="account" routerLink="/account/xrb_1e6e41up4x5e4jke6wy4k6nnuagagspfx4tjafghub6cw46ueimqt657nx4a">xrb_1e6e41up4x5e4jke6wy4k6nnuagagspfx4tjafghub6cw46ueimqt657nx4a</a></p>
+          <h4>Node Details</h4>
+          <p>Specification</p>
+          <ul>
+            <li>2 CPU</li>
+            <li>4 GB Memory</li>
+            <li>80GB SSD Disk</li>
+          </ul>
+          <p>Location: London</p>
+          <p>Provider: Digital Ocean</p>
+          <ng-container *ngIf="versionResults; then versionLoaded; else versionLoading">
+          </ng-container>
+          <ng-template #versionLoaded>
+            <p>Version: {{ formatVersion(versionResults['node_vendor']) }}</p>
+          </ng-template>
+          <ng-template #versionLoading>
+            <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+          </ng-template>
+          <ng-container *ngIf="blockCountResults; then blockCountLoaded; else blockCountLoading">
+          </ng-container>
+          <ng-template #blockCountLoaded>
+            <p>Synchronisation: {{
+              formatDecimals(+(+blockCountResults['count']/(+blockCountResults['count']++blockCountResults['unchecked']))*100)
+              }}%</p>
+          </ng-template>
+          <ng-template #blockCountLoading>
+            <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+          </ng-template>
+          <ng-container *ngIf="weightResults; then weightLoaded; else weightLoading">
+          </ng-container>
+          <ng-template #weightLoaded>
+            <p>Voting Weight: {{  formatAmount(weightResults['weight']) }}</p>
+          </ng-template>
+          <ng-template #weightLoading>
+            <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+          </ng-template>
           <h3>Decentralise Nano</h3>
           <p>Transactions on the Nano network are voted on to ensure they are legitimate and protect the network
-            against bad actors. This voting is conducted by a Nano node, software that can be run by anybody wishing to
-            participate in the network. See <a href="https://github.com/nanocurrency/raiblocks/wiki/Docker-node">here</a>
-            for details on how to run a Nano node and help decentralise the nano network.</p>
-          <p>Nano nodes are associated with 1 or more accounts (within a wallet), all of which can be nominated as a
-            Representative by other accounts. This is an efficient way for accounts to ensure that they can participate
-            in the network voting, even if they aren't going to be consistenly online; a representative will vote on
-            behalf of all accounts that have nominated the account. The ability for an account to change its nominated
-            representative is an important feature for decentralisation of the Nano network.</p>
-          <p>A representative's voting power is related to the amount of Nano that is assigned to the representative
-            from accounts. In many cases, individuals will keep a default representative on their account and this can
-            result in a more centralised Nano network. To support Nano decentralisation, individuals should change
-            their representative based on an assessment of:
+            against bad actors who may wish to conduct malicious actions such as interupting transactions and
+            conducting double spending attacks. Voting power is related to the number of Nano that are represented in
+            the vote.</p>
+          <p>Voting is conducted by a Nano node on behalf of its associated representatives. The Nano node software
+            can be run by anybody wishing to help decentralise the network. See <a href="https://github.com/nanocurrency/raiblocks/wiki/Docker-node">here</a>
+            for details on how to run a Nano Node.</p>
+          <p>Nano nodes are associated with 1 or more accounts, all of which can be nominated as a representative by
+            another individual's accounts; this is a sensible approach where an individual is not running a node
+            themselves (so they wouldn't be able to represent the voting power of the Nano in their own accounts). A
+            representative will vote on behalf of all the Nano in all the accounts that have nominated the
+            representative.</p>
+          <p>Selecting a representative is an important way to secure the health of the Nano network and ensure your
+            Nano voting power is counted. It is an important feature for decentralisation of Nano voting power, and
+            allow's individuals to change their representative at any time for no cost. A representative may be
+            assessed on several factors including:
             <ul>
-              <li>Node Availability</li>
+              <li>Online Availability</li>
               <li>Reputation</li>
               <li>Diversity</li>
               <li>Version</li>
@@ -39,7 +76,10 @@
               <li>Voting Weight</li>
               <li>Synchronization</li>
             </ul>
-            <p>Increasing the number of good representatives improves network health.</p>
+            <p>In many cases, individuals will keep a default representative on their account (as they may score highly
+              on several fronts) or will hold their Nano on an exchange where they may not get a choice of
+              representative. This can result in a more centralised Nano network. The long term aim is to have many
+              more good representatives for an individual to choose from so that Nano becomes more decentralised.</p>
         </div>
       </div>
       <div class="col-lg-5 my-auto">

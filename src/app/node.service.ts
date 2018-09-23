@@ -37,6 +37,27 @@ export class NodeService {
     );
   };
 
+  getVersion(): Observable<NodeVersion> {
+
+    let httpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    let options = {
+      headers: httpHeaders
+    };
+
+    let body = JSON.stringify({  
+      "action": "version" 
+        });
+
+
+    return this.http.post<NodeVersion>(environment.serverUrl, body, options).pipe(
+      //tap(_ => this.log(`found account matching "${params}"`)),
+      catchError(this.handleError<NodeVersion>('getBlockCount', null))
+    );
+  };
+
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
  
@@ -59,4 +80,10 @@ interface BlockCountResults {
   error?: string;
   count?: number;
   unchecked?: number;  
+}
+
+interface NodeVersion {
+  rpc_version : string,
+  store_version : string,
+  node_vendor : string
 }
