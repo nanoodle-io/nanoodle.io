@@ -1,17 +1,21 @@
 
  
+
+  p
+  {
+    font-size: 14px;
+    font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+    word-wrap:  break-word;
+    letter-spacing: 1.5px;
+  }
+ 
   h3 {
     width: 100%;
     font-size: 20px;
 	  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
     letter-spacing: 2px;
     text-transform: uppercase;
-  }
+    margin-bottom: 15px;
+    margin-top: 10px;
 
-  h4 {
-    width: 100%;
-    font-size: 13px;
-	  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
-    letter-spacing: 1px;
-    text-transform: uppercase;
   }

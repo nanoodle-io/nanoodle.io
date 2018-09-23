@@ -13,7 +13,6 @@
   <ng-template #errorPresent>
     <div class="container">
       <h3>Block Details</h3>
-      <br>
       <p>Error: {{ error }}</p>
     </div>
   </ng-template>
@@ -25,25 +24,24 @@
           <ng-container *ngIf="blockCountResults; then blockCountLoaded; else blockCountLoading">
             </ng-container>
             <ng-template #blockCountLoaded>
-              <p>Nanoodle node is {{ formatDecimals(+(+blockCountResults['count']/(+blockCountResults['count']++blockCountResults['unchecked']))*100) }}% in sync with the Nano network.</p>
+              <p>The NANOODLE node is {{ formatDecimals(+(+blockCountResults['count']/(+blockCountResults['count']++blockCountResults['unchecked']))*100) }}% in sync with the Nano network.</p>
             </ng-template>
             <ng-template #blockCountLoading>
                 <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
             </ng-template>
         <h3>Block Details</h3>
-        <br>
         <div class="row">
           <div class="col-lg-12 my-auto">
             <p>Hash: {{ key }}</p>
             <p>Time: 12/12/12 10:10</p>
-            <p>Block Account: <a [routerLink]="['/account',detail['block_account']]">{{ detail['block_account'] }}</a></p>
+            <p>Block Account: <a class="account" [routerLink]="['/account',detail['block_account']]">{{ detail['block_account'] }}</a></p>
             <p>Amount: {{ formatAmount(detail['amount']) }}</p>
             <p>Type: {{ contents['type'] }}</p>
             <p>Previous: <a [routerLink]="['/block',contents['previous']]">{{ contents['previous'] }}</a></p>
-            <p>Representative: <a [routerLink]="['/account',contents['representative']]">{{ contents['representative'] }}</a></p>
+            <p>Representative: <a class="account" [routerLink]="['/account',contents['representative']]">{{ contents['representative'] }}</a></p>
             <p>Balance: {{ formatAmount(contents['balance']) }}</p>
             <p>Link: {{ contents['link'] }}</p>
-            <p>Link As Account: <a [routerLink]="['/account',contents['link_as_account']]">{{ contents['link_as_account'] }}</a></p>
+            <p>Link As Account: <a class="account" [routerLink]="['/account',contents['link_as_account']]">{{ contents['link_as_account'] }}</a></p>
             <p>Signature: {{ contents['signature'] }}</p>
             <p>Work: {{ contents['work'] }}</p>
           </div>

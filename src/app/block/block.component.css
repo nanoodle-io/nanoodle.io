@@ -12,11 +12,12 @@ table {
     width: 100%;
   }
 
-  p {
-    font-size: 11px;
-	  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
-    letter-spacing: 1px;
-    text-transform: uppercase;
+  p
+  {
+    font-size: 14px;
+    font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+    word-wrap:  break-word;
+    letter-spacing: 1.5px;
   }
  
   h3 {
@@ -25,7 +26,14 @@ table {
 	  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
     letter-spacing: 2px;
     text-transform: uppercase;
+    margin-bottom: 15px;
+    margin-top: 10px;
+
   }
+
+  .account {
+    text-transform: uppercase;
+}
 
   h4 {
     width: 100%;

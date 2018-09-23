@@ -1,11 +1,11 @@
 <header class="masthead">
-    <div class="section-heading text-center">
-        <img src="../../assets/nanoodle_logo.svg" width="50px" class="img-fluid" alt="">
-        <br>
-        <br>
-        <h3>Account Overview</h3>
-        <br>
-      </div>
+  <div class="section-heading text-center">
+    <img src="../../assets/nanoodle_logo.svg" width="50px" class="img-fluid" alt="">
+    <br>
+    <br>
+    <h3>Account Overview</h3>
+    <br>
+  </div>
 </header>
 <section class="features" id="features">
   <ng-container *ngIf="error; then errorPresent; else results">
@@ -13,29 +13,29 @@
   <ng-template #errorPresent>
     <div class="container">
       <h3>Address</h3>
-      <br>
       <p>Error: {{ error }}</p>
     </div>
   </ng-template>
   <ng-template #results>
     <div class="container">
-        <ng-container *ngIf="blockCountResults; then blockCountLoaded; else blockCountLoading">
-          </ng-container>
-          <ng-template #blockCountLoaded>
-            <p>Nanoodle node is {{ formatDecimals(+(+blockCountResults['count']/(+blockCountResults['count']++blockCountResults['unchecked']))*100) }}% in sync with the Nano network.</p>
-          </ng-template>
-          <ng-template #blockCountLoading>
-              <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-          </ng-template>
-      <h3>Address</h3>
-      <br>
+      <ng-container *ngIf="blockCountResults; then blockCountLoaded; else blockCountLoading">
+      </ng-container>
+      <ng-template #blockCountLoaded>
+        <p>The NANOODLE node is {{
+          formatDecimals(+(+blockCountResults['count']/(+blockCountResults['count']++blockCountResults['unchecked']))*100)
+          }}% in sync with the Nano network</p>
+      </ng-template>
+      <ng-template #blockCountLoading>
+        <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+      </ng-template>
+      <h3>Identifier</h3>
       <ng-container *ngIf="accountResults; then accountLoaded; else accountLoading">
       </ng-container>
       <ng-template #accountLoaded>
         <p>
           <qrcode [qrdata]="accountResults['account']" [size]="128" [level]="'M'"></qrcode>
         </p>
-        <p>{{ accountResults['account'] }}</p>
+        <p><a class="account" [routerLink]="['/account',accountResults['account']]">{{ accountResults['account'] }}</a></p>
       </ng-template>
       <ng-template #accountLoading>
         <div>
@@ -45,7 +45,6 @@
     </div>
     <div class="container">
       <h3>Balance</h3>
-      <br>
       <ng-container *ngIf="balanceResults; then balanceLoaded; else balanceLoading">
       </ng-container>
       <ng-template #balanceLoaded>
@@ -60,14 +59,13 @@
     </div>
     <div class="container">
       <h3>Unprocessed Blocks</h3>
-      <br>
       <ng-container *ngIf="keys; then blocksloaded; else blocksloading">
       </ng-container>
       <ng-template #blocksloaded>
         <ng-container *ngIf="keys.length > 0; then blocksShow; else blocksEmpty">
         </ng-container>
         <ng-template #blocksShow>
-          <p>Incoming blocks for which the account has not yet published a block to complete the transaction.</p>
+          <p>Incoming blocks for which the account has not yet published a block to complete the transaction</p>
           <div class="row">
             <div class="col-lg-12 my-auto">
               <table class="table table-hover">
@@ -84,7 +82,7 @@
                         15:01</a></td>
                     <td [attr.id]="'unprocessedAmount' + u">{{ formatType('receive', 'unprocessedAmount'+u)}}{{
                       formatAmount(blockResults.blocks[key].amount) }}</td>
-                    <td title="Click to see account details" data-toggle="popover"><a [routerLink]="['/account',blockResults.blocks[key].block_account]">{{
+                    <td class="account" title="Click to see account details" data-toggle="popover"><a [routerLink]="['/account',blockResults.blocks[key].block_account]">{{
                         blockResults.blocks[key].block_account }}</a></td>
                   </tr>
                 </tbody>
@@ -94,7 +92,7 @@
         </ng-template>
       </ng-template>
       <ng-template #blocksEmpty>
-          <p>No incoming blocks.</p>
+        <p>No incoming blocks</p>
       </ng-template>
       <ng-template #blocksloading>
         <div>
@@ -105,7 +103,6 @@
 
     <div class="container">
       <h3>Transactions</h3>
-      <br>
       <ng-container *ngIf="accountResults; then transactionLoaded; else transactionLoading">
       </ng-container>
       <ng-template #transactionLoaded>
@@ -125,7 +122,7 @@
                       15:01</a></td>
                   <td [attr.id]="'transactionAmount' + i">{{ formatType(transaction.type, 'transactionAmount'+i)
                     }}{{formatAmount(transaction.amount) }}</td>
-                  <td title="Click to see account details" data-toggle="popover"><a [routerLink]="['/account',transaction.account]">{{
+                  <td title="Click to see account details" data-toggle="popover"><a class=account [routerLink]="['/account',transaction.account]">{{
                       transaction.account }}</a></td>
                 </tr>
               </tbody>
@@ -141,12 +138,12 @@
     </div>
     <div class="container">
       <h3>Voting</h3>
-      <br>
       <ng-container *ngIf="representativeResults; then representativeLoaded; else representativeLoading">
       </ng-container>
       <ng-template #representativeLoaded>
-        <p>This account's representative is <a [routerLink]="['/account',representativeResults['representative']]">{{
-            representativeResults['representative'] }}.</a>
+        <p>This account's representative is:
+          <a class=account [routerLink]="['/account',representativeResults['representative']]">{{
+            representativeResults['representative'] }}</a>
           <p>
       </ng-template>
       <ng-template #representativeLoading>

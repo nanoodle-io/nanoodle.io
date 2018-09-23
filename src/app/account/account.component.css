@@ -1,23 +1,32 @@
 /* Structure */
 table {
     width: 100%;
-    font-size: 11px;
+    font-size: 14px;
 	  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  td{
+    word-wrap:  break-word;
   }
   
   .mat-form-field {
     font-size: 14px;
     width: 100%;
   }
-  p {
-    font-size: 11px;
+
+  p
+  {
+    font-size: 14px;
     font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
     word-wrap:  break-word;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    letter-spacing: 1.5px;
   }
+
+  .account {
+    text-transform: uppercase;
+}
+
  
   h3 {
     width: 100%;
@@ -25,6 +34,9 @@ table {
 	  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
     letter-spacing: 2px;
     text-transform: uppercase;
+    margin-bottom: 15px;
+    margin-top: 10px;
+
   }
 
   h4 {
