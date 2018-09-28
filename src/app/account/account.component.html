@@ -2,7 +2,6 @@
   <div class="section-heading text-center">
     <img src="../../assets/nanoodle_logo.svg" width="50px" class="img-fluid" alt="">
     <br>
-    <br>
     <h3>Account Overview</h3>
     <br>
   </div>
@@ -71,15 +70,14 @@
               <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th scope="col">Date</th>
+                    <th scope="col">NANOODLE Time</th>
                     <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
                     <th scope="col">Associated Account</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let key of keys; let u = index">
-                    <td title="Click to see block details" data-toggle="popover" scope="row"><a [routerLink]="['/block',key]">01/01/2001
-                        15:01</a></td>
+                    <td title="Click to see block details" data-toggle="popover" scope="row"><a [routerLink]="['/block',key]"><app-blockTime [hash]=key></app-blockTime></a></td>
                     <td [attr.id]="'unprocessedAmount' + u">{{ formatType('receive', 'unprocessedAmount'+u)}}{{
                       formatAmount(blockResults.blocks[key].amount) }}</td>
                     <td class="account" title="Click to see account details" data-toggle="popover"><a [routerLink]="['/account',blockResults.blocks[key].block_account]">{{
@@ -113,15 +111,14 @@
               <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th scope="col">Date</th>
+                    <th scope="col">NANOODLE Time</th>
                     <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
                     <th scope="col">Associated Account</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let transaction of accountResults['history']; let i = index">
-                    <td title="Click to see block details" data-toggle="popover" scope="row"><a [routerLink]="['/block',transaction.hash]">01/01/2001
-                        15:01</a></td>
+                    <td title="Click to see block details" data-toggle="popover" scope="row"><a [routerLink]="['/block',transaction.hash]"><app-blockTime [hash]=transaction.hash></app-blockTime></a></td>
                     <td [attr.id]="'transactionAmount' + i">{{ formatType(transaction.type, 'transactionAmount'+i)
                       }}{{formatAmount(transaction.amount) }}</td>
                     <td title="Click to see account details" data-toggle="popover"><a class=account [routerLink]="['/account',transaction.account]">{{

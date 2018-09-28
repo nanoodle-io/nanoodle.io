@@ -15,6 +15,9 @@ table {
     width: 100%;
   }
 
+  .account {
+    text-transform: lowercase;
+}
   p
   {
     font-size: 14px;
@@ -22,11 +25,6 @@ table {
     word-wrap:  break-word;
     letter-spacing: 1.5px;
   }
-
-  .account {
-    text-transform: uppercase;
-}
-
  
   h3 {
     width: 100%;

@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
-import { HttpClient } from '@angular/common/http';
-import { HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import {environment} from '../environments/environment';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -27,8 +26,8 @@ export class BlockService {
     };
 
     let body = JSON.stringify({
-        "action": "blocks_info",  
-        "hashes": [ params ]
+      "action": "blocks_info",
+      "hashes": [params]
     });
 
     return this.http.post<BlockResults>(environment.serverUrl, body, options).pipe(
@@ -36,7 +35,24 @@ export class BlockService {
       catchError(this.handleError<BlockResults>('getBlock', null))
     );
   };
+  
+  getBlockTime(hash: string): Observable<BlockTime> {
 
+    const httpOptions = {
+      params: new HttpParams({
+        fromString: "keys={'log.dateTime':1}&filter={'hash':'" + hash + "'}&sort={'log.dateTime':1}&pagesize=1&np"
+      }),
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': "Basic " + btoa(environment.dbUser + ":" + environment.dbPassword)
+        })
+        };
+
+    return this.http.get<BlockTime>(environment.api, httpOptions).pipe(
+      //tap(_ => this.log(`found account matching "${params}"`)),
+      catchError(this.handleError<BlockTime>('getBlockTime', null))
+    );
+  };
 
   getBlocks(params: string[]): Observable<BlockResults> {
 
@@ -49,8 +65,8 @@ export class BlockService {
     };
 
     let body = JSON.stringify({
-        "action": "blocks_info",  
-        "hashes": params
+      "action": "blocks_info",
+      "hashes": params
     });
 
 
@@ -60,15 +76,15 @@ export class BlockService {
     );
   };
 
-  private handleError<T> (operation = 'operation', result?: T) {
+  private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
- 
+
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
- 
+
       // TODO: better job of transforming error for user consumption
       this.log(`${operation} failed: ${error.message}`);
- 
+
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
@@ -77,7 +93,7 @@ export class BlockService {
     this.messageService.add(`Block Service: ${message}`);
   }
 
-    
+
   formatDecimals(input: number): string {
     const dec = 3;
     return input.toFixed(dec);
@@ -88,6 +104,15 @@ export class BlockService {
 interface BlockResults {
   error?: string;
   blocks?: Block[];
+}
+
+interface BlockTime {
+  _id: string;
+  time: Time;
+}
+
+interface Time {
+  dateTime: string;
 }
 
 interface Block {
@@ -119,5 +144,5 @@ interface Content {
 interface BlockCountResults {
   error?: string;
   count?: number;
-  unchecked?: number;  
+  unchecked?: number;
 }

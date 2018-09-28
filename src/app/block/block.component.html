@@ -1,11 +1,10 @@
 <header class="masthead">
-    <div class="section-heading text-center">
-        <img src="../../assets/nanoodle_logo.svg" width="50px" class="img-fluid" alt="">
-        <br>
-        <br>
-        <h3>Block Overview</h3>
-        <br>
-      </div>
+  <div class="section-heading text-center">
+    <img src="../../assets/nanoodle_logo.svg" width="50px" class="img-fluid" alt="">
+    <br>
+    <h3>Block Overview</h3>
+    <br>
+  </div>
 </header>
 <section class="features" id="features">
   <ng-container *ngIf="error; then errorPresent; else results">
@@ -21,27 +20,48 @@
     </ng-container>
     <ng-template #loaded>
       <div class="container">
-          <ng-container *ngIf="blockCountResults; then blockCountLoaded; else blockCountLoading">
-            </ng-container>
-            <ng-template #blockCountLoaded>
-              <p>The NANOODLE node is {{ formatDecimals(+(+blockCountResults['count']/(+blockCountResults['count']++blockCountResults['unchecked']))*100) }}% in sync with the Nano network</p>
-            </ng-template>
-            <ng-template #blockCountLoading>
-                <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-            </ng-template>
+        <ng-container *ngIf="blockCountResults; then blockCountLoaded; else blockCountLoading">
+        </ng-container>
+        <ng-template #blockCountLoaded>
+          <p>The NANOODLE node is {{
+            formatDecimals(+(+blockCountResults['count']/(+blockCountResults['count']++blockCountResults['unchecked']))*100)
+            }}% in sync with the Nano network</p>
+        </ng-template>
+        <ng-template #blockCountLoading>
+          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+        </ng-template>
         <h3>Block Details</h3>
         <div class="row">
           <div class="col-lg-12 my-auto">
             <p>Hash: {{ key }}</p>
-            <p>Time: 12/12/12 10:10</p>
-            <p>Block Account: <a class="account" [routerLink]="['/account',detail['block_account']]">{{ detail['block_account'] }}</a></p>
+            <p>NANOODLE Time:
+              <ng-container *ngIf="blockTime; then blockTimeLoaded; else blockTimeLoading">
+              </ng-container>
+              <ng-template #blockTimeLoaded>
+                <ng-container *ngIf="blockTime.length > 0; then blockTimeResults else blockTimeEmpty">
+                </ng-container>
+                <ng-template #blockTimeResults>
+                  <app-blockTime [hash]=key></app-blockTime>
+                </ng-template>
+                <ng-template #blockTimeEmpty>
+                  Not Recorded
+                </ng-template>
+              </ng-template>
+              <ng-template #blockTimeLoading>
+                <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+              </ng-template>
+            </p>
+            <p>Block Account: <a class="account" [routerLink]="['/account',detail['block_account']]">{{
+                detail['block_account'] }}</a></p>
             <p>Amount: {{ formatAmount(detail['amount']) }}</p>
             <p>Type: {{ contents['type'] }}</p>
             <p>Previous: <a [routerLink]="['/block',contents['previous']]">{{ contents['previous'] }}</a></p>
-            <p>Representative: <a class="account" [routerLink]="['/account',contents['representative']]">{{ contents['representative'] }}</a></p>
+            <p>Representative: <a class="account" [routerLink]="['/account',contents['representative']]">{{
+                contents['representative'] }}</a></p>
             <p>Balance: {{ formatAmount(contents['balance']) }}</p>
             <p>Link: {{ contents['link'] }}</p>
-            <p>Link As Account: <a class="account" [routerLink]="['/account',contents['link_as_account']]">{{ contents['link_as_account'] }}</a></p>
+            <p>Link As Account: <a class="account" [routerLink]="['/account',contents['link_as_account']]">{{
+                contents['link_as_account'] }}</a></p>
             <p>Signature: {{ contents['signature'] }}</p>
             <p>Work: {{ contents['work'] }}</p>
           </div>

@@ -14,6 +14,7 @@ export class BlockComponent implements OnInit {
   paramsub: any;
   //Results
   blockResults: BlockResults;
+  blockTime: BlockTime;
   detail: Detail;
   blockCountResults: BlockCountResults;
   contents: Content;
@@ -30,10 +31,26 @@ export class BlockComponent implements OnInit {
     this.blockResults = null;
     this.error = null;
     this.blockCountResults = null;
+    this.blockTime = null;
     this.getBlockCount();
     this.paramsub = this.route.params.subscribe(sub => {
       this.getBlock(sub['id']);
+      this.getBlockTime(sub['id']);
     });
+  }
+
+  getBlockTime(blockParam: string): void {
+    this.blockService.getBlockTime(blockParam)
+      .subscribe(data => {
+        this.blockTime = data;
+        if (this.reg.test(JSON.stringify(this.blockResults))) {
+          this.error = JSON.stringify(this.blockResults['error']);
+        }
+      });
+  }
+
+  formatDate(rawDate: string): string {
+    return rawDate.match(/\d{2}\/[A-Za-z]{3}\/\d{4}/) + " " + rawDate.match(/\d{2}:\d{2}:\d{2}/);
   }
 
   getBlock(blockParam: string): void {
@@ -99,6 +116,7 @@ interface Detail {
   amount: string;
   contents: Content;
 }
+
 interface Content {
   type: string;
   account: string;
@@ -111,9 +129,17 @@ interface Content {
   work: string;
 }
 
-
 interface BlockCountResults {
   error?: string;
   count?: number;
   unchecked?: number;  
+}
+
+interface BlockTime {
+  _id: string;
+  time: Time;
+}
+
+interface Time {
+  dateTime: string;
 }

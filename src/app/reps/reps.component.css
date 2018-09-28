@@ -16,6 +16,7 @@
     text-transform: uppercase;
     margin-bottom: 15px;
     margin-top: 10px;
+
   }
 
   h4 {
@@ -28,9 +29,12 @@
     margin-top: 10px;
   }
 
+  .video-top {
+    vertical-align: top;
+  }
 
   .account {
-    text-transform: uppercase;
+    text-transform: lowercase;
 }
 
   li
@@ -45,6 +49,8 @@
     position: relative;
     height: 0;
     padding-bottom: 56.25%;
+    border: 0;    
+    overflow: hidden;
   }
   .wrapper iframe {
     position: absolute;

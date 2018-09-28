@@ -66,6 +66,10 @@ section h2 {
   color: #fdcc52;
   font-family: 'Catamaran', 'Helvetica', 'Arial', 'sans-serif';
   font-weight: 200;
+  height:calc(100% - 1px);
+  z-index: 1;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
   letter-spacing: 1px;
 }
 

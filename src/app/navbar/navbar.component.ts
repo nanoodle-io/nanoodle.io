@@ -20,7 +20,7 @@ export class NavbarComponent {
     this.searchTerm = null;
     var reg = new RegExp('^(xrb_|nano_|XRB_|NANO_)[a-zA-Z0-9]{60}$');
     if (reg.test(param)) {
-      this.router.navigate(['/account', param]);
+      this.router.navigate(['/account', param.toLowerCase()]);
     }
     reg = new RegExp('^[a-zA-Z0-9]{64}$');
     if (reg.test(param)) {
