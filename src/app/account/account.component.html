@@ -25,7 +25,7 @@
           }}% in sync with the Nano network</p>
       </ng-template>
       <ng-template #blockCountLoading>
-        <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+        <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
       </ng-template>
       <h3>Identifier</h3>
       <ng-container *ngIf="accountResults; then accountLoaded; else accountLoading">
@@ -38,7 +38,7 @@
       </ng-template>
       <ng-template #accountLoading>
         <div>
-          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </div>
       </ng-template>
     </div>
@@ -52,7 +52,7 @@
       </ng-template>
       <ng-template #balanceLoading>
         <div>
-          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </div>
       </ng-template>
     </div>
@@ -77,7 +77,7 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let key of keys; let u = index">
-                    <td title="Click to see block details" data-toggle="popover" scope="row"><a [routerLink]="['/block',key]"><app-blockTime [hash]=key></app-blockTime></a></td>
+                    <td title="Click to see block details" data-toggle="popover" scope="row"><app-blockTime [hyperlink]=true [hash]=key></app-blockTime></td>
                     <td [attr.id]="'unprocessedAmount' + u">{{ formatType('receive', 'unprocessedAmount'+u)}}{{
                       formatAmount(blockResults.blocks[key].amount) }}</td>
                     <td class="account" title="Click to see account details" data-toggle="popover"><a [routerLink]="['/account',blockResults.blocks[key].block_account]">{{
@@ -94,7 +94,7 @@
       </ng-template>
       <ng-template #blocksloading>
         <div>
-          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </div>
       </ng-template>
     </div>
@@ -118,7 +118,7 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let transaction of accountResults['history']; let i = index">
-                    <td title="Click to see block details" data-toggle="popover" scope="row"><a [routerLink]="['/block',transaction.hash]"><app-blockTime [hash]=transaction.hash></app-blockTime></a></td>
+                    <td title="Click to see block details" data-toggle="popover" scope="row"><app-blockTime [hyperlink]=true [hash]=transaction.hash></app-blockTime></td>
                     <td [attr.id]="'transactionAmount' + i">{{ formatType(transaction.type, 'transactionAmount'+i)
                       }}{{formatAmount(transaction.amount) }}</td>
                     <td title="Click to see account details" data-toggle="popover"><a class=account [routerLink]="['/account',transaction.account]">{{
@@ -135,7 +135,7 @@
       </ng-template>
       <ng-template #transactionLoading>
         <div>
-          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </div>
       </ng-template>
     </div>
@@ -158,7 +158,7 @@
       </ng-template>
       <ng-template #representativeLoading>
         <div>
-          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </div>
       </ng-template>
       <ng-container *ngIf="weightResults; then weightLoaded; else weightloading">
@@ -168,7 +168,7 @@
       </ng-template>
       <ng-template #weightloading>
         <div>
-          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </div>
       </ng-template>
     </div>

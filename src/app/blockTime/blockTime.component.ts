@@ -16,6 +16,8 @@ export class BlockTimeComponent implements OnInit {
 
   @Input()
   hash: string;
+  @Input()
+  hyperlink: boolean;
 
   constructor(private messageService: MessageService, private blockService: BlockService) { }
 

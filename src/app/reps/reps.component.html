@@ -68,7 +68,7 @@
             <p>Version: {{ formatVersion(versionResults['node_vendor']) }}</p>
           </ng-template>
           <ng-template #versionLoading>
-            <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+            <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
           </ng-template>
           <ng-container *ngIf="blockCountResults; then blockCountLoaded; else blockCountLoading">
           </ng-container>
@@ -78,7 +78,7 @@
               }}%</p>
           </ng-template>
           <ng-template #blockCountLoading>
-            <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+            <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
           </ng-template>
           <ng-container *ngIf="weightResults; then weightLoaded; else weightLoading">
           </ng-container>
@@ -86,7 +86,7 @@
             <p>Voting Weight: {{ formatAmount(weightResults['weight']) }}</p>
           </ng-template>
           <ng-template #weightLoading>
-            <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+            <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
           </ng-template>
         </div>
       </div>

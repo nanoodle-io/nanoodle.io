@@ -28,7 +28,7 @@
             }}% in sync with the Nano network</p>
         </ng-template>
         <ng-template #blockCountLoading>
-          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </ng-template>
         <h3>Block Details</h3>
         <div class="row">
@@ -41,14 +41,14 @@
                 <ng-container *ngIf="blockTime.length > 0; then blockTimeResults else blockTimeEmpty">
                 </ng-container>
                 <ng-template #blockTimeResults>
-                  <app-blockTime [hash]=key></app-blockTime>
+                  <app-blockTime [hyperlink]=false [hash]=key></app-blockTime>
                 </ng-template>
                 <ng-template #blockTimeEmpty>
                   Not Recorded
                 </ng-template>
               </ng-template>
               <ng-template #blockTimeLoading>
-                <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+                <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
               </ng-template>
             </p>
             <p>Block Account: <a class="account" [routerLink]="['/account',detail['block_account']]">{{
@@ -71,7 +71,7 @@
     <ng-template #loading>
       <div class="container">
         <div>
-          <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </div>
       </div>
     </ng-template>
