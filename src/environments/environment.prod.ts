@@ -3,5 +3,5 @@ export const environment = {
   serverUrl: "https://nanoodle.io:8080",
   dbUser: "",
   dbPassword: "",
-  api: 'http://nanoodle.io:8081/blocks/input'
+  api: 'https://nanoodle.io:8081/blocks/input'
 };

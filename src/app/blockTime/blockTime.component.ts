@@ -37,7 +37,7 @@ export class BlockTimeComponent implements OnInit {
   }
 
   formatDate(rawDate: string): string {
-    return rawDate.match(/\d{2}\/[A-Za-z]{3}\/\d{4}/) + " " + rawDate.match(/\d{2}:\d{2}:\d{2}/);
+    return rawDate.match(/\d{2}\/[A-Za-z]{3}\/\d{4}/) + " " + ("" + rawDate.match(/\d{2}:\d{2}:\d{2} /)).trim();
   }
 
   private log(message: string) {

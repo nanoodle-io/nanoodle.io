@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   serverUrl: "http://localhost:7076",
-  dbUser: "nanoodle",
-  dbPassword: "nanoodle",
+  dbUser: "",
+  dbPassword: "",
   api: 'http://localhost:8080/blocks/input'
 };
 
