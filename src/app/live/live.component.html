@@ -12,7 +12,16 @@
       <div class="col-lg-12 my-auto">
         <div class="header-content mx-auto">
           <h3>Visualisations</h3>
+          <p>In Development</p>
           <h3>Network Statistics</h3>
+          <ng-container *ngIf="frontierResults; then frontierLoaded; else frontierLoading">
+          </ng-container>
+          <ng-template #frontierLoaded>
+            <p>Accounts: {{ frontierResults['count'] }}</p>
+          </ng-template>
+          <ng-template #frontierLoading>
+            <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+          </ng-template>
         </div>
       </div>
     </div>
