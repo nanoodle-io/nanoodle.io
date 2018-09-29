@@ -16,7 +16,7 @@ export class AccountService {
 
   constructor(private messageService: MessageService, private http: HttpClient) { }
 
-  getAccount(params: string): Observable<Account> {
+  getAccount(params: string, resultSize: number): Observable<Account> {
     let httpHeaders = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -29,7 +29,7 @@ export class AccountService {
     let body = JSON.stringify({
       "action": "account_history",
       "account": "" + params + "",
-      "count": "50"
+      "count": "" + resultSize + ""
     });
 
     return this.http.post<Account>(environment.serverUrl, body, options).pipe(

@@ -50,7 +50,7 @@ export class AccountComponent implements OnInit {
   }
 
   getAccount(accountParam: string): void {
-    this.accountService.getAccount(accountParam)
+    this.accountService.getAccount(accountParam,20)
       .subscribe(data => {
         this.accountResults = data;
         if (this.reg.test(JSON.stringify(this.accountResults))) {
