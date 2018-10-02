@@ -18,6 +18,12 @@ import { SocialComponent } from './social/social.component';
 import { BlockComponent } from './block/block.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { BlockTimeComponent } from './blockTime/blockTime.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AccountDownloadComponent  } from './accountDownload/accountDownload.component';
+import { AccountDownloadComponentDialog  } from './accountDownload/accountDownload.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'my-app',
@@ -40,10 +46,11 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [BrowserModule, FormsModule, QRCodeModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
+  imports: [BrowserModule, MatDialogModule, FormsModule, BrowserAnimationsModule, MatButtonModule, MatSelectModule, QRCodeModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
     appRoutes//,{ enableTracing: true } // <-- debugging purposes only
   )],
-  declarations: [App, NavbarComponent, AccountComponent, BlockTimeComponent, HomeComponent, LiveComponent, BusinessComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
+  declarations: [App, NavbarComponent, AccountDownloadComponent, AccountDownloadComponentDialog, AccountComponent, BlockTimeComponent, HomeComponent, LiveComponent, BusinessComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
+  entryComponents: [ AccountDownloadComponentDialog ],
   bootstrap: [App]
 })
 export class AppModule { }

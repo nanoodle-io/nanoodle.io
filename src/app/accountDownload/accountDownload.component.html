@@ -1,0 +1,10 @@
+<button mat-raised-button (click)="openDialog()">
+    <ng-container *ngIf="processing; then processingResults; else processed">
+    </ng-container>
+    <ng-template #processingResults>
+        Processing <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+    </ng-template>
+    <ng-template #processed>
+        Download Transactions
+    </ng-template>
+</button>

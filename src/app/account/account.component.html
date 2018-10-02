@@ -64,7 +64,8 @@
         <ng-container *ngIf="keys.length > 0; then blocksShow; else blocksEmpty">
         </ng-container>
         <ng-template #blocksShow>
-          <p>Incoming blocks for which the account has not yet published a block to complete the transaction</p>
+          <p>Showing up to the last 20 incoming blocks for which the account has not yet published a block to complete
+            the transaction</p>
           <div class="row">
             <div class="col-lg-12 my-auto">
               <table class="table table-hover">
@@ -77,7 +78,9 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let key of keys; let u = index">
-                    <td title="Click to see block details" data-toggle="popover" scope="row"><app-blockTime [hyperlink]=true [hash]=key></app-blockTime></td>
+                    <td title="Click to see block details" data-toggle="popover" scope="row">
+                      <app-blockTime [hyperlink]=true [hash]=key></app-blockTime>
+                    </td>
                     <td [attr.id]="'unprocessedAmount' + u">{{ formatType('receive', 'unprocessedAmount'+u)}}{{
                       formatAmount(blockResults.blocks[key].amount) }}</td>
                     <td class="account" title="Click to see account details" data-toggle="popover"><a [routerLink]="['/account',blockResults.blocks[key].block_account]">{{
@@ -106,6 +109,7 @@
         <ng-container *ngIf="accountResults['history'].length > 0; then transactionsShow; else transactionsEmpty">
         </ng-container>
         <ng-template #transactionsShow>
+          <p>Showing up to the last 20 transactions</p>
           <div class="row">
             <div class="col-lg-12 my-auto">
               <table class="table table-hover">
@@ -118,7 +122,9 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let transaction of accountResults['history']; let i = index">
-                    <td title="Click to see block details" data-toggle="popover" scope="row"><app-blockTime [hyperlink]=true [hash]=transaction.hash></app-blockTime></td>
+                    <td title="Click to see block details" data-toggle="popover" scope="row">
+                      <app-blockTime [hyperlink]=true [hash]=transaction.hash></app-blockTime>
+                    </td>
                     <td [attr.id]="'transactionAmount' + i">{{ formatType(transaction.type, 'transactionAmount'+i)
                       }}{{formatAmount(transaction.amount) }}</td>
                     <td title="Click to see account details" data-toggle="popover"><a class=account [routerLink]="['/account',transaction.account]">{{
@@ -150,7 +156,6 @@
           <p>This account's representative is:
             <a class=account [routerLink]="['/account',representativeResults['representative']]">{{
               representativeResults['representative'] }}</a>
-            <p>
         </ng-template>
         <ng-template #representativeEmpty>
           <p>This account has no representative set</p>
@@ -171,6 +176,9 @@
           <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </div>
       </ng-template>
+      <h3>NANOODLE Books</h3>
+      <p>Download this account's transactions in a variety of formats</p>
+      <app-accountDownload [identifier]=identifier></app-accountDownload>
     </div>
   </ng-template>
 </section>

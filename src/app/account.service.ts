@@ -38,7 +38,7 @@ export class AccountService {
     );
   };
 
-  getUnprocessedBlocks(params: string): Observable<UnprocessedBlocks> {
+  getUnprocessedBlocks(params: string, size: number): Observable<UnprocessedBlocks> {
     let httpHeaders = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -51,7 +51,7 @@ export class AccountService {
     let body = JSON.stringify({
       "action": "pending",
       "account": "" + params + "",
-      "count": "20"
+      "count": "" + size + ""
     });
 
     return this.http.post<UnprocessedBlocks>(environment.serverUrl, body, options).pipe(

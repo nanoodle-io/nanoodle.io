@@ -1,0 +1,22 @@
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-select name="format" [(ngModel)]="data.format" placeholder="Select Format" required #format="ngModel">
+      <mat-option value="csv">CSV - Comma Separated Value</mat-option>
+      <!-- <mat-option value="ofx">OFX - Open Financial Exchange</mat-option> -->
+      <!-- <mat-option value="qif">QIF - Quicken Interchange Format</mat-option> -->
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select name="last" [(ngModel)]="data.last" placeholder="Previous Transactions" required #last="ngModel">
+      <mat-option value="100">100</mat-option>
+      <mat-option value="250">250</mat-option>
+      <mat-option value="500">500</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="data" [disabled]="last.invalid || format.invalid">
+      Download
+  </button>
+</div>

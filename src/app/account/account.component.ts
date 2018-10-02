@@ -12,7 +12,6 @@ import { NodeService } from '../node.service';
 })
 
 export class AccountComponent implements OnInit {
-
   //raw results
   accountResults: Account;
   unprocessedBlocksResults: UnprocessedBlocks;
@@ -22,6 +21,7 @@ export class AccountComponent implements OnInit {
   balanceResults: Balance;
   blockCountResults: BlockCountResults;
   keys: string[];
+  identifier: string;
   //param
   paramsub: any;
   error: string;
@@ -31,6 +31,7 @@ export class AccountComponent implements OnInit {
 
   ngOnInit(): void {
     this.paramsub = this.route.params.subscribe(sub => {
+      this.identifier = sub['id'];
       this.accountResults = null;
       this.representativeResults = null;
       this.weightResults = null;
@@ -41,16 +42,16 @@ export class AccountComponent implements OnInit {
       this.unprocessedBlocksResults = null;
       this.blockCountResults = null;
       this.getBlockCount();
-      this.getAccount(sub['id']);
-      this.getUnprocessedBlocks(sub['id']);
-      this.getRepresentative(sub['id']);
-      this.getWeight(sub['id']);
-      this.getBalance(sub['id']);
+      this.getAccount(this.identifier, 20);
+      this.getUnprocessedBlocks(this.identifier);
+      this.getRepresentative(this.identifier);
+      this.getWeight(this.identifier);
+      this.getBalance(this.identifier);
     });
   }
 
-  getAccount(accountParam: string): void {
-    this.accountService.getAccount(accountParam,20)
+  getAccount(accountParam: string, size: number): void {
+    this.accountService.getAccount(accountParam, size)
       .subscribe(data => {
         this.accountResults = data;
         if (this.reg.test(JSON.stringify(this.accountResults))) {
@@ -73,14 +74,14 @@ export class AccountComponent implements OnInit {
     const dec = 3;
     return input.toFixed(dec);
   }
-  
+
   //RPC block results have a bunch of extra characters that need removing before a parse
   formatContents(jsonRepParam: string): string {
     return jsonRepParam.replace(/\\n/g, "").replace(/\\/g, "").replace(/\"{/g, "{").replace(/}\"/g, "}");
   }
 
   getUnprocessedBlocks(accountParam: string): void {
-    this.accountService.getUnprocessedBlocks(accountParam)
+    this.accountService.getUnprocessedBlocks(accountParam, 20)
       .subscribe(data => {
         this.unprocessedBlocksResults = data;
         this.blockService.getBlocks(this.unprocessedBlocksResults['blocks'])
@@ -116,7 +117,7 @@ export class AccountComponent implements OnInit {
   }
 
   formatAmount(mRai: number): string {
-    const dec = 2;
+    const dec = 6;
     const raw = 1000000000000000000000000000000;
     var temp = mRai / raw;
     return temp.toFixed(dec);
@@ -199,9 +200,8 @@ interface Content {
   work: string;
 }
 
-
 interface BlockCountResults {
   error?: string;
   count?: number;
-  unchecked?: number;  
+  unchecked?: number;
 }

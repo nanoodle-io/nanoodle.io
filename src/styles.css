@@ -8,3 +8,14 @@
 @import "https://fonts.googleapis.com/css?family=Muli";
 @import "device-mockups/device-mockups.css";
 @import "device-mockups/device-mockups2.css";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+.cdk-overlay-container {
+    position: fixed;
+    z-index: 3000;
+  }
+
+.cdk-global-scrollblock {
+    position: static;
+    overflow: hidden !important;
+}

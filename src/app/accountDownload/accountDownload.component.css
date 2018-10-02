@@ -1,0 +1,33 @@
+button
+{
+  font-size: 14px;
+  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+  letter-spacing: 1.5px;
+  position: relative;
+  background-color: white;
+}
+
+p
+{
+    font-size: 14px;
+    font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+    letter-spacing: 1.5px;
+}
+
+.mat-form-field
+{
+    font-size: 12px;
+    font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+    letter-spacing: 1.5px;
+    width:100%;
+}
+
+button:active
+{
+    outline:0;
+}
+
+button:focus
+{
+    outline:0;
+}

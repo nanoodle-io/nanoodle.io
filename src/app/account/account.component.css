@@ -10,40 +10,51 @@ table {
     word-wrap:  break-word;
   }
   
-  .mat-form-field {
+  .mat-form-field  
+  {
     font-size: 14px;
-    width: 100%;
+    font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+    letter-spacing: 1.5px;
   }
 
   .account {
     text-transform: lowercase;
 }
-  p
-  {
-    font-size: 14px;
-    font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
-    word-wrap:  break-word;
-    letter-spacing: 1.5px;
-  }
- 
-  h3 {
-    width: 100%;
-    font-size: 20px;
-	  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 15px;
-    margin-top: 10px;
 
-  }
+button:focus {
+  outline: 0 !important;
+  border: 0 !important;
+}
 
-  h4 {
-    width: 100%;
-    font-size: 13px;
-	  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
+p
+{
+  font-size: 14px;
+  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+  word-wrap:  break-word;
+  letter-spacing: 1.5px;
+}
+
+h3 {
+  width: 100%;
+  font-size: 20px;
+  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  margin-top: 10px;
+
+}
+
+h4 {
+  width: 100%;
+  font-size: 16px;
+  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  margin-top: 10px;
+}
+
 
   .positive {
     color: green;

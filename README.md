@@ -1,12 +1,10 @@
-# Nanoodle
+# NANOODLE
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.1.5.
 
-# NG Bootstrap
+# Packages
 
-Nanoodle utilises NG Bootstrap.
-
-`npm install --save @ng-bootstrap/ng-bootstrap`
+`npm install @fortawesome/fontawesome-free`
 
 Once installed you need to import the NG Boostrap main module.
 

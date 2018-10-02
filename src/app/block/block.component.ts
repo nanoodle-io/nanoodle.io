@@ -82,7 +82,7 @@ export class BlockComponent implements OnInit {
   }
   
   formatAmount(mRai: number): string {
-    const dec = 4;
+    const dec = 6;
     const raw = 1000000000000000000000000000000;
     var temp = mRai / raw;
     return temp.toFixed(dec);
