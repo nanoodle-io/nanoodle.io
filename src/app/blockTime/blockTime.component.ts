@@ -47,7 +47,7 @@ export class BlockTimeComponent implements OnInit {
 
 interface BlockTime {
   _id: string;
-  time: Time;
+  log: Time;
 }
 
 interface Time {

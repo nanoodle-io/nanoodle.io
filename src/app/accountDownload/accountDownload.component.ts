@@ -1,9 +1,12 @@
 import { Component, Inject, Input } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { saveAs } from 'file-saver/FileSaver';
 import { AccountService } from '../account.service';
 import { BlockService } from '../block.service';
+import { MessageService } from '../message.service';
+import { isNull } from 'util';
+
 
 export interface DialogData {
   format: string;
@@ -23,6 +26,7 @@ export class AccountDownloadComponent {
   accountResults: Account;
   unprocessedBlocksResults: UnprocessedBlocks;
   detail: Detail;
+  tempvar: BlockTime[];
   blockResults: BlockResults;
   contents: Content;
   unprocessedPart: string[];
@@ -37,7 +41,7 @@ export class AccountDownloadComponent {
   @Input()
   identifier: string;
 
-  constructor(public dialog: MatDialog, private accountService: AccountService, private blockService: BlockService) { }
+  constructor(public dialog: MatDialog, private messageService: MessageService, private accountService: AccountService, private blockService: BlockService) { }
 
   openDialog(): void {
     this.selection = {
@@ -67,23 +71,67 @@ export class AccountDownloadComponent {
   }
 
   saveAccount(accountParam: string, size: number): void {
-    this.accountService.getAccount(accountParam, size)
-    .subscribe(data => {
-      this.accountResults = data;
-      
-      this.downloadString = [];
-      this.downloadString.push("Type, Account, Amount, Hash\n");
-      for (var i = 0; i < this.accountResults['history'].length; i++) {
-        this.downloadString.push(this.accountResults['history'][i]['type'] + "," + this.accountResults['history'][i]['account'] + "," + this.accountResults['history'][i]['amount'] + "," + this.accountResults['history'][i]['hash'] + "\n");
-      }
-      const blob = new Blob(this.downloadString, { type: 'text/plain' });
-      this.processing = false;
-      saveAs(blob, "nanoodle_" + this.identifier + "." + this.selection.format);
-    });
-  }
-}        
+    let hashes = [];
+    let results: BlockTime[] = [];
+    let timeQueries = [];
+    let resultsString: string[] = [];
+    this.downloadString = [];
+    this.downloadString.push("Nanoodle Time (UTC), Type, Account, Amount, Hash\n");
 
-   
+    this.accountService.getAccount(accountParam, size)
+      .subscribe(data => {
+        this.accountResults = data;
+        for (var i = 0; i < this.accountResults['history'].length; i++) {
+          hashes.push(this.accountResults['history'][i]['hash']);
+        }
+        hashes.forEach((item) => {
+          timeQueries.push(this.blockService.getBlockTime(item));
+        });
+        const combined = forkJoin(
+          timeQueries
+        )
+        combined.subscribe(data => {
+
+          results = data;
+
+          results.forEach((item) => {
+
+            if (Object.keys(item).length > 0) {
+              resultsString.push(this.formatDate(item[0]['log']['dateTime']));
+            }
+            else {
+              resultsString.push("Not Recorded");
+            }
+          });
+
+          for (var i = 0; i < this.accountResults['history'].length; i++) {
+            this.downloadString.push(resultsString[i] + "," + this.accountResults['history'][i]['type'] + "," + this.accountResults['history'][i]['account'] + "," + this.formatAmount(this.accountResults['history'][i]['amount']) + "," + this.accountResults['history'][i]['hash'] + "\n");
+          }
+          const blob = new Blob(this.downloadString, { type: 'text/plain' });
+          this.processing = false;
+          saveAs(blob, "nanoodle_" + this.identifier + "." + this.selection.format);
+        });
+      });
+  }
+
+  formatDate(rawDate: string): string {
+    return rawDate.match(/\d{2}\/[A-Za-z]{3}\/\d{4}/) + " " + ("" + rawDate.match(/\d{2}:\d{2}:\d{2} /)).trim();
+  }
+
+  formatAmount(mRai: number): string {
+    const dec = 6;
+    const raw = 1000000000000000000000000000000;
+    var temp = mRai / raw;
+    return temp.toFixed(dec);
+  }
+
+  private log(message: string) {
+    this.messageService.add(`Account Component: ${message}`);
+  }
+
+}
+
+
 @Component({
   selector: 'app-accountDownloadDialog',
   templateUrl: './accountDownloadDialog.html',
@@ -144,4 +192,13 @@ interface Block {
 interface BlockResults {
   error?: string;
   blocks?: Block[];
+}
+
+interface BlockTime {
+  _id: string;
+  log: Time;
+}
+
+interface Time {
+  dateTime: string;
 }
