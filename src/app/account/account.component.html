@@ -47,7 +47,8 @@
       <ng-container *ngIf="balanceResults; then balanceLoaded; else balanceLoading">
       </ng-container>
       <ng-template #balanceLoaded>
-        <p>{{ formatAmount(+balanceResults['balance'] + +balanceResults['pending']) }} (including {{formatAmount(balanceResults['pending'])}}
+        <p>{{ formatAmount(+balanceResults['balance'] + +balanceResults['pending']) }} (including
+          {{formatAmount(balanceResults['pending'])}}
           pending)</p>
       </ng-template>
       <ng-template #balanceLoading>

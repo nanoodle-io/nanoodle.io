@@ -26,6 +26,7 @@ export class AccountDownloadComponent {
   accountResults: Account;
   unprocessedBlocksResults: UnprocessedBlocks;
   detail: Detail;
+  keys: string[];
   tempvar: BlockTime[];
   blockResults: BlockResults;
   contents: Content;
@@ -60,7 +61,9 @@ export class AccountDownloadComponent {
 
       if (this.selection != null) {
         this.processing = true;
-        this.saveAccount(this.identifier, +this.selection.last);
+
+        if (this.selection.format == "csv")
+          this.saveAccountCSV(this.identifier, +this.selection.last);
       }
     });
   }
@@ -70,47 +73,76 @@ export class AccountDownloadComponent {
     return jsonRepParam.replace(/\\n/g, "").replace(/\\/g, "").replace(/\"{/g, "{").replace(/}\"/g, "}");
   }
 
-  saveAccount(accountParam: string, size: number): void {
+  saveAccountCSV(accountParam: string, size: number): void {
+    //queries
     let hashes = [];
-    let results: BlockTime[] = [];
-    let timeQueries = [];
-    let resultsString: string[] = [];
+    let blockQueries = [];
+    let time = "";
+    let status = "";
+    let direction = "";
+    let offset = 0;
+    //download data
     this.downloadString = [];
-    this.downloadString.push("Nanoodle Time (UTC), Type, Account, Amount, Hash\n");
+    this.downloadString.push("Nanoodle Time (UTC), Transaction Type, Block Type, Processing Status, Account, Amount, Hash\n");
 
-    this.accountService.getAccount(accountParam, size)
+    this.accountService.getUnprocessedBlocks(accountParam, size)
       .subscribe(data => {
-        this.accountResults = data;
-        for (var i = 0; i < this.accountResults['history'].length; i++) {
-          hashes.push(this.accountResults['history'][i]['hash']);
-        }
-        hashes.forEach((item) => {
-          timeQueries.push(this.blockService.getBlockTime(item));
-        });
-        const combined = forkJoin(
-          timeQueries
-        )
-        combined.subscribe(data => {
-
-          results = data;
-
-          results.forEach((item) => {
-
-            if (Object.keys(item).length > 0) {
-              resultsString.push(this.formatDate(item[0]['log']['dateTime']));
+        this.unprocessedBlocksResults = data;
+        this.accountService.getAccount(accountParam, size - this.unprocessedBlocksResults['blocks'].length)
+          .subscribe(data => {
+            this.accountResults = data;
+            for (var i = 0; i < this.unprocessedBlocksResults['blocks'].length; i++) {
+              hashes.push(this.unprocessedBlocksResults['blocks'][i]);
             }
-            else {
-              resultsString.push("Not Recorded");
+            for (var i = 0; i < this.accountResults['history'].length; i++) {
+              hashes.push(this.accountResults['history'][i]['hash']);
             }
+            hashes.forEach((item) => {
+              blockQueries.push(this.blockService.getBlockTime(item));
+              blockQueries.push(this.blockService.getBlock(item));
+            });
+            const combined = forkJoin(
+              blockQueries
+            )
+            combined.subscribe(data => {                
+
+              for (var i = 0; i < data.length ; i = i + 2) {
+                if (Object.keys(data[i]).length > 0) {
+                  time = this.formatDate(data[i][0]['log']['dateTime']);
+                }
+                else {
+                  time = "Not Recorded";
+                }
+
+                this.blockResults = JSON.parse(this.formatContents(JSON.stringify(data[i + 1])));
+                this.key = JSON.stringify(Object.keys(this.blockResults['blocks'])[0]).replace(/\"/g, '');
+                this.detail = this.blockResults['blocks'][this.key];
+                this.contents = this.detail['contents'];
+
+                if (accountParam == this.contents.account) {
+                  status = "Processed";
+                }
+                else {
+                  status = "Unprocessed";
+                }
+
+                if (status == "Unprocessed") {
+                  //work out the position when excluding the unprocessed blocks
+                  offset = offset + 1;
+                  direction = "receive";
+                }
+                else {
+                  direction = this.accountResults['history'][(i / 2) - offset].type;
+                }
+
+                this.downloadString.push(time + "," + direction + "," + this.contents.type + "," + status + "," + this.contents.account + "," + this.formatAmount(+this.detail.amount) + "," + this.key + "\n");
+
+              }
+              const blob = new Blob(this.downloadString, { type: 'text/plain' });
+              this.processing = false;
+              saveAs(blob, "nanoodle_" + this.identifier + "." + this.selection.format);
+            });
           });
-
-          for (var i = 0; i < this.accountResults['history'].length; i++) {
-            this.downloadString.push(resultsString[i] + "," + this.accountResults['history'][i]['type'] + "," + this.accountResults['history'][i]['account'] + "," + this.formatAmount(this.accountResults['history'][i]['amount']) + "," + this.accountResults['history'][i]['hash'] + "\n");
-          }
-          const blob = new Blob(this.downloadString, { type: 'text/plain' });
-          this.processing = false;
-          saveAs(blob, "nanoodle_" + this.identifier + "." + this.selection.format);
-        });
       });
   }
 
