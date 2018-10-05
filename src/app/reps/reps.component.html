@@ -86,10 +86,21 @@
           </ng-container>
           <ng-template #weightLoaded>
             <p>Voting Weight: {{ formatAmount(weightResults['weight']) }}</p>
+            <ng-container *ngIf="+formatDecimals(+formatAmount(weightResults['weight']) / 133248.289 * 100) < 133248.289; then displayProgress; else displayThanks">
+            </ng-container>
+            <ng-template #displayProgress>
+              <p>The NANOODLE representative is {{formatDecimals(+formatAmount(weightResults['weight']) / 133248.289 *
+                100)}}% toward becoming a rebroadcasting representative</p>
+            </ng-template>
+            <ng-template #displayThanks>
+              <p>The NANOODLE representative is a rebroadcasting representative! Thanks you</p>
+            </ng-template>
           </ng-template>
           <ng-template #weightLoading>
             <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
           </ng-template>
+          <p><a href="https://mynano.ninja/account/xrb_1e6e41up4x5e4jke6wy4k6nnuagagspfx4tjafghub6cw46ueimqt657nx4a"><img
+                src="../../assets/ninja-icon.png" width="30px"> NANOODLE representative on My Nano Ninja</a></p>
         </div>
       </div>
     </div>

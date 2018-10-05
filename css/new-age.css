@@ -176,9 +176,9 @@ header.masthead {
   height: 320px;
   padding-top: 145px;
   color: white;
-  background: url("../img/bg-pattern.png"), #CFDBE0;
-  background: url("../img/bg-pattern.png"), -webkit-linear-gradient(to bottom, #CFDBE0, #55A3B7);
-  background: url("../img/bg-pattern.png"), linear-gradient(to bottom, #CFDBE0, #55A3B7);
+  background: url("../src/assets/bg-pattern.png"), #CFDBE0;
+  background: url("../src/assets/bg-pattern.png"), -webkit-linear-gradient(to bottom, #CFDBE0, #55A3B7);
+  background: url("../src/assets/bg-pattern.png"), linear-gradient(to bottom, #CFDBE0, #55A3B7);
 }
 
 header.masthead .header-content {
@@ -405,9 +405,9 @@ footer ul li a:hover, footer ul li a:focus, footer ul li a:active, footer ul li 
 }
 
 .bg-primary {
-  background: url("../img/bg-pattern.png"), #55A3B7;
-  background: url("../img/bg-pattern.png"), -webkit-linear-gradient(to bottom, #55A3B7, #CFDBE0);
-  background: url("../img/bg-pattern.png"), linear-gradient(to bottom, #55A3B7, #CFDBE0);
+  background: url("../src/assets/bg-pattern.png"), #55A3B7;
+  background: url("../src/assets/bg-pattern.png"), -webkit-linear-gradient(to bottom, #55A3B7, #CFDBE0);
+  background: url("../src/assets/bg-pattern.png"), linear-gradient(to bottom, #55A3B7, #CFDBE0);
 }
 
 .text-primary {

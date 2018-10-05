@@ -30,8 +30,6 @@
               "node_modules/bootstrap/js/bootstrap.bundle.min.js",
               "node_modules/jquery-easing/jquery.easing.min.js",
               "node_modules/js/new-age.js"
-
-              
             ]
           },
           "configurations": {
