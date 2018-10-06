@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormControl, FormGroup } from '@angular/forms';
+import { DonateComponent } from '../donate/donate.component'
 
 @Component({
   selector: 'app-navbar',
@@ -14,7 +14,7 @@ export class NavbarComponent {
   searchTerm: string;
 
   //in your constructor
-  constructor(public router: Router) { }
+  constructor(public router: Router, public donate: DonateComponent) { }
 
   search(param: string) {
     this.searchTerm = null;
@@ -30,5 +30,9 @@ export class NavbarComponent {
 
   scroll(el) {
     el.scrollIntoView();
+  }
+
+  openDonate() {
+    this.donate.openDonateDialog();
   }
 }

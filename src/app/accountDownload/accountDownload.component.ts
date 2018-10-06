@@ -5,7 +5,6 @@ import { saveAs } from 'file-saver/FileSaver';
 import { AccountService } from '../account.service';
 import { BlockService } from '../block.service';
 import { MessageService } from '../message.service';
-import { isNull } from 'util';
 
 
 export interface DialogData {
@@ -52,7 +51,7 @@ export class AccountDownloadComponent {
     this.accountResults = null;
 
     const dialogRef = this.dialog.open(AccountDownloadComponentDialog, {
-      width: '255px',
+      width: '260px',
       data: { selection: this.selection }
     });
 
@@ -83,7 +82,7 @@ export class AccountDownloadComponent {
     let offset = 0;
     //download data
     this.downloadString = [];
-    this.downloadString.push("Nanoodle Time (UTC), Transaction Type, Block Type, Processing Status, Account, Amount, Hash\n");
+    this.downloadString.push("nanoodle time (utc),transaction type,block type,processing status,account,amount,hash\n");
 
     this.accountService.getUnprocessedBlocks(accountParam, size)
       .subscribe(data => {
@@ -111,7 +110,7 @@ export class AccountDownloadComponent {
                   time = this.formatDate(data[i][0]['log']['dateTime']);
                 }
                 else {
-                  time = "Not Recorded";
+                  time = "not recorded";
                 }
 
                 this.blockResults = JSON.parse(this.formatContents(JSON.stringify(data[i + 1])));
@@ -120,13 +119,13 @@ export class AccountDownloadComponent {
                 this.contents = this.detail['contents'];
 
                 if (accountParam == this.contents.account) {
-                  status = "Processed";
+                  status = "processed";
                 }
                 else {
-                  status = "Unprocessed";
+                  status = "unprocessed";
                 }
 
-                if (status == "Unprocessed") {
+                if (status == "unprocessed") {
                   //work out the position when excluding the unprocessed blocks
                   offset = offset + 1;
                   direction = "receive";
@@ -159,6 +158,10 @@ export class AccountDownloadComponent {
 
   private log(message: string) {
     this.messageService.add(`Account Component: ${message}`);
+  }
+
+  modalClose( $event ) {
+    console.log($event); // { submitted: true }
   }
 
 }

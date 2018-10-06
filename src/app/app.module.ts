@@ -23,7 +23,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AccountDownloadComponent  } from './accountDownload/accountDownload.component';
 import { AccountDownloadComponentDialog  } from './accountDownload/accountDownload.component';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material';
+import { DonateComponent, DonateComponentDialog } from './donate/donate.component';
 
 @Component({
   selector: 'my-app',
@@ -42,15 +43,15 @@ const appRoutes: Routes = [
   { path: 'live', component: LiveComponent },
   { path: 'products', component: ProductComponent },
   { path: 'reps', component: RepsComponent },
-  { path: '**', component: PageNotFoundComponent }
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({
   imports: [BrowserModule, MatDialogModule, FormsModule, BrowserAnimationsModule, MatButtonModule, MatSelectModule, QRCodeModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
     appRoutes//,{ enableTracing: true } // <-- debugging purposes only
   )],
-  declarations: [App, NavbarComponent, AccountDownloadComponent, AccountDownloadComponentDialog, AccountComponent, BlockTimeComponent, HomeComponent, LiveComponent, ProductComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
-  entryComponents: [ AccountDownloadComponentDialog ],
+  declarations: [App, NavbarComponent, AccountDownloadComponent,AccountDownloadComponentDialog, DonateComponent, DonateComponentDialog, AccountComponent, BlockTimeComponent, HomeComponent, LiveComponent, ProductComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
+  entryComponents: [ AccountDownloadComponentDialog, DonateComponentDialog ],
   bootstrap: [App]
 })
 export class AppModule { }

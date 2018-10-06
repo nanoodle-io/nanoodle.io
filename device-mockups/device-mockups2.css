@@ -70,6 +70,65 @@
 
 /* DEVICES */
 
+/* iPhone 6 */
+.device-mockup[data-device="iphone6"],
+.device-mockup[data-device="iphone6"][data-orientation="portrait"] {
+	padding-bottom: 207.19%;
+}
+
+.device-mockup[data-device="iphone6"][data-orientation="landscape"] {
+	padding-bottom: 48.76%;
+}
+
+.device-mockup[data-device="iphone6"] > .device,
+.device-mockup[data-device="iphone6"][data-color="black"] > .device,
+.device-mockup[data-device="iphone6"][data-orientation="portrait"][data-color="black"] > .device {
+	background-image: url("iphone_6/iphone_6_port_black.png");
+}
+
+.device-mockup[data-device="iphone6"][data-orientation="landscape"] > .device,
+.device-mockup[data-device="iphone6"][data-orientation="landscape"][data-color="black"] > .device {
+	background-image: url("iphone_6/iphone_6_land_black.png");
+}
+
+.device-mockup[data-device="iphone6"][data-color="white"] > .device,
+.device-mockup[data-device="iphone6"][data-orientation="portrait"][data-color="white"] > .device {
+	background-image: url("iphone_6/iphone_6_port_white.png");
+}
+
+.device-mockup[data-device="iphone6"][data-orientation="landscape"][data-color="white"] > .device {
+	background-image: url("iphone_6/iphone_6_land_white.png");
+}
+
+.device-mockup[data-device="iphone6"][data-color="gold"] > .device,
+.device-mockup[data-device="iphone6"][data-orientation="portrait"][data-color="gold"] > .device {
+	background-image: url("iphone_6/iphone_6_port_gold.png");
+}
+
+.device-mockup[data-device="iphone6"][data-orientation="landscape"][data-color="gold"] > .device {
+	background-image: url("iphone_6/iphone_6_land_gold.png");
+}
+
+.device-mockup[data-device="iphone6"] > .device > .screen,
+.device-mockup[data-device="iphone6"][data-orientation="portrait"] > .device > .screen {
+	top: 12.58%; bottom: 12.88%; left: 6.77%; right: 6.77%;
+}
+
+.device-mockup[data-device="iphone6"][data-orientation="landscape"] > .device > .screen {
+	top: 6.77%; bottom: 6.77%; left: 12.58%; right: 12.88%;
+}
+
+.device-mockup[data-device="iphone6"] > .device > .button,
+.device-mockup[data-device="iphone6"][data-orientation="portrait"] > .device > .button {
+	display: block;
+	top: 88.6%; bottom: 3.2%; left: 42%; right: 42%;
+}
+
+.device-mockup[data-device="iphone6"][data-orientation="landscape"] > .device > .button {
+	display: block;
+	top: 42%; bottom: 42%; left:  88.6%; right: 3.2%;
+}
+
 /* iPhone 6 Plus*/
 .device-mockup[data-device="iphone6_plus"],
 .device-mockup[data-device="iphone6_plus"][data-orientation="portrait"] {
@@ -111,11 +170,11 @@
 
 .device-mockup[data-device="iphone6_plus"] > .device > .screen,
 .device-mockup[data-device="iphone6_plus"][data-orientation="portrait"] > .device > .screen {
-    top: 11.58%; bottom: 11.58%; left: 5.97%; right: 5.97%;
+    top: 11.3%; bottom: 11.3%; left: 5.97%; right: 5.97%;
 }
 
 .device-mockup[data-device="iphone6_plus"][data-orientation="landscape"] > .device > .screen {
-    top: 5.97%; bottom: 5.97%; left: 11.38%; right: 11.58%;
+    top: 5.97%; bottom: 5.97%; left: 11.38%; right: 11.3%;
 }
 
 .device-mockup[data-device="iphone6_plus"] > .device > .button,

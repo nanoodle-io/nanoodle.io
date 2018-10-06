@@ -65,7 +65,7 @@
         <ng-container *ngIf="keys.length > 0; then blocksShow; else blocksEmpty">
         </ng-container>
         <ng-template #blocksShow>
-          <p>Showing up to the last 20 incoming blocks for which the account has not yet published a block to complete
+          <p>Showing up to the last 20 incoming blocks, in no order, for which this account has not published a block to complete
             the transaction</p>
           <div class="row">
             <div class="col-lg-12 my-auto">
