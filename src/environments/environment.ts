@@ -7,7 +7,8 @@ export const environment = {
   serverUrl: "http://localhost:7076",
   dbUser: "nanoodle",
   dbPassword: "nanoodle",
-  api: 'http://localhost:8080/blocks/input'
+  api: 'http://localhost:8080/blocks/input',
+  watch: 'http://localhost:8080/core/watch'
 };
 
 /*

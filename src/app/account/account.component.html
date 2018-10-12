@@ -72,7 +72,7 @@
               <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th scope="col">NANOODLE Time (UTC)</th>
+                    <th scope="col">NANOODLE Time (UTC+0)</th>
                     <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
                     <th scope="col">Associated Account</th>
                   </tr>
@@ -116,7 +116,7 @@
               <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th scope="col">NANOODLE Time (UTC)</th>
+                    <th scope="col">NANOODLE Time (UTC+0)</th>
                     <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
                     <th scope="col">Associated Account</th>
                   </tr>
@@ -178,8 +178,11 @@
         </div>
       </ng-template>
       <h3>NANOODLE Books</h3>
-      <p>Download this account's transactions in a variety of formats</p>
+      <p>Download this account's transactions in a variety of formats (unprocessed transactions are included)</p>
       <app-accountDownload [identifier]=identifier></app-accountDownload>
+      <h3>NANOODLE Watch</h3>
+      <p>Receive an email when transactions are detected on this account</p>
+      <app-accountWatch [identifier]=identifier></app-accountWatch>
     </div>
   </ng-template>
 </section>

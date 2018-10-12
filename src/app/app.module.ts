@@ -19,10 +19,12 @@ import { BlockComponent } from './block/block.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { BlockTimeComponent } from './blockTime/blockTime.component';
 import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AccountDownloadComponent  } from './accountDownload/accountDownload.component';
 import { AccountDownloadComponentDialog  } from './accountDownload/accountDownload.component';
+import { AccountWatchComponent, AccountWatchComponentDialog  } from './accountWatch/accountWatch.component';
 import { MatDialogModule } from '@angular/material';
 import { DonateComponent, DonateComponentDialog } from './donate/donate.component';
 
@@ -47,11 +49,11 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [BrowserModule, MatDialogModule, FormsModule, BrowserAnimationsModule, MatButtonModule, MatSelectModule, QRCodeModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
+  imports: [BrowserModule, MatDialogModule, FormsModule, BrowserAnimationsModule, MatButtonModule, MatSelectModule, MatInputModule, QRCodeModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
     appRoutes//,{ enableTracing: true } // <-- debugging purposes only
   )],
-  declarations: [App, NavbarComponent, AccountDownloadComponent,AccountDownloadComponentDialog, DonateComponent, DonateComponentDialog, AccountComponent, BlockTimeComponent, HomeComponent, LiveComponent, ProductComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
-  entryComponents: [ AccountDownloadComponentDialog, DonateComponentDialog ],
+  declarations: [App, NavbarComponent, AccountWatchComponent, AccountWatchComponentDialog, AccountDownloadComponent,AccountDownloadComponentDialog, DonateComponent, DonateComponentDialog, AccountComponent, BlockTimeComponent, HomeComponent, LiveComponent, ProductComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
+  entryComponents: [ AccountDownloadComponentDialog, DonateComponentDialog, AccountWatchComponentDialog ],
   bootstrap: [App]
 })
 export class AppModule { }
