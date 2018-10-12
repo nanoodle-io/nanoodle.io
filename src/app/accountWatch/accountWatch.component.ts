@@ -1,9 +1,10 @@
 import { Component, Inject, Input } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatIcon, MatStep } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MessageService } from '../message.service';
 import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { WatchService } from '../watch.service';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 
 export interface DialogData {
   email: string;
@@ -18,6 +19,7 @@ export class AccountWatchComponent {
 
   //processing
   result: DialogData;
+  addWatcherError: string;
 
   @Input()
   identifier: string;
@@ -25,6 +27,7 @@ export class AccountWatchComponent {
   constructor(public dialog: MatDialog, private messageService: MessageService, private watchService: WatchService) { }
 
   openDialog(): void {
+    this.addWatcherError = "";
 
     const dialogRef = this.dialog.open(AccountWatchComponentDialog, {
       width: '260px',
@@ -34,7 +37,13 @@ export class AccountWatchComponent {
     dialogRef.afterClosed().subscribe(data => {
       this.result = data;
       if (this.result != null) {
-        this.watchService.putWatch(this.identifier,this.result.email);
+        this.watchService.putWatch(this.identifier, this.result.email).subscribe(res => {
+          console.log(res);
+        },
+          (err: HttpErrorResponse) => {
+            this.addWatcherError = err.message;
+          }
+        );
       }
     });
   }

@@ -33,7 +33,11 @@ button:focus
 {
     outline:0;
 }
-
+.error
+{
+    margin-top: 10px;
+    color: red;
+}
 .controls
 {
     display: block;

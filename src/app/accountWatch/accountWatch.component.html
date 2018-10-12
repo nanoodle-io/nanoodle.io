@@ -1,3 +1,8 @@
 <button mat-raised-button (click)="openDialog()">
     Watch Account
 </button>
+<ng-container *ngIf="addWatcherError; then showError">
+</ng-container>
+<ng-template #showError>
+    <p class="error">Error: the account is already being watched by this email address</p>
+<ng-template>
