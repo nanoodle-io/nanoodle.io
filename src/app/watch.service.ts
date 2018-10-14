@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
-import { HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams, HttpHeaders } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { catchError } from 'rxjs/operators';
 
@@ -29,11 +29,54 @@ export class WatchService {
     //console.log("Account Service Parameters: "+params);
     let body = JSON.stringify({
       "account": "" + account + "",
-      "email": "" + email + ""
+      "email": "" + email + "",
+      //0 - 1 - Verification email not sent, 1 - Verification email sent, 2 - Verified
+      "verified": "0",
+      "key": "" + makeKey() + ""
     });
 
     return this.http.post(environment.watch, body, options);
   }
+
+  removeWatcher(unsubscribe: string) {
+    const httpOptions = {
+      params: new HttpParams({
+        fromString: "filter={'key':'" + unsubscribe + "'}"
+      }),
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': "Basic " + btoa(environment.dbUser + ":" + environment.dbPassword)
+      })
+    };
+
+    return this.http.delete(environment.watch+"/*", httpOptions).pipe(
+      //tap(_ => this.log(`found account matching "${params}"`)),
+      catchError(this.handleError('removeWatcher', null))
+    );
+  };
+
+  verifyWatcher(verifyKey: string) {
+    
+    let body = JSON.stringify({
+      "verified": "" + 2 + "" 
+    });
+
+    const httpOptions = {
+      params: new HttpParams({
+        //change to verified state
+        fromString: 'filter={"key":"' + verifyKey + '"}'
+      }),
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': "Basic " + btoa(environment.dbUser + ":" + environment.dbPassword)
+      })
+    };
+
+    return this.http.patch(environment.watch+"/*", body,httpOptions).pipe(
+      //tap(_ => this.log(`found account matching "${params}"`)),
+      catchError(this.handleError('verifyWatcher', null))
+    );
+  };
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
@@ -52,4 +95,14 @@ export class WatchService {
     this.messageService.add(`Account Service: ${message}`);
   }
 
+}
+
+function makeKey() {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 16; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
 }

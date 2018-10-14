@@ -28,6 +28,7 @@
     "angularx-qrcode": "^1.2.2",
     "core-js": "^2.5.4",
     "fork-awesome": "^1.1.1",
+    "nodemailer": "^4.6.8",
     "rxjs": "^6.0.0",
     "zone.js": "~0.8.26"
   },

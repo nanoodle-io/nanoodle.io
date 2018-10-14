@@ -27,6 +27,8 @@ import { AccountDownloadComponentDialog  } from './accountDownload/accountDownlo
 import { AccountWatchComponent, AccountWatchComponentDialog  } from './accountWatch/accountWatch.component';
 import { MatDialogModule } from '@angular/material';
 import { DonateComponent, DonateComponentDialog } from './donate/donate.component';
+import { UnsubscribeComponent  } from './unsubscribe/unsubscribe.component';
+import { VerifyComponent } from './verify/verify.component';
 
 @Component({
   selector: 'my-app',
@@ -45,6 +47,8 @@ const appRoutes: Routes = [
   { path: 'live', component: LiveComponent },
   { path: 'products', component: ProductComponent },
   { path: 'reps', component: RepsComponent },
+  { path: 'verify/:id', component: VerifyComponent },
+  { path: 'unsubscribe/:id', component: UnsubscribeComponent },
   { path: '**', component: PageNotFoundComponent },
 ];
 
@@ -52,7 +56,7 @@ const appRoutes: Routes = [
   imports: [BrowserModule, MatDialogModule, FormsModule, BrowserAnimationsModule, MatButtonModule, MatSelectModule, MatInputModule, QRCodeModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
     appRoutes//,{ enableTracing: true } // <-- debugging purposes only
   )],
-  declarations: [App, NavbarComponent, AccountWatchComponent, AccountWatchComponentDialog, AccountDownloadComponent,AccountDownloadComponentDialog, DonateComponent, DonateComponentDialog, AccountComponent, BlockTimeComponent, HomeComponent, LiveComponent, ProductComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
+  declarations: [App, NavbarComponent, UnsubscribeComponent, VerifyComponent, AccountWatchComponent, AccountWatchComponentDialog, AccountDownloadComponent,AccountDownloadComponentDialog, DonateComponent, DonateComponentDialog, AccountComponent, BlockTimeComponent, HomeComponent, LiveComponent, ProductComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
   entryComponents: [ AccountDownloadComponentDialog, DonateComponentDialog, AccountWatchComponentDialog ],
   bootstrap: [App]
 })

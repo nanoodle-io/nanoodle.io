@@ -4,5 +4,10 @@
 <ng-container *ngIf="addWatcherError; then showError">
 </ng-container>
 <ng-template #showError>
-    <p class="error">Error: the account is already being watched by this email address</p>
-<ng-template>
+    <p class="error">error: the account is already being watched by this email address</p>
+</ng-template>
+<ng-container *ngIf="addWatcher; then showMessage">
+</ng-container>
+<ng-template #showMessage>
+    <p class="success">A verification link will be sent to the email account provided in the next few minutes</p>
+</ng-template>

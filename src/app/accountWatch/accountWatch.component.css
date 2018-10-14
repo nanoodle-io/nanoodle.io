@@ -38,6 +38,12 @@ button:focus
     margin-top: 10px;
     color: red;
 }
+
+.success
+{
+    margin-top: 10px;
+    color: green;
+}
 .controls
 {
     display: block;

@@ -20,6 +20,7 @@ export class AccountWatchComponent {
   //processing
   result: DialogData;
   addWatcherError: string;
+  addWatcher: string;
 
   @Input()
   identifier: string;
@@ -28,6 +29,7 @@ export class AccountWatchComponent {
 
   openDialog(): void {
     this.addWatcherError = "";
+    this.addWatcher = "";
 
     const dialogRef = this.dialog.open(AccountWatchComponentDialog, {
       width: '260px',
@@ -38,7 +40,7 @@ export class AccountWatchComponent {
       this.result = data;
       if (this.result != null) {
         this.watchService.putWatch(this.identifier, this.result.email).subscribe(res => {
-          console.log(res);
+          this.addWatcher = "Success";
         },
           (err: HttpErrorResponse) => {
             this.addWatcherError = err.message;
