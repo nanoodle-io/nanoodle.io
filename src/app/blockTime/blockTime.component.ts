@@ -3,14 +3,12 @@ import { BlockService } from '../block.service';
 import { MessageService } from '../message.service';
 
 @Component({
-  selector: "app-blockTime",
-  templateUrl: "./blockTime.component.html",
-  styleUrls: ['./blockTime.component.css']
-})
+  selector: 'app-blockTime',
+  templateUrl: "./blockTime.component.html"})
 
 export class BlockTimeComponent implements OnInit {
   //Results
-  blockTime: BlockTime;
+  blockTime: BlockTime[];
   error: string;
   reg = new RegExp('"error"');
 
@@ -46,10 +44,15 @@ export class BlockTimeComponent implements OnInit {
 }
 
 interface BlockTime {
-  _id: string;
+  _id?: string;
   log: Time;
 }
 
 interface Time {
   dateTime: string;
+  epochTimeStamp: DateTime;
+}
+
+interface DateTime {
+  $date: DateTime;
 }

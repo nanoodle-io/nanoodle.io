@@ -8,7 +8,8 @@ export const environment = {
   dbUser: "nanoodle",
   dbPassword: "nanoodle",
   api: 'http://localhost:8080/blocks/input',
-  watch: 'http://localhost:8080/core/watch'
+  watch: 'http://localhost:8080/core/watch',
+  price: 'http://localhost:8080/core/price'
 };
 
 /*

@@ -14,7 +14,7 @@ export class BlockComponent implements OnInit {
   paramsub: any;
   //Results
   blockResults: BlockResults;
-  blockTime: BlockTime;
+  blockTime: BlockTime[];
   detail: Detail;
   blockCountResults: BlockCountResults;
   contents: Content;
@@ -136,7 +136,7 @@ interface BlockCountResults {
 }
 
 interface BlockTime {
-  _id: string;
+  _id?: string;
   log: Time;
 }
 

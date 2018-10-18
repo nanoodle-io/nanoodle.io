@@ -4,6 +4,7 @@ import { AccountService } from '../account.service';
 import { BlockService } from '../block.service';
 import { MessageService } from '../message.service';
 import { NodeService } from '../node.service';
+import { CryptoCompareService } from '../cryptocompare.service';
 
 @Component({
   selector: "app-account",
@@ -18,6 +19,8 @@ export class AccountComponent implements OnInit {
   blockResults: BlockResults;
   representativeResults: Representative;
   weightResults: Weight;
+  blockTime: BlockTime;
+  priceResults: FiatResults;
   balanceResults: Balance;
   blockCountResults: BlockCountResults;
   keys: string[];
@@ -27,7 +30,7 @@ export class AccountComponent implements OnInit {
   error: string;
   reg = new RegExp('"error"');
 
-  constructor(private messageService: MessageService, private NodeService: NodeService, private route: ActivatedRoute, private accountService: AccountService, private blockService: BlockService) { }
+  constructor(private messageService: MessageService, private cryptoCompareService: CryptoCompareService, private NodeService: NodeService, private route: ActivatedRoute, private accountService: AccountService, private blockService: BlockService) { }
 
   ngOnInit(): void {
     this.paramsub = this.route.params.subscribe(sub => {
@@ -37,28 +40,27 @@ export class AccountComponent implements OnInit {
       this.weightResults = null;
       this.keys = null;
       this.error = null;
+      this.priceResults = null;
       this.balanceResults = null;
       this.blockResults = null;
       this.unprocessedBlocksResults = null;
       this.blockCountResults = null;
       this.getBlockCount();
+      this.getPrice();
       this.getAccount(this.identifier, 20);
-      this.getUnprocessedBlocks(this.identifier);
+      this.getUnprocessedBlocks(this.identifier,20);
       this.getRepresentative(this.identifier);
       this.getWeight(this.identifier);
       this.getBalance(this.identifier);
     });
   }
 
-  getAccount(accountParam: string, size: number): void {
-    this.accountService.getAccount(accountParam, size)
-      .subscribe(data => {
-        this.accountResults = data;
-        if (this.reg.test(JSON.stringify(this.accountResults))) {
-          this.error = JSON.stringify(this.accountResults['error']);
-        }
+  getPrice()
+    {
+      this.cryptoCompareService.getPrice().subscribe(data => {
+        this.priceResults = data;
       });
-  }
+    }
 
   getBlockCount(): void {
     this.NodeService.getBlockCount()
@@ -70,9 +72,8 @@ export class AccountComponent implements OnInit {
       });
   }
 
-  formatDecimals(input: number): string {
-    const dec = 3;
-    return input.toFixed(dec);
+  formatDecimals(input: number, places: number): string {
+    return input.toFixed(places);
   }
 
   //RPC block results have a bunch of extra characters that need removing before a parse
@@ -80,8 +81,16 @@ export class AccountComponent implements OnInit {
     return jsonRepParam.replace(/\\n/g, "").replace(/\\/g, "").replace(/\"{/g, "{").replace(/}\"/g, "}");
   }
 
-  getUnprocessedBlocks(accountParam: string): void {
-    this.accountService.getUnprocessedBlocks(accountParam, 20)
+  getAccount(accountParam: string, size: number): void {
+    this.accountService.getAccount(accountParam, size)
+      .subscribe(data => {
+        this.accountResults = data;
+
+      });
+  }
+
+  getUnprocessedBlocks(accountParam: string, size: number): void {
+    this.accountService.getUnprocessedBlocks(accountParam, size)
       .subscribe(data => {
         this.unprocessedBlocksResults = data;
         this.blockService.getBlocks(this.unprocessedBlocksResults['blocks'])
@@ -116,22 +125,14 @@ export class AccountComponent implements OnInit {
       });
   }
 
-  formatAmount(mRai: number): string {
-    const dec = 6;
+  formatAmount(mRai: number, places: number): string {
     const raw = 1000000000000000000000000000000;
     var temp = mRai / raw;
-    return temp.toFixed(dec);
+    return temp.toFixed(places);
   }
 
-  formatType(type: string, cellID: string): string {
-    if (type == "receive") {
-      document.getElementById(cellID).classList.add('positive');
-      return "+";
-    }
-    else {
-      document.getElementById(cellID).classList.add('negative');
-      return "-";
-    }
+  formatDate(rawDate: string): string {
+    return rawDate.match(/\d{2}\/[A-Za-z]{3}\/\d{4}/) + " " + ("" + rawDate.match(/\d{2}:\d{2}:\d{2} /)).trim();
   }
 
   private log(message: string) {
@@ -140,6 +141,10 @@ export class AccountComponent implements OnInit {
 
   ngOnDestroy() {
     this.paramsub.unsubscribe();
+  }
+
+  trackElement(index: number, element: any) {
+    return element ? element.guid : null;
   }
 }
 
@@ -204,4 +209,42 @@ interface BlockCountResults {
   error?: string;
   count?: number;
   unchecked?: number;
+}
+
+interface FiatResults {
+  NANO: FiatRate;
+}
+
+interface FiatRate {
+  USD: number;
+  EUR: number;
+  GBP: number;
+}
+
+interface BlockTime {
+  _id: string;
+  log: Time;
+}
+
+interface Time {
+  dateTime: string;
+  epochTimeStamp: DateTime;
+}
+
+interface DateTime {
+  $date: DateTime;
+}
+
+interface BlockTime {
+  _id: string;
+  log: Time;
+}
+
+interface Time {
+  dateTime: string;
+  epochTimeStamp: DateTime;
+}
+
+interface DateTime {
+  $date: DateTime;
 }

@@ -47,8 +47,8 @@
       <ng-container *ngIf="balanceResults; then balanceLoaded; else balanceLoading">
       </ng-container>
       <ng-template #balanceLoaded>
-        <p>{{ formatAmount(+balanceResults['balance'] + +balanceResults['pending']) }} (including
-          {{formatAmount(balanceResults['pending'])}}
+        <p>{{ formatAmount(+balanceResults['balance'] + +balanceResults['pending'],4) }} (including
+          {{formatAmount(balanceResults['pending'],4)}}
           pending)</p>
       </ng-template>
       <ng-template #balanceLoading>
@@ -65,7 +65,8 @@
         <ng-container *ngIf="keys.length > 0; then blocksShow; else blocksEmpty">
         </ng-container>
         <ng-template #blocksShow>
-          <p>Showing up to the last 20 incoming blocks, in no order, for which this account has not published a block to complete
+          <p>Showing up to the last 20 incoming blocks, in no order, for which this account has not published a block
+            to complete
             the transaction</p>
           <div class="row">
             <div class="col-lg-12 my-auto">
@@ -74,18 +75,12 @@
                   <tr>
                     <th scope="col">NANOODLE Time (UTC+0)</th>
                     <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
+                    <th scope="col">£Now (£Then)</th>
                     <th scope="col">Associated Account</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let key of keys; let u = index">
-                    <td title="Click to see block details" data-toggle="popover" scope="row">
-                      <app-blockTime [hyperlink]=true [hash]=key></app-blockTime>
-                    </td>
-                    <td [attr.id]="'unprocessedAmount' + u">{{ formatType('receive', 'unprocessedAmount'+u)}}{{
-                      formatAmount(blockResults.blocks[key].amount) }}</td>
-                    <td class="account" title="Click to see account details" data-toggle="popover"><a [routerLink]="['/account',blockResults.blocks[key].block_account]">{{
-                        blockResults.blocks[key].block_account }}</a></td>
+                  <tr app-transactionRow *ngFor="let key of keys;" [rate]=this.priceResults [hash]=key [type]='"receive"' [account]='blockResults["blocks"][key]["block_account"]' [amount]='blockResults["blocks"][key]["amount"]'>
                   </tr>
                 </tbody>
               </table>
@@ -118,18 +113,12 @@
                   <tr>
                     <th scope="col">NANOODLE Time (UTC+0)</th>
                     <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
+                    <th scope="col">£Now (£Then)</th>
                     <th scope="col">Associated Account</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let transaction of accountResults['history']; let i = index">
-                    <td title="Click to see block details" data-toggle="popover" scope="row">
-                      <app-blockTime [hyperlink]=true [hash]=transaction.hash></app-blockTime>
-                    </td>
-                    <td [attr.id]="'transactionAmount' + i">{{ formatType(transaction.type, 'transactionAmount'+i)
-                      }}{{formatAmount(transaction.amount) }}</td>
-                    <td title="Click to see account details" data-toggle="popover"><a class=account [routerLink]="['/account',transaction.account]">{{
-                        transaction.account }}</a></td>
+                  <tr app-transactionRow *ngFor="let transaction of accountResults['history']" [rate]=this.priceResults [type]=transaction.type [hash]=transaction.hash [account]=transaction.account [amount]=transaction.amount> 
                   </tr>
                 </tbody>
               </table>
@@ -170,7 +159,7 @@
       <ng-container *ngIf="weightResults; then weightLoaded; else weightloading">
       </ng-container>
       <ng-template #weightLoaded>
-        <p>This account has {{formatAmount(weightResults['weight'])}} voting weight</p>
+        <p>This account has {{formatAmount(weightResults['weight'],4)}} voting weight</p>
       </ng-template>
       <ng-template #weightloading>
         <div>

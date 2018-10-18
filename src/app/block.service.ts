@@ -36,11 +36,11 @@ export class BlockService {
     );
   };
   
-  getBlockTime(hash: string): Observable<BlockTime> {
+  getBlockTime(hash: string): Observable<BlockTime[]> {
 
     const httpOptions = {
       params: new HttpParams({
-        fromString: "keys={'log.dateTime':1}&filter={'hash':'" + hash + "'}&sort={'log.dateTime':1}&pagesize=1&np"
+        fromString: "keys={'log.dateTime':1}&keys={'log.epochTimeStamp':1}&filter={'hash':'" + hash + "'}&sort={'log.dateTime':1}&pagesize=1&np"
       }),
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -48,9 +48,9 @@ export class BlockService {
         })
         };
 
-    return this.http.get<BlockTime>(environment.api, httpOptions).pipe(
+    return this.http.get<BlockTime[]>(environment.api, httpOptions).pipe(
       //tap(_ => this.log(`found account matching "${params}"`)),
-      catchError(this.handleError<BlockTime>('getBlockTime', null))
+      catchError(this.handleError<BlockTime[]>('getBlockTime', null))
     );
   };
 
@@ -107,12 +107,17 @@ interface BlockResults {
 }
 
 interface BlockTime {
-  _id: string;
+  _id?: string;
   log: Time;
 }
 
 interface Time {
   dateTime: string;
+  epochTimeStamp: DateTime;
+}
+
+interface DateTime {
+  $date: DateTime;
 }
 
 interface Block {

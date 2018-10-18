@@ -26,7 +26,6 @@ export class WatchService {
       headers: httpHeaders
     };
 
-    //console.log("Account Service Parameters: "+params);
     let body = JSON.stringify({
       "account": "" + account + "",
       "email": "" + email + "",

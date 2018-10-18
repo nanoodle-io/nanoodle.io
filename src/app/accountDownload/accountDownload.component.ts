@@ -82,7 +82,7 @@ export class AccountDownloadComponent {
     let offset = 0;
     //download data
     this.downloadString = [];
-    this.downloadString.push("nanoodle time (utc),transaction type,block type,processing status,account,amount,hash\n");
+    this.downloadString.push("nanoodle time (utc+0),transaction type,block type,processing status,account,amount,hash\n");
 
     this.accountService.getUnprocessedBlocks(accountParam, size)
       .subscribe(data => {

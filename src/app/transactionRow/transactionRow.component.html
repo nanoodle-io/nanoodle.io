@@ -1,0 +1,44 @@
+<td>
+    <ng-container *ngIf="blockTime; then blockTimeLoaded; else blockTimeLoading">
+    </ng-container>
+    <ng-template #blockTimeLoaded>
+        <ng-container *ngIf="blockTime.length > 0; then blockTimeResults else blockTimeEmpty">
+        </ng-container>
+        <ng-template #blockTimeResults>
+            <a [routerLink]="['/block',hash]">{{ formatDate(blockTime[0]['log']['dateTime']) }}</a>
+        </ng-template>
+        <ng-template #blockTimeEmpty>
+            <a [routerLink]="['/block',hash]"> Not Recorded</a>
+        </ng-template>
+    </ng-template>
+    <ng-template #blockTimeLoading>
+        <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+    </ng-template>
+</td>
+<td [attr.id]="hash+'a'">{{formatAmount(amount,4) }}</td>
+<td [attr.id]="hash+'b'">
+    <ng-container *ngIf="rate; then priceLoaded; else priceLoading">
+    </ng-container>
+    <ng-template #priceLoaded>
+        £{{ formatDecimals(rate.NANO.GBP * formatAmount(amount,4),2) }}
+    </ng-template>
+    <ng-template #priceLoading>
+        <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+    </ng-template>
+    <ng-container *ngIf="pastPriceFetch==true; then pastPriceLoading;">
+        </ng-container>
+        <ng-template #pastPriceLoading>
+                <ng-container *ngIf="pastPrice; then pastPriceLoaded; else pastPriceLoading">
+                    </ng-container>
+                    <ng-template #pastPriceLoaded>
+                        (£{{ formatDecimals(pastPrice,2) }})
+                    </ng-template>
+                    <ng-template #pastPriceLoading>
+                        <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+                    </ng-template>
+        </ng-template>
+</td>
+<td><a [routerLink]="['/account',account]">{{
+        account }}</a></td>
+{{ formatType(type, hash+"a") }}
+{{ formatType(type, hash+"b") }}
