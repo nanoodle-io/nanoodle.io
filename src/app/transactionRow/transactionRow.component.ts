@@ -86,6 +86,17 @@ export class TransactionRowComponent implements OnInit {
     }
   }
 
+  addType(): string {
+    if (this.type == "receive")
+    {
+      return '+'
+    }
+    else
+    {
+      return '-'
+    }
+  }
+
   formatDecimals(input: number, places: number): string {
     return input.toFixed(places);
   }
@@ -118,7 +129,6 @@ interface Time {
 interface DateTime {
   $date: DateTime;
 }
-
 
 interface FiatResults {
   NANO: FiatRate;

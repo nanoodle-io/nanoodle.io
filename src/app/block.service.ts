@@ -107,7 +107,7 @@ interface BlockResults {
 }
 
 interface BlockTime {
-  _id?: string;
+  _id: string;
   log: Time;
 }
 
