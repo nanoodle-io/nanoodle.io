@@ -37,28 +37,6 @@ export class NodeService {
     );
   };
 
-  getFrontierCount(): Observable<FrontierResults> {
-
-    let httpHeaders = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    let options = {
-      headers: httpHeaders
-    };
-
-    let body = JSON.stringify({  
-      "action": "frontier_count" 
-        });
-
-
-    return this.http.post<FrontierResults>(environment.serverUrl, body, options).pipe(
-      //tap(_ => this.log(`found account matching "${params}"`)),
-      catchError(this.handleError<FrontierResults>('getBlockCount', null))
-    );
-  };
-
-
   getVersion(): Observable<NodeVersion> {
 
     let httpHeaders = new HttpHeaders({

@@ -15,6 +15,32 @@ export class BlockService {
 
   constructor(private messageService: MessageService, private http: HttpClient) { }
 
+  getBlockCount(previousSeconds: number, transactionsOnly: boolean): Observable<any> {
+    let paramDate = new Date(new Date().getTime() - previousSeconds * 1000);
+    let transactionString;
+    if (transactionsOnly)
+      {
+        transactionString = '&filter={"is_send" : "true" }';
+      }
+      else{
+        transactionString = "";
+      }
+    const httpOptions = {
+      params: new HttpParams({
+        fromString: 'filter={"log.epochTimeStamp":{$gt: new Date(' + paramDate.getTime() + ')}}' + transactionString + '&count&pagesize=0'
+      }),
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': "Basic " + btoa(environment.dbUser + ":" + environment.dbPassword)
+      })
+    };
+
+    return this.http.get<any>(environment.api, httpOptions).pipe(
+      //tap(_ => this.log(`found account matching "${params}"`)),
+      catchError(this.handleError<any>('getBlock', null))
+    );
+  }
+
   getBlock(params: string): Observable<BlockResults> {
 
     let httpHeaders = new HttpHeaders({
@@ -35,7 +61,7 @@ export class BlockService {
       catchError(this.handleError<BlockResults>('getBlock', null))
     );
   };
-  
+
   getBlockTime(hash: string): Observable<BlockTime[]> {
 
     const httpOptions = {
@@ -45,8 +71,8 @@ export class BlockService {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         'Authorization': "Basic " + btoa(environment.dbUser + ":" + environment.dbPassword)
-        })
-        };
+      })
+    };
 
     return this.http.get<BlockTime[]>(environment.api, httpOptions).pipe(
       //tap(_ => this.log(`found account matching "${params}"`)),
