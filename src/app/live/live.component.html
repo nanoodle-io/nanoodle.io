@@ -10,10 +10,25 @@
   <div class="container h-100">
     <div class="row h-100">
       <div class="col-lg-12 my-auto">
-        <div class="header-content mx-auto">
-          <h3>Transactions</h3>
-          <app-transactionGraph></app-transactionGraph>
-        </div>
+        <ng-container *ngIf="blockCountResults; then blockCountLoaded; else blockCountLoading">
+        </ng-container>
+        <ng-template #blockCountLoaded>
+          <p>The NANOODLE node is {{
+            formatDecimals(+(+blockCountResults['count']/(+blockCountResults['count']++blockCountResults['unchecked']))*100)
+            }}% in sync with the Nano network</p>
+        </ng-template>
+        <ng-template #blockCountLoading>
+          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+        </ng-template>
+      </div>
+    </div>
+    <div class="row h-100">
+      <div class="col-lg-8 my-auto">
+        <app-transactionGraph></app-transactionGraph>
+      </div>
+      <div class="col-lg-4 my-auto">
+        <p>Number of transactions detected on the Nano network, within a 15 second window. An indicator of the current
+          activity on the Nano network.</p>
       </div>
     </div>
   </div>

@@ -2,16 +2,12 @@
   stroke-width: 1;
 }
 
-.graph {
-}
-
 .graph .axis .tick line {
   stroke: black;
 }
 
 .graph .axis .tick text {
   fill: black;
-  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
 }
 
 .graph .axis .domain {
@@ -26,17 +22,16 @@
 }
 
 .svg-container {
+  margin-top: 25px; 
   display: inline-block;
   position: relative;
   width: 100%;
   vertical-align: top;
   overflow: hidden;
-  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
 }
 .svg-content-responsive {
   display: inline-block;
  position: absolute;
   top: 10px;
   left: 0;
-  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
 }

@@ -23,7 +23,7 @@ export class TransactionGraphComponent implements OnInit {
     var width = 450,
       height = 150,
       counter = 18,
-      max = 1 * 1.2;
+      max = 5 * 1.2;
 
 
     var groups = {
@@ -59,22 +59,38 @@ export class TransactionGraphComponent implements OnInit {
       //responsive SVG needs these 2 attributes and no width and height attr
       .attr('class', 'chart')
       .attr("preserveAspectRatio", "xMinYMin meet")
-      .attr("viewBox", "0 0 " + width + " " + (height + 50) + "")
+      .attr("viewBox", "0 0 " + width + " " + (height + 30) + "")
       //class to make it responsive
       .classed("svg-content-responsive", true);
 
+      svg
+      .style('font-size', '10px')
+      .style('font-family', "'Lato', 'Helvetica', 'Arial', 'sans-serif'")
+      .style('font-weight', '0')
+      .style('letter-spacing', '1.5px')
+
+      svg.append("text")
+      .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+      .attr("transform", "translate("+ 7 +","+(height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+      .text("Transactions in 15s");
+
     // Add the X Axis
+    x.axis = d3.axisBottom(x)
     var xaxis = svg.append('g')
       .attr('class', 'axis')
-      .attr('transform', 'translate(0,' + height + ')')
-      .call(x.axis = d3.axisBottom(x))
+      .attr('transform', 'translate(30,' + height + ')')
+      .call(x.axis)
 
     // Add the Y Axis
+    y.axis = d3.axisLeft(y)
+    .ticks(5)
+    .tickSizeOuter(0)
+    .tickFormat(d3.format("d"))
+
     var yaxis = svg.append("g")
       .attr("class", "yaxis")
-      .attr("transform", "translate(" + 25 + ",0)")
-      .call(y.axis = d3.axisLeft(y)); // Create an axis component with d3.axisLeft
-
+      .attr("transform", "translate(" + 30 + ",0)")
+      .call(y.axis) // Create an axis component with d3.axisLeft
 
     var paths = svg.append('g')
 
@@ -98,7 +114,7 @@ export class TransactionGraphComponent implements OnInit {
 
           // y-axis
           yaxis.transition()
-          .attr("transform", "translate(" + 25 + ",0)")
+          .attr("transform", "translate(" + 30 + ",0)")
           .duration(1500)
           .ease(d3.easeLinear)
           .call(y.axis)
