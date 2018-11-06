@@ -41,6 +41,32 @@ export class BlockService {
     );
   }
 
+  getBlockCountDetails(previousSeconds: number, transactionsOnly: boolean): Observable<any> {
+    let paramDate = new Date(new Date().getTime() - previousSeconds * 1000);
+    let transactionString;
+    if (transactionsOnly)
+      {
+        transactionString = '&filter={"is_send" : "true" }';
+      }
+      else{
+        transactionString = "";
+      }
+    const httpOptions = {
+      params: new HttpParams({
+        fromString: 'filter={"log.epochTimeStamp":{$gt: new Date(' + paramDate.getTime() + ')}}' + transactionString + '&np'
+      }),
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': "Basic " + btoa(environment.dbUser + ":" + environment.dbPassword)
+      })
+    };
+
+    return this.http.get<any>(environment.api, httpOptions).pipe(
+      //tap(_ => this.log(`found account matching "${params}"`)),
+      catchError(this.handleError<any>('getBlock', null))
+    );
+  }
+
   getBlock(params: string): Observable<BlockResults> {
 
     let httpHeaders = new HttpHeaders({
@@ -98,7 +124,7 @@ export class BlockService {
 
     return this.http.post<BlockResults>(environment.serverUrl, body, options).pipe(
       //tap(_ => this.log(`found account matching "${params}"`)),
-      catchError(this.handleError<BlockResults>('getBlock', null))
+      catchError(this.handleError<BlockResults>('getBlocks', null))
     );
   };
 

@@ -10,6 +10,7 @@ import { balancePreviousStylesIntoKeyframes } from '@angular/animations/browser/
 })
 export class TransactionGraphComponent implements OnInit {
   now = new Date();
+  transactions = [];
 
   constructor(private blockService: BlockService) {
   }
@@ -71,14 +72,14 @@ export class TransactionGraphComponent implements OnInit {
 
       svg.append("text")
       .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-      .attr("transform", "translate("+ 7 +","+(height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+      .attr("transform", "translate("+ 6 +","+(height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
       .text("Transactions in 15s");
 
     // Add the X Axis
     x.axis = d3.axisBottom(x)
     var xaxis = svg.append('g')
       .attr('class', 'axis')
-      .attr('transform', 'translate(30,' + height + ')')
+      .attr('transform', 'translate(35,' + height + ')')
       .call(x.axis)
 
     // Add the Y Axis
@@ -89,7 +90,7 @@ export class TransactionGraphComponent implements OnInit {
 
     var yaxis = svg.append("g")
       .attr("class", "yaxis")
-      .attr("transform", "translate(" + 30 + ",0)")
+      .attr("transform", "translate(" + 35 + ",0)")
       .call(y.axis) // Create an axis component with d3.axisLeft
 
     var paths = svg.append('g')
@@ -108,23 +109,25 @@ export class TransactionGraphComponent implements OnInit {
         groups['current'].value = data['_size'];
         if (data['_size'] > max) {
           max = data['_size'];
-          console.log(max);
 
           y.domain([0, max * 1.2])
 
           // y-axis
           yaxis.transition()
-          .attr("transform", "translate(" + 30 + ",0)")
+          .attr("transform", "translate(" + 35 + ",0)")
           .duration(1500)
           .ease(d3.easeLinear)
           .call(y.axis)
         }
       });
+      blockService.getBlockCountDetails(15, true).subscribe(data => {
+        console.log(data);
+      });
     }
 
     function tick() {
       counter++;
-      //every 15 seconds get some data
+      //every 15 (20*5) seconds get some data
       if (counter == 19) {
         counter = 0;
 
