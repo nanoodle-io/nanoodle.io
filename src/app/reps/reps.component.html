@@ -77,7 +77,7 @@
           <ng-template #blockCountLoaded>
             <p>Synchronisation: {{
               formatDecimals(+(+blockCountResults['count']/(+blockCountResults['count']++blockCountResults['unchecked']))*100)
-              }}%</p>
+              }}% ({{+blockCountResults['unchecked']}} Unchecked Blocks)</p>
           </ng-template>
           <ng-template #blockCountLoading>
             <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>

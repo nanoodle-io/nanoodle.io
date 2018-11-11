@@ -45,6 +45,9 @@ export class AccountDownloadComponent {
 
   @Input()
   identifier: string;
+  
+  @Input()
+  currencyType: string;
 
   constructor(public dialog: MatDialog, private marketService: MarketService, private messageService: MessageService, private accountService: AccountService, private blockService: BlockService) { }
 
@@ -67,7 +70,7 @@ export class AccountDownloadComponent {
         this.processing = true;
 
         if (this.selection.format == "csv")
-          this.saveAccountCSV(this.identifier, +this.selection.last);
+          this.saveAccountCSV(this.identifier, +this.selection.last, this.currencyType);
       }
     });
   }
@@ -77,7 +80,7 @@ export class AccountDownloadComponent {
     return jsonRepParam.replace(/\\n/g, "").replace(/\\/g, "").replace(/\"{/g, "{").replace(/}\"/g, "}");
   }
 
-  saveAccountCSV(accountParam: string, size: number): void {
+  saveAccountCSV(accountParam: string, size: number, currencyType: string): void {
     //queries
     let hashes = [];
     let queryTimes = [];
@@ -160,7 +163,7 @@ export class AccountDownloadComponent {
                     if (data[i].length > 0) {
                       for (var x = 0; x < data[i].length; x++) {
                         this.tempPrice = data[i][x];
-                        returnPrice = returnPrice + this.tempPrice.NANO.GBP;
+                        returnPrice = returnPrice + this.tempPrice[currencyType];
                       }
                       this.pastPrice = "£" + this.formatDecimals(returnPrice / data[i].length * +this.formatAmount(+this.detail.amount,5),2);
                     }
@@ -216,7 +219,6 @@ export class AccountDownloadComponent {
   }
 
   modalClose($event) {
-    console.log($event); // { submitted: true }
   }
 
 }
@@ -290,7 +292,6 @@ interface BlockTime {
 }
 
 interface Time {
-  dateTime: string;
   epochTimeStamp: DateTime;
 }
 
@@ -299,11 +300,5 @@ interface DateTime {
 }
 
 interface FiatResults {
-  NANO: FiatRate;
-}
-
-interface FiatRate {
-  USD: number;
-  EUR: number;
-  GBP: number;
+  [currencyType: string]: number;
 }

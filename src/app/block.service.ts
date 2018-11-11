@@ -92,7 +92,7 @@ export class BlockService {
 
     const httpOptions = {
       params: new HttpParams({
-        fromString: "keys={'log.dateTime':1}&keys={'log.epochTimeStamp':1}&filter={'hash':'" + hash + "'}&sort={'log.dateTime':1}&pagesize=1&np"
+        fromString: "keys={'log.epochTimeStamp':1}&filter={'hash':'" + hash + "'}&sort={'log.epochTimeStamp':1}&pagesize=1&np"
       }),
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -141,14 +141,14 @@ export class BlockService {
       return of(result as T);
     };
   }
-  private log(message: string) {
-    this.messageService.add(`Block Service: ${message}`);
-  }
-
 
   formatDecimals(input: number): string {
     const dec = 3;
     return input.toFixed(dec);
+  }
+
+  private log(message: string) {
+    this.messageService.add(`CryptoCompare Service: ${message}`);
   }
 
 }
@@ -164,7 +164,6 @@ interface BlockTime {
 }
 
 interface Time {
-  dateTime: string;
   epochTimeStamp: DateTime;
 }
 

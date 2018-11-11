@@ -49,8 +49,9 @@ export class BlockComponent implements OnInit {
       });
   }
 
-  formatDate(rawDate: string): string {
-    return rawDate.match(/\d{2}\/[A-Za-z]{3}\/\d{4}/) + " " + rawDate.match(/\d{2}:\d{2}:\d{2}/);
+  formatDate(rawDate: number): string {
+    let myDate = new Date(rawDate);
+    return myDate.toLocaleString();
   }
 
   getBlock(blockParam: string): void {
@@ -141,5 +142,9 @@ interface BlockTime {
 }
 
 interface Time {
-  dateTime: string;
+  epochTimeStamp: DateTime;
+}
+
+interface DateTime {
+  $date: DateTime;
 }

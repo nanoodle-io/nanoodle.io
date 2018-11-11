@@ -10,12 +10,12 @@ import { environment } from '../environments/environment';
 })
 
 export class CryptoCompareService {
-  cryptocompareUrl = 'https://min-api.cryptocompare.com/data/pricemulti?fsyms=NANO&tsyms=USD,EUR,GBP&extraParams=nanoodle.io';
+  cryptocompareUrl = '';
 
   constructor(private messageService: MessageService, private http: HttpClient) { }
 
-  getPrice(): Observable<FiatResults> {
-
+  getPrice(currencyType: string ): Observable<FiatResults> {
+    this.cryptocompareUrl = 'https://min-api.cryptocompare.com/data/price?fsym=NANO&tsyms=' + currencyType + '&extraParams=nanoodle.io';
     let httpHeaders = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -23,7 +23,6 @@ export class CryptoCompareService {
     let options = {
       headers: httpHeaders
     };
-
     return this.http.get<FiatResults>(this.cryptocompareUrl, options).pipe(
       //tap(_ => this.log(`found account matching "${params}"`)),
       catchError(this.handleError<FiatResults>('getPrice', null))
@@ -50,11 +49,5 @@ export class CryptoCompareService {
 }
 
 interface FiatResults {
-  NANO: FiatRate;
-}
-
-interface FiatRate {
-  USD: number;
-  EUR: number;
-  GBP: number;
+  [currencyType: string]: number;
 }

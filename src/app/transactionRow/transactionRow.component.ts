@@ -11,7 +11,7 @@ import { MessageService } from '../message.service';
 
 export class TransactionRowComponent implements OnInit {
   //Results
-  blockTime: BlockTime[];
+  blockTime: BlockTime[] = [];
   pastPrice: number;
   pastPriceFetch: boolean;
   tempPrice: FiatResults;
@@ -21,6 +21,9 @@ export class TransactionRowComponent implements OnInit {
 
   @Input()
   hash: string;
+
+  @Input()
+  utcOffset: string;
 
   @Input()
   account: string;
@@ -34,43 +37,58 @@ export class TransactionRowComponent implements OnInit {
   @Input()
   rate: FiatResults;
 
+  //detect changes on currency type
+  _currencyType: string;
+  @Input() set currencyType(value: string) {
+    this._currencyType = value;
+    this.getMarketPrice();
+  }
+
+  get currencyType(): string {
+    return this._currencyType;
+  }
+
   constructor(private messageService: MessageService, private blockService: BlockService, private marketService: MarketService) { }
 
   ngOnInit(): void {
-    this.blockTime = null;
+    this.blockTime = [];
     this.pastPrice = null;
     this.pastPriceFetch = false;
-    this.getBlockTime(this.hash);
+    this.getBlockDetails(this.hash, this.currencyType);
   }
 
-  getBlockTime(blockParam: string): void {
+  getBlockDetails(blockParam: string, currencyType: string): void {
     this.blockService.getBlockTime(blockParam)
       .subscribe(data => {
         this.blockTime = data;
-        if (this.blockTime.length > 0) {
-          if (this.blockTime[0]['log'].hasOwnProperty('epochTimeStamp')) {
-            this.pastPriceFetch = true;
-            this.getMarketPrice(+this.blockTime[0]['log']['epochTimeStamp'].$date);
-          }
-        }
+        //console.log(this.blockTime);
+        this.getMarketPrice();
       });
   }
 
-  getMarketPrice(timestamp: number) {
-    this.marketService.getMarketPrice(timestamp)
-      .subscribe(data => {
-        let returnPrice = 0;
-        if (data.length > 0) {
-          for (var i = 0; i < data.length; i++) {
-            this.tempPrice = data[i];
-            returnPrice = returnPrice + this.tempPrice.NANO.GBP;
-          }
-          this.pastPrice = returnPrice / data.length * +this.formatAmount(this.amount,5);
-        }
-        else{
-          this.pastPriceFetch = false;
-        }
-      });
+  getMarketPrice() {
+    if (this.blockTime.length > 0) {
+      if (this.blockTime[0]['log'].hasOwnProperty('epochTimeStamp')) {
+
+        this.pastPriceFetch = true;
+        let timestamp = +this.blockTime[0]['log']['epochTimeStamp'].$date;
+        this.marketService.getMarketPrice(timestamp)
+          .subscribe(data => {
+            let returnPrice = 0;
+            if (data.length > 0) {
+              for (var i = 0; i < data.length; i++) {
+                this.tempPrice = data[i];
+                returnPrice = returnPrice + this.tempPrice[this.currencyType];
+              }
+              this.pastPrice = returnPrice / data.length * +this.formatAmount(this.amount, 5);
+            }
+            else {
+              this.pastPriceFetch = false;
+            }
+          });
+
+      }
+    }
   }
 
   formatType(type: string, cellID: string): void {
@@ -87,12 +105,10 @@ export class TransactionRowComponent implements OnInit {
   }
 
   addType(): string {
-    if (this.type == "receive")
-    {
+    if (this.type == "receive") {
       return '+'
     }
-    else
-    {
+    else {
       return '-'
     }
   }
@@ -107,8 +123,9 @@ export class TransactionRowComponent implements OnInit {
     return temp.toFixed(places);
   }
 
-  formatDate(rawDate: string): string {
-    return rawDate.match(/\d{2}\/[A-Za-z]{3}\/\d{4}/) + " " + ("" + rawDate.match(/\d{2}:\d{2}:\d{2} /)).trim();
+  formatDate(rawDate: number): string {
+    let myDate = new Date(rawDate);
+    return myDate.toLocaleString();
   }
 
   private log(message: string) {
@@ -122,7 +139,6 @@ interface BlockTime {
 }
 
 interface Time {
-  dateTime: string;
   epochTimeStamp: DateTime;
 }
 
@@ -131,11 +147,5 @@ interface DateTime {
 }
 
 interface FiatResults {
-  NANO: FiatRate;
-}
-
-interface FiatRate {
-  USD: number;
-  EUR: number;
-  GBP: number;
+  [currencyType: string]: number;
 }

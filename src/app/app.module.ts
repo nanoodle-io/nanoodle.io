@@ -17,7 +17,6 @@ import { FooterComponent } from './footer/footer.component';
 import { SocialComponent } from './social/social.component';
 import { BlockComponent } from './block/block.component';
 import { QRCodeModule } from 'angularx-qrcode';
-import { BlockTimeComponent } from './blockTime/blockTime.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -58,7 +57,7 @@ const appRoutes: Routes = [
   imports: [BrowserModule, MatDialogModule, FormsModule, BrowserAnimationsModule, MatButtonModule, MatSelectModule, MatInputModule, QRCodeModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
     appRoutes//,{ enableTracing: true } // <-- debugging purposes only
   )],
-  declarations: [App, NavbarComponent, TransactionRowComponent, TransactionGraphComponent, UnsubscribeComponent, VerifyComponent, AccountWatchComponent, AccountWatchComponentDialog, AccountDownloadComponent,AccountDownloadComponentDialog, DonateComponent, DonateComponentDialog, AccountComponent, BlockTimeComponent, HomeComponent, LiveComponent, ProductComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
+  declarations: [App, NavbarComponent, TransactionRowComponent, TransactionGraphComponent, UnsubscribeComponent, VerifyComponent, AccountWatchComponent, AccountWatchComponentDialog, AccountDownloadComponent,AccountDownloadComponentDialog, DonateComponent, DonateComponentDialog, AccountComponent, HomeComponent, LiveComponent, ProductComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
   entryComponents: [ AccountDownloadComponentDialog, DonateComponentDialog, AccountWatchComponentDialog ],
   bootstrap: [App]
 })

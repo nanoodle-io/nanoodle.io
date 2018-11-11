@@ -121,7 +121,6 @@ export class TransactionGraphComponent implements OnInit {
         }
       });
       blockService.getBlockCountDetails(15, true).subscribe(data => {
-        console.log(data);
       });
     }
 

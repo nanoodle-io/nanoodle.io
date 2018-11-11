@@ -25,7 +25,6 @@ export class AccountService {
       headers: httpHeaders
     };
 
-    //console.log("Account Service Parameters: "+params);
     let body = JSON.stringify({
       "action": "account_history",
       "account": "" + params + "",
@@ -47,7 +46,6 @@ export class AccountService {
       headers: httpHeaders
     };
 
-    //console.log("Account Service Parameters: "+params);
     let body = JSON.stringify({
       "action": "pending",
       "account": "" + params + "",
@@ -69,7 +67,6 @@ export class AccountService {
       headers: httpHeaders
     };
 
-    //console.log("Account Service Parameters: "+params);
     let body = JSON.stringify(
     {  
       "action": "account_balance",  
@@ -92,7 +89,6 @@ export class AccountService {
       headers: httpHeaders
     };
 
-    //console.log("Account Service Parameters: "+params);
     let body = JSON.stringify({
       "action": "account_representative",
       "account": "" + params + ""
@@ -114,7 +110,6 @@ export class AccountService {
       headers: httpHeaders
     };
 
-    //console.log("Account Service Parameters: "+params);
     let body = JSON.stringify({
       "action": "account_weight",
       "account": "" + params + ""

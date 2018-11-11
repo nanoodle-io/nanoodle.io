@@ -19,6 +19,8 @@ export class AccountComponent implements OnInit {
   blockResults: BlockResults;
   representativeResults: Representative;
   weightResults: Weight;
+  currencyType: string;
+  utcOffset: string;
   blockTime: BlockTime;
   priceResults: FiatResults;
   balanceResults: Balance;
@@ -39,8 +41,17 @@ export class AccountComponent implements OnInit {
       this.representativeResults = null;
       this.weightResults = null;
       this.keys = null;
+      this.currencyType = 'GBP';
       this.error = null;
-      this.priceResults = null;
+      let tz = Math.floor(new Date().getTimezoneOffset()/-60);
+      if (tz > -1)
+      {
+        this.utcOffset = "+" + tz;
+      }
+      else
+      {
+        this.utcOffset = "" + tz;
+      }
       this.balanceResults = null;
       this.blockResults = null;
       this.unprocessedBlocksResults = null;
@@ -57,7 +68,8 @@ export class AccountComponent implements OnInit {
 
   getPrice()
     {
-      this.cryptoCompareService.getPrice().subscribe(data => {
+      this.priceResults = null;
+      this.cryptoCompareService.getPrice(this.currencyType).subscribe(data => {
         this.priceResults = data;
       });
     }
@@ -212,13 +224,7 @@ interface BlockCountResults {
 }
 
 interface FiatResults {
-  NANO: FiatRate;
-}
-
-interface FiatRate {
-  USD: number;
-  EUR: number;
-  GBP: number;
+  [currencyType: string]: number;
 }
 
 interface BlockTime {
@@ -227,7 +233,6 @@ interface BlockTime {
 }
 
 interface Time {
-  dateTime: string;
   epochTimeStamp: DateTime;
 }
 
@@ -241,7 +246,6 @@ interface BlockTime {
 }
 
 interface Time {
-  dateTime: string;
   epochTimeStamp: DateTime;
 }
 

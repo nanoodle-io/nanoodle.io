@@ -43,13 +43,69 @@
       </ng-template>
     </div>
     <div class="container">
+      <h3>Options</h3>
+      <mat-form-field>
+        <mat-select name="currencyType" [(ngModel)]="currencyType" placeholder="Currency" required #last="ngModel"
+          (selectionChange)="getPrice($event)">
+          <mat-option value="GBP">GBP - British Pound Sterling</mat-option>
+          <mat-option value="EUR">EUR - Euro</mat-option>
+          <mat-option value="USD">USD - United States Dollar</mat-option>
+          <mat-option value="BTC">BTC - Bitcoin </mat-option>
+          <mat-option value="ETH">ETH - Etherium</mat-option>
+          <mat-option value="JPY">JPY - Japanese Yen</mat-option>
+          <mat-option value="CHF">CHF - Swiss Franc</mat-option>
+          <mat-option value="CAD">CAD - Canadian Dollar</mat-option>
+          <mat-option value="AUD">AUD - Australian Dollar</mat-option>
+          <mat-option value="ZAR">ZAR - South African Rand</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="container">
+      <mat-form-field>
+        <mat-select name="utcOffset" [(ngModel)]="utcOffset" placeholder="UTC Time Offset" required #last="ngModel">
+          <mat-option value="-11">-11 e.g. Midway, Pago Pago</mat-option>
+          <mat-option value="-10">-10 e.g. Honolulu, Tahiti</mat-option>
+          <mat-option value="-9">-9 e.g. Anchorage</mat-option>
+          <mat-option value="-8">-8 e.g. Los Angeles, Tijuana, Vancouver</mat-option>
+          <mat-option value="-7">-7 e.g. Denver, Edmonton, Phoenix</mat-option>
+          <mat-option value="-6">-6 e.g. Belize, Chicago, Costa Rica, El Salvador, Mexico City</mat-option>
+          <mat-option value="-5">-5 e.g. Jamaica, Lima, New York, Peru</mat-option>
+          <mat-option value="-4">-4 e.g. Barbados, Halifax, Santiago, Bermuda</mat-option>
+          <mat-option value="-3">-3 e.g. Buenos Aires, Sao Paulo</mat-option>
+          <mat-option value="-2">-2 e.g. South Georgia, Noronha</mat-option>
+          <mat-option value="-1">-1 e.g. Scoresbysund, Azores, Cape Verde</mat-option>
+          <mat-option value="+0">+0 e.g. London, Abidjan, Accra, Casablanca, Dublin, Lisbon</mat-option>
+          <mat-option value="+1">+1 e.g. Madrid, Berlin, Stockholm, Rome, Kinshasa, Lagos </mat-option>
+          <mat-option value="+2">+2 e.g. Johannesburg, Cairo, Athens, Tripoli, Instanbul</mat-option>
+          <mat-option value="+3">+3 e.g. Djibouti, Mogadishu, Riyadh, Baghdad, Moscow</mat-option>
+          <mat-option value="+4">+4 e.g. Tbilisi, Dubai</mat-option>
+          <mat-option value="+5">+5 e.g. Karachi, Maldvies</mat-option>
+          <mat-option value="+6">+6 e.g. Dhaka, Vostok</mat-option>
+          <mat-option value="+7">+7 e.g. Ho Chi Minh, Bangkok, Jakarta</mat-option>
+          <mat-option value="+8">+8 e.g. Kuala Lumpur, Hong Kong, Shanghai, Singapore, Perth</mat-option>
+          <mat-option value="+9">+9 e.g. Seoul, Tokyo</mat-option>
+          <mat-option value="+10">+10 e.g. Sydney, Guam</mat-option>
+          <mat-option value="+11">+11 e.g. Micronesia</mat-option>
+          <mat-option value="+12">+12 e.g. Auckland, Fiji</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="container">
       <h3>Balance</h3>
       <ng-container *ngIf="balanceResults; then balanceLoaded; else balanceLoading">
       </ng-container>
       <ng-template #balanceLoaded>
-        <p>{{ formatAmount(+balanceResults['balance'] + +balanceResults['pending'],4) }} (including
+        <p>Nano (XNO): {{ formatAmount(+balanceResults['balance'] + +balanceResults['pending'],4) }} (including
           {{formatAmount(balanceResults['pending'],4)}}
           pending)</p>
+          <ng-container *ngIf="priceResults; then priceLoaded; else priceLoading">
+          </ng-container>
+          <ng-template #priceLoaded>
+            <p>{{ currencyType }} Value: {{ formatAmount((+balanceResults['balance'] + +balanceResults['pending']) * priceResults[currencyType],4) }} </p>
+          </ng-template>
+          <ng-template #priceLoading>
+              <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+          </ng-template>
       </ng-template>
       <ng-template #balanceLoading>
         <div>
@@ -73,14 +129,16 @@
               <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th scope="col">NANOODLE Time (UTC+0)</th>
-                    <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
-                    <th scope="col">£Now (£Then)</th>
+                    <th scope="col">Time (UTC {{utcOffset}})</th>
+                    <th scope="col">XNO</th>
+                    <th scope="col">{{currencyType}} Now</th>
+                    <th scope="col">{{currencyType}} Then</th>
                     <th scope="col">Associated Account</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr app-transactionRow *ngFor="let key of keys;" [rate]=this.priceResults [hash]=key [type]='"receive"' [account]='blockResults["blocks"][key]["block_account"]' [amount]='blockResults["blocks"][key]["amount"]'>
+                  <tr app-transactionRow *ngFor="let key of keys;" [rate]=this.priceResults [hash]=key [type]='"receive"' [utcOffset]=utcOffset
+                    [currencyType]=currencyType [account]='blockResults["blocks"][key]["block_account"]' [amount]='blockResults["blocks"][key]["amount"]'>
                   </tr>
                 </tbody>
               </table>
@@ -111,14 +169,17 @@
               <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th scope="col">NANOODLE Time (UTC+0)</th>
-                    <th scope="col"><img src="../../assets/nano_logo_black.svg" width="30px"></th>
-                    <th scope="col">£Now (£Then)</th>
+                    <th scope="col">Time (UTC {{utcOffset}})</th>
+                    <th scope="col">XNO</th>
+                    <th scope="col">{{currencyType}} Now</th>
+                    <th scope="col">{{currencyType}} Then</th>
                     <th scope="col">Associated Account</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr app-transactionRow *ngFor="let transaction of accountResults['history']" [rate]=this.priceResults [type]=transaction.type [hash]=transaction.hash [account]=transaction.account [amount]=transaction.amount> 
+                  <tr app-transactionRow *ngFor="let transaction of accountResults['history']" [rate]=this.priceResults
+                    [type]=transaction.type [utcOffset]=utcOffset [currencyType]=currencyType [hash]=transaction.hash [account]=transaction.account
+                    [amount]=transaction.amount>
                   </tr>
                 </tbody>
               </table>
@@ -169,7 +230,7 @@
       <h3>NANOODLE Products</h3>
       <h4>NANOODLE Books</h4>
       <p>Download this account's transactions in a variety of formats (unprocessed transactions are included)</p>
-      <app-accountDownload [identifier]=identifier></app-accountDownload>
+      <app-accountDownload [identifier]=identifier [currencyType]=currencyType></app-accountDownload>
       <h4>NANOODLE Watch</h4>
       <p>Receive an email when transactions are detected on this account</p>
       <app-accountWatch [identifier]=identifier></app-accountWatch>

@@ -55,7 +55,6 @@ export class AccountWatchComponent {
   }
 
   modalClose($event) {
-    console.log($event); // { submitted: true }
   }
 
 }

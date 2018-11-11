@@ -34,14 +34,14 @@
         <div class="row">
           <div class="col-lg-12 my-auto">
             <p>Hash: {{ key }}</p>
-            <p>NANOODLE Time (UTC+0):
+            <p>Time (UTC+0):
               <ng-container *ngIf="blockTime; then blockTimeLoaded; else blockTimeLoading">
               </ng-container>
               <ng-template #blockTimeLoaded>
                 <ng-container *ngIf="blockTime.length > 0; then blockTimeResults else blockTimeEmpty">
                 </ng-container>
                 <ng-template #blockTimeResults>
-                  <app-blockTime [hyperlink]=false [hash]=key></app-blockTime>
+                    {{ formatDate(+blockTime[0]['log']['epochTimeStamp'].$date) }}
                 </ng-template>
                 <ng-template #blockTimeEmpty>
                   Not Recorded

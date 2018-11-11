@@ -6,24 +6,25 @@ table {
     letter-spacing: 1.5px;
   }
 
-  td{
+td{
     word-wrap:  break-word;
-  }
-  
-  .mat-form-field  
-  {
-    font-size: 14px;
-    font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
-    letter-spacing: 1.5px;
-  }
+}
 
-  .account {
+.account {
     text-transform: lowercase;
 }
 
 button:focus {
   outline: 0 !important;
   border: 0 !important;
+}
+
+.mat-form-field
+{
+    font-size: 12px;
+    font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+    letter-spacing: 1.5px;
+    width: 350px;
 }
 
 p
