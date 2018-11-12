@@ -24,7 +24,7 @@ export class TransactionGraphComponent implements OnInit {
     var width = 450,
       height = 150,
       counter = 18,
-      max = 5 * 1.2;
+      max = 10;
 
 
     var groups = {
@@ -107,7 +107,7 @@ export class TransactionGraphComponent implements OnInit {
     function getValues() {
       blockService.getBlockCount(15, true).subscribe(data => {
         groups['current'].value = data['_size'];
-        if (data['_size'] > max) {
+        if (data['_size'] >= max) {
           max = data['_size'];
 
           y.domain([0, max * 1.2])

@@ -61,7 +61,7 @@ export class TransactionRowComponent implements OnInit {
     this.blockService.getBlockTime(blockParam)
       .subscribe(data => {
         this.blockTime = data;
-        //console.log(this.blockTime);
+        console.log(this.blockTime);
         this.getMarketPrice();
       });
   }
@@ -69,10 +69,9 @@ export class TransactionRowComponent implements OnInit {
   getMarketPrice() {
     if (this.blockTime.length > 0) {
       if (this.blockTime[0]['log'].hasOwnProperty('epochTimeStamp')) {
-
         this.pastPriceFetch = true;
         let timestamp = +this.blockTime[0]['log']['epochTimeStamp'].$date;
-        this.marketService.getMarketPrice(timestamp)
+        this.marketService.getMarketPrice(timestamp,this.currencyType)
           .subscribe(data => {
             let returnPrice = 0;
             if (data.length > 0) {

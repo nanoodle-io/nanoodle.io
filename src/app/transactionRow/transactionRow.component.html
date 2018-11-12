@@ -2,7 +2,7 @@
     <ng-container *ngIf="blockTime; then blockTimeLoaded; else blockTimeLoading">
     </ng-container>
     <ng-template #blockTimeLoaded>
-        <ng-container *ngIf="blockTime.length > 0; then blockTimeResults else blockTimeEmpty">
+        <ng-container *ngIf="blockTime.length > 0; then blockTimeResults; else blockTimeEmpty">
         </ng-container>
         <ng-template #blockTimeResults>
             <a [routerLink]="['/block',hash]">{{ formatDate(+(+blockTime[0]['log']['epochTimeStamp'].$date + (+utcOffset * 3600000))) }}</a>

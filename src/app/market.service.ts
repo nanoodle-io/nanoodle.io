@@ -13,20 +13,19 @@ import { catchError } from 'rxjs/operators';
 export class MarketService {
   //x minutes either side
   minutes: number = 5;
-
   private sub: any;
    greaterThan: number;
    lessThan: number;
 
   constructor(private messageService: MessageService, private http: HttpClient) { }
 
-  getMarketPrice(timestamp: number) {
+  getMarketPrice(timestamp: number, currencyType: string) {
     this.greaterThan = timestamp - (1000 * 60 * this.minutes);
     this.lessThan = timestamp + (1000 * 60 * this.minutes);
     
     const httpOptions = {
       params: new HttpParams({
-        fromString: "filter={'log.epochTimeStamp':{$gte: new Date(" + this.greaterThan + ")}}&filter={'log.epochTimeStamp':{$lte: new Date(" + this.lessThan + ")}}&np"
+        fromString: "filter={'log.epochTimeStamp':{$gte: new Date(" + this.greaterThan + ")}}&filter={'log.epochTimeStamp':{$lte: new Date(" + this.lessThan + ")}}&filter={'" + currencyType + "': {'$exists': true }}&np"
       }),
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -36,7 +35,7 @@ export class MarketService {
 
     return this.http.get(environment.price, httpOptions).pipe(
       //tap(_ => this.log(`found account matching "${params}"`)),
-      catchError(this.handleError('removeWatcher', null))
+      catchError(this.handleError('getMarketPrice', null))
     );
   };
 
@@ -54,7 +53,7 @@ export class MarketService {
     };
   }
   private log(message: string) {
-    this.messageService.add(`Account Service: ${message}`);
+    this.messageService.add(`Market Service: ${message}`);
   }
 
 }

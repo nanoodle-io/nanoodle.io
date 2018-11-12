@@ -6,7 +6,6 @@ import { AccountService } from '../account.service';
 import { BlockService } from '../block.service';
 import { MessageService } from '../message.service';
 import { MarketService } from '../market.service';
-import { query } from '@angular/core/src/render3/query';
 
 export interface DialogData {
   format: string;
@@ -46,8 +45,9 @@ export class AccountDownloadComponent {
   @Input()
   identifier: string;
   
-  @Input()
-  currencyType: string;
+  @Input() currencyType: string;
+
+  @Input() utcOffset: string;
 
   constructor(public dialog: MatDialog, private marketService: MarketService, private messageService: MessageService, private accountService: AccountService, private blockService: BlockService) { }
 
@@ -63,6 +63,9 @@ export class AccountDownloadComponent {
       data: { selection: this.selection }
     });
 
+    dialogRef.componentInstance.utcOffset = this.utcOffset;
+    dialogRef.componentInstance.currencyType = this.currencyType;
+
     dialogRef.afterClosed().subscribe(result => {
       this.selection = result;
 
@@ -70,7 +73,7 @@ export class AccountDownloadComponent {
         this.processing = true;
 
         if (this.selection.format == "csv")
-          this.saveAccountCSV(this.identifier, +this.selection.last, this.currencyType);
+          this.saveAccountCSV(this.identifier, +this.selection.last, this.currencyType, this.utcOffset);
       }
     });
   }
@@ -80,7 +83,7 @@ export class AccountDownloadComponent {
     return jsonRepParam.replace(/\\n/g, "").replace(/\\/g, "").replace(/\"{/g, "{").replace(/}\"/g, "}");
   }
 
-  saveAccountCSV(accountParam: string, size: number, currencyType: string): void {
+  saveAccountCSV(accountParam: string, size: number, currencyType: string, utcOffset: string): void {
     //queries
     let hashes = [];
     let queryTimes = [];
@@ -92,7 +95,7 @@ export class AccountDownloadComponent {
     let offset = 0;
     //download data
     this.downloadString = [];
-    this.downloadString.push("nanoodle time (utc+0),transaction type,block type,processing status,account,nano amount,£then amount,hash\n");
+    this.downloadString.push("time utc" + utcOffset + ",transaction type,block type,processing status,account,xno amount," + currencyType.toLowerCase() + " amount then,hash\n");
 
     this.accountService.getUnprocessedBlocks(accountParam, size)
       .subscribe(data => {
@@ -129,7 +132,7 @@ export class AccountDownloadComponent {
 
                   if (this.blockTimes.length > 0) {
                     if (this.blockTimes[0]['log'].hasOwnProperty('epochTimeStamp')) {
-                      queryPrice.push(this.marketService.getMarketPrice(+this.blockTimes[0]['log']['epochTimeStamp'].$date));
+                      queryPrice.push(this.marketService.getMarketPrice(+this.blockTimes[0]['log']['epochTimeStamp'].$date,currencyType));
                     }
                     else {
                       queryPrice.push(of([]));
@@ -146,7 +149,7 @@ export class AccountDownloadComponent {
                   for (var i = 0; i < this.blockTimeResults.length; i++) {
                     //time
                     if (Object.keys(this.blockTimeResults[i]).length > 0) {
-                      time = this.formatDate(this.blockTimeResults[i][0]['log']['dateTime']);
+                      time = this.formatDate(+this.blockTimeResults[i][0]['log']['epochTimeStamp'].$date + (+utcOffset * 3600000));
                     }
                     else {
                       time = "not recorded";
@@ -165,7 +168,7 @@ export class AccountDownloadComponent {
                         this.tempPrice = data[i][x];
                         returnPrice = returnPrice + this.tempPrice[currencyType];
                       }
-                      this.pastPrice = "£" + this.formatDecimals(returnPrice / data[i].length * +this.formatAmount(+this.detail.amount,5),2);
+                      this.pastPrice = "" + this.formatDecimals(returnPrice / data[i].length * +this.formatAmount(+this.detail.amount,5),4);
                     }
                     else {
                       this.pastPrice = "not recorded";
@@ -200,8 +203,9 @@ export class AccountDownloadComponent {
       });
   }
 
-  formatDate(rawDate: string): string {
-    return rawDate.match(/\d{2}\/[A-Za-z]{3}\/\d{4}/) + " " + ("" + rawDate.match(/\d{2}:\d{2}:\d{2} /)).trim();
+  formatDate(rawDate: number): string {
+    let myDate = new Date(rawDate);
+    return myDate.toLocaleString();
   }
 
   formatDecimals(input: number, places: number): string {
@@ -215,7 +219,7 @@ export class AccountDownloadComponent {
   }
 
   private log(message: string) {
-    this.messageService.add(`Account Component: ${message}`);
+    this.messageService.add(`Account Download Component: ${message}`);
   }
 
   modalClose($event) {
@@ -230,6 +234,9 @@ export class AccountDownloadComponent {
   styleUrls: ['./accountDownload.component.css']
 })
 export class AccountDownloadComponentDialog {
+
+  currencyType: string;
+  utcOffset: string;
 
   constructor(
     public dialogRef: MatDialogRef<AccountDownloadComponentDialog>,
@@ -279,11 +286,6 @@ interface Content {
 
 interface Block {
   [detail: string]: Detail;
-}
-
-interface BlockResults {
-  error?: string;
-  blocks?: Block[];
 }
 
 interface BlockTime {
