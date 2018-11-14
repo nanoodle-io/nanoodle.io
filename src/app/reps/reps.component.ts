@@ -27,9 +27,9 @@ export class RepsComponent implements OnInit {
     //NANOODLE Representative
     this.getWeight('xrb_1e6e41up4x5e4jke6wy4k6nnuagagspfx4tjafghub6cw46ueimqt657nx4a');
   }
-  formatDecimals(input: number): string {
-    const dec = 3;
-    return input.toFixed(dec);
+  
+  formatDecimals(input: number, places: number): string {
+    return input.toFixed(places);
   }
 
   formatVersion(input: string): string {

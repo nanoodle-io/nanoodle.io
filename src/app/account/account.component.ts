@@ -43,13 +43,11 @@ export class AccountComponent implements OnInit {
       this.keys = null;
       this.currencyType = 'GBP';
       this.error = null;
-      let tz = Math.floor(new Date().getTimezoneOffset()/-60);
-      if (tz > -1)
-      {
+      let tz = Math.floor(new Date().getTimezoneOffset() / -60);
+      if (tz > -1) {
         this.utcOffset = "+" + tz;
       }
-      else
-      {
+      else {
         this.utcOffset = "" + tz;
       }
       this.balanceResults = null;
@@ -59,20 +57,19 @@ export class AccountComponent implements OnInit {
       this.getBlockCount();
       this.getPrice();
       this.getAccount(this.identifier, 20);
-      this.getUnprocessedBlocks(this.identifier,20);
+      this.getUnprocessedBlocks(this.identifier, 20);
       this.getRepresentative(this.identifier);
       this.getWeight(this.identifier);
       this.getBalance(this.identifier);
     });
   }
 
-  getPrice()
-    {
-      this.priceResults = null;
-      this.cryptoCompareService.getPrice(this.currencyType).subscribe(data => {
-        this.priceResults = data;
-      });
-    }
+  getPrice() {
+    this.priceResults = null;
+    this.cryptoCompareService.getPrice(this.currencyType).subscribe(data => {
+      this.priceResults = data;
+    });
+  }
 
   getBlockCount(): void {
     this.NodeService.getBlockCount()
@@ -137,10 +134,147 @@ export class AccountComponent implements OnInit {
       });
   }
 
-  formatAmount(mRai: number, places: number): string {
-    const raw = 1000000000000000000000000000000;
-    var temp = mRai / raw;
-    return temp.toFixed(places);
+  formatAmount(type: string, amount: number, returnSymbol: boolean): string {
+    if (type == 'XRB') {
+      let raw = 1000000000000000000000000000000;
+      let temp = amount / raw;
+      if (returnSymbol) {
+        return temp.toFixed(2);
+      }
+      else {
+        return temp.toFixed(2);
+
+      }
+    }
+    else if (type == 'XNO') {
+      let raw = 1000000000000000000000000;
+      let temp = amount / raw;
+      if (returnSymbol) {
+        return 'N̶' + temp.toFixed(0);
+      }
+      else {
+        return temp.toFixed(0);
+      }
+    }
+    else if (type == 'ETH') {
+      if (returnSymbol) {
+        return 'Ξ' + amount.toFixed(6);
+      }
+      else {
+        return amount.toFixed(6);
+      }
+    }
+    else if (type == 'BTC') {
+      if (returnSymbol) {
+        return '₿' + amount.toFixed(6);
+      }
+      else {
+        return amount.toFixed(6);
+      }
+    }
+    else if (type == 'JPY') {
+      if (returnSymbol) {
+
+        return '¥' + amount.toFixed(0);
+      }
+      else {
+        return amount.toFixed(0);
+      }
+    }
+    else if (type == 'CNY') {
+      if (returnSymbol) {
+
+        return '¥' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'USD') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'SEK') {
+      if (returnSymbol) {
+
+        return 'kr' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'CHF') {
+      if (returnSymbol) {
+
+        return '₣' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'ZAR') {
+      if (returnSymbol) {
+
+        return 'R' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'EUR') {
+      if (returnSymbol) {
+
+        return '€' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'GBP') {
+      if (returnSymbol) {
+
+        return '£' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'CAD') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'MXN') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'AUD') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else {
+      return amount.toFixed(2);
+    }
   }
 
   formatDate(rawDate: string): string {

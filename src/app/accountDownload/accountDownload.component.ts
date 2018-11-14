@@ -95,7 +95,7 @@ export class AccountDownloadComponent {
     let offset = 0;
     //download data
     this.downloadString = [];
-    this.downloadString.push("time utc" + utcOffset + ",transaction type,block type,processing status,account,xno amount," + currencyType.toLowerCase() + " amount then,hash\n");
+    this.downloadString.push("time utc" + utcOffset + ",transaction type,block type,processing status,account,xrb amount," + currencyType.toLowerCase() + " amount then,hash\n");
 
     this.accountService.getUnprocessedBlocks(accountParam, size)
       .subscribe(data => {
@@ -168,7 +168,7 @@ export class AccountDownloadComponent {
                         this.tempPrice = data[i][x];
                         returnPrice = returnPrice + this.tempPrice[currencyType];
                       }
-                      this.pastPrice = "" + this.formatDecimals(returnPrice / data[i].length * +this.formatAmount(+this.detail.amount,5),4);
+                      this.pastPrice = "" + this.formatAmount(currencyType,returnPrice / data[i].length * +this.formatAmount('XRB', +this.detail.amount,false),true);
                     }
                     else {
                       this.pastPrice = "not recorded";
@@ -189,7 +189,7 @@ export class AccountDownloadComponent {
                       direction = this.accountResults['history'][i-y].type;
                     }
 
-                    this.downloadString.push(time + "," + direction + "," + this.contents.type + "," + status + "," + this.contents.account + "," + this.formatAmount(+this.detail.amount, 5) + "," + this.pastPrice + "," + this.key + "\n");
+                    this.downloadString.push(time + "," + direction + "," + this.contents.type + "," + status + "," + this.contents.account + "," + this.formatAmount('XRB', +this.detail.amount,true) + "," + this.pastPrice + "," + this.key + "\n");
 
                   }
                   const blob = new Blob(this.downloadString, { type: 'text/plain' });
@@ -208,14 +208,147 @@ export class AccountDownloadComponent {
     return myDate.toLocaleString();
   }
 
-  formatDecimals(input: number, places: number): string {
-    return input.toFixed(places);
-  }
+  formatAmount(type: string, amount: number, returnSymbol: boolean): string {
+    if (type == 'XRB') {
+      let raw = 1000000000000000000000000000000;
+      let temp = amount / raw;
+      if (returnSymbol) {
+        return temp.toFixed(2);
+      }
+      else {
+        return temp.toFixed(2);
 
-  formatAmount(mRai: number, places: number): string {
-    const raw = 1000000000000000000000000000000;
-    var temp = mRai / raw;
-    return temp.toFixed(places);
+      }
+    }
+    else if (type == 'XNO') {
+      let raw = 1000000000000000000000000;
+      let temp = amount / raw;
+      if (returnSymbol) {
+        return 'N̶' + temp.toFixed(0);
+      }
+      else {
+        return temp.toFixed(0);
+      }
+    }
+    else if (type == 'ETH') {
+      if (returnSymbol) {
+        return 'Ξ' + amount.toFixed(6);
+      }
+      else {
+        return amount.toFixed(6);
+      }
+    }
+    else if (type == 'BTC') {
+      if (returnSymbol) {
+        return '₿' + amount.toFixed(6);
+      }
+      else {
+        return amount.toFixed(6);
+      }
+    }
+    else if (type == 'JPY') {
+      if (returnSymbol) {
+
+        return '¥' + amount.toFixed(0);
+      }
+      else {
+        return amount.toFixed(0);
+      }
+    }
+    else if (type == 'CNY') {
+      if (returnSymbol) {
+
+        return '¥' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'USD') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'SEK') {
+      if (returnSymbol) {
+
+        return 'kr' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'CHF') {
+      if (returnSymbol) {
+
+        return '₣' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'ZAR') {
+      if (returnSymbol) {
+
+        return 'R' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'EUR') {
+      if (returnSymbol) {
+
+        return '€' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'GBP') {
+      if (returnSymbol) {
+
+        return '£' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'CAD') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'MXN') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'AUD') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else {
+      return amount.toFixed(2);
+    }
   }
 
   private log(message: string) {

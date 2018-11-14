@@ -82,11 +82,28 @@ export class BlockComponent implements OnInit {
     return input.toFixed(dec);
   }
   
-  formatAmount(mRai: number): string {
-    const dec = 6;
-    const raw = 1000000000000000000000000000000;
-    var temp = mRai / raw;
-    return temp.toFixed(dec);
+  formatAmount(type: string, amount: number, returnSymbol: boolean): string {
+    if (type == 'XRB') {
+      let raw = 1000000000000000000000000000000;
+      let temp = amount / raw;
+      if (returnSymbol) {
+        return temp.toFixed(2);
+      }
+      else {
+        return temp.toFixed(2);
+
+      }
+    }
+    else if (type == 'XNO') {
+      let raw = 1000000000000000000000000;
+      let temp = amount / raw;
+      if (returnSymbol) {
+        return 'N̶' + temp.toFixed(0);
+      }
+      else {
+        return temp.toFixed(0);
+      }
+    }
   }
 
   //RPC block results have a bunch of extra characters that need removing before a parse

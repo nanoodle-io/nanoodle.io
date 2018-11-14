@@ -14,7 +14,7 @@
         </ng-container>
         <ng-template #blockCountLoaded>
           <p>The NANOODLE node is {{
-            formatDecimals(+(+blockCountResults['count']/(+blockCountResults['count']++blockCountResults['unchecked']))*100)
+            formatDecimals(+(+blockCountResults['count']/(+blockCountResults['count']++blockCountResults['unchecked']))*100,3)
             }}% in sync with the Nano network</p>
         </ng-template>
         <ng-template #blockCountLoading>

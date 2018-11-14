@@ -24,7 +24,7 @@
         </ng-container>
         <ng-template #blockCountLoaded>
           <p>The NANOODLE node is {{
-            formatDecimals(+(+blockCountResults['count']/(+blockCountResults['count']++blockCountResults['unchecked']))*100)
+            formatDecimals(+(+blockCountResults['count']/(+blockCountResults['count']++blockCountResults['unchecked']))*100,3)
             }}% in sync with the Nano network</p>
         </ng-template>
         <ng-template #blockCountLoading>
@@ -53,12 +53,15 @@
             </p>
             <p>Block Account: <a class="account" [routerLink]="['/account',detail['block_account']]">{{
                 detail['block_account'] }}</a></p>
-            <p>Amount: {{ formatAmount(detail['amount']) }}</p>
+            <p>XRB Amount: {{ formatAmount('XRB',detail['amount'],true) }}</p>
+            <p>XNO Amount: {{ formatAmount('XNO',detail['amount'],true) }}</p>
+            <p>({{detail['amount']}} raw)</p>
             <p>Type: {{ contents['type'] }}</p>
             <p>Previous: <a [routerLink]="['/block',contents['previous']]">{{ contents['previous'] }}</a></p>
             <p>Representative: <a class="account" [routerLink]="['/account',contents['representative']]">{{
                 contents['representative'] }}</a></p>
-            <p>Balance: {{ formatAmount(contents['balance']) }}</p>
+            <p>XRB Balance: {{ formatAmount('XRB',contents['balance'],true) }}</p>
+            <p>XNO Balance: {{ formatAmount('XNO',contents['balance'],true) }}</p>
             <p>Link: {{ contents['link'] }}</p>
             <p>Link As Account: <a class="account" [routerLink]="['/account',contents['link_as_account']]">{{
                 contents['link_as_account'] }}</a></p>

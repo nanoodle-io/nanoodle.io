@@ -12,9 +12,9 @@ import { MessageService } from '../message.service';
 export class TransactionRowComponent implements OnInit {
   //Results
   blockTime: BlockTime[] = [];
-  pastPrice: number;
+  pastRate: number;
   pastPriceFetch: boolean;
-  tempPrice: FiatResults;
+  tempRate: FiatResults;
 
   error: string;
   reg = new RegExp('"error"');
@@ -41,7 +41,7 @@ export class TransactionRowComponent implements OnInit {
   _currencyType: string;
   @Input() set currencyType(value: string) {
     this._currencyType = value;
-    this.getMarketPrice();
+    this.getMarketRate();
   }
 
   get currencyType(): string {
@@ -52,7 +52,7 @@ export class TransactionRowComponent implements OnInit {
 
   ngOnInit(): void {
     this.blockTime = [];
-    this.pastPrice = null;
+    this.pastRate = null;
     this.pastPriceFetch = false;
     this.getBlockDetails(this.hash, this.currencyType);
   }
@@ -61,31 +61,29 @@ export class TransactionRowComponent implements OnInit {
     this.blockService.getBlockTime(blockParam)
       .subscribe(data => {
         this.blockTime = data;
-        console.log(this.blockTime);
-        this.getMarketPrice();
+        this.getMarketRate();
       });
   }
 
-  getMarketPrice() {
+  getMarketRate() {
     if (this.blockTime.length > 0) {
       if (this.blockTime[0]['log'].hasOwnProperty('epochTimeStamp')) {
         this.pastPriceFetch = true;
         let timestamp = +this.blockTime[0]['log']['epochTimeStamp'].$date;
-        this.marketService.getMarketPrice(timestamp,this.currencyType)
+        this.marketService.getMarketPrice(timestamp, this.currencyType)
           .subscribe(data => {
-            let returnPrice = 0;
+            let returnRate = 0;
             if (data.length > 0) {
               for (var i = 0; i < data.length; i++) {
-                this.tempPrice = data[i];
-                returnPrice = returnPrice + this.tempPrice[this.currencyType];
+                this.tempRate = data[i];
+                returnRate = returnRate + this.tempRate[this.currencyType];
               }
-              this.pastPrice = returnPrice / data.length * +this.formatAmount(this.amount, 5);
+              this.pastRate = returnRate / data.length;
             }
             else {
               this.pastPriceFetch = false;
             }
           });
-
       }
     }
   }
@@ -112,14 +110,147 @@ export class TransactionRowComponent implements OnInit {
     }
   }
 
-  formatDecimals(input: number, places: number): string {
-    return input.toFixed(places);
-  }
+  formatAmount(type: string, amount: number, returnSymbol: boolean): string {
+    if (type == 'XRB') {
+      let raw = 1000000000000000000000000000000;
+      let temp = amount / raw;
+      if (returnSymbol) {
+        return temp.toFixed(2);
+      }
+      else {
+        return temp.toFixed(2);
 
-  formatAmount(mRai: number, places: number): string {
-    const raw = 1000000000000000000000000000000;
-    var temp = mRai / raw;
-    return temp.toFixed(places);
+      }
+    }
+    else if (type == 'XNO') {
+      let raw = 1000000000000000000000000;
+      let temp = amount / raw;
+      if (returnSymbol) {
+        return 'N̶' + temp.toFixed(0);
+      }
+      else {
+        return temp.toFixed(0);
+      }
+    }
+    else if (type == 'ETH') {
+      if (returnSymbol) {
+        return 'Ξ' + amount.toFixed(6);
+      }
+      else {
+        return amount.toFixed(6);
+      }
+    }
+    else if (type == 'BTC') {
+      if (returnSymbol) {
+        return '₿' + amount.toFixed(6);
+      }
+      else {
+        return amount.toFixed(6);
+      }
+    }
+    else if (type == 'JPY') {
+      if (returnSymbol) {
+
+        return '¥' + amount.toFixed(0);
+      }
+      else {
+        return amount.toFixed(0);
+      }
+    }
+    else if (type == 'CNY') {
+      if (returnSymbol) {
+
+        return '¥' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'USD') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'SEK') {
+      if (returnSymbol) {
+
+        return 'kr' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'CHF') {
+      if (returnSymbol) {
+
+        return '₣' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'ZAR') {
+      if (returnSymbol) {
+
+        return 'R' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'EUR') {
+      if (returnSymbol) {
+
+        return '€' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'GBP') {
+      if (returnSymbol) {
+
+        return '£' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'CAD') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'MXN') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'AUD') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else {
+      return amount.toFixed(2);
+    }
   }
 
   formatDate(rawDate: number): string {

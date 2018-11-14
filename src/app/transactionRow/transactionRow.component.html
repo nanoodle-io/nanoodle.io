@@ -15,25 +15,26 @@
         <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
     </ng-template>
 </td>
-<td [attr.id]="hash+'a'">{{addType()}}{{ formatAmount(amount,4) }}</td>
-<td [attr.id]="hash+'b'">
+<td [attr.id]="hash+'a'">{{addType()}}{{formatAmount('XRB',this.amount,true)}}</td>
+<td [attr.id]="hash+'b'">{{formatAmount('XNO',this.amount,true)}}</td>
+<td [attr.id]="hash+'c'">
     <ng-container *ngIf="rate; then priceLoaded; else priceLoading">
     </ng-container>
     <ng-template #priceLoaded>
-        {{ formatDecimals(+rate[currencyType] * formatAmount(amount,4),4) }}
+        {{ formatAmount(currencyType, +rate[currencyType] * +formatAmount('XRB',this.amount,false),true) }}
     </ng-template>
     <ng-template #priceLoading>
         <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
     </ng-template>
 </td>
-<td [attr.id]="hash+'c'">
+<td [attr.id]="hash+'d'">
     <ng-container *ngIf="pastPriceFetch==true; then pastShow;">
     </ng-container>
     <ng-template #pastShow>
         <ng-container *ngIf="pastPrice; then pastPriceLoaded; else pastPriceLoading">
         </ng-container>
         <ng-template #pastPriceLoaded>
-            {{ formatDecimals(pastPrice,4) }}
+            {{ formatAmount(currencyType, pastRate * +formatAmount('XRB',this.amount,false),true) }}
         </ng-template>
         <ng-template #pastPriceLoading>
             <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
@@ -45,3 +46,4 @@
 {{ formatType(type, hash+"a") }}
 {{ formatType(type, hash+"b") }}
 {{ formatType(type, hash+"c") }}
+{{ formatType(type, hash+"d") }}

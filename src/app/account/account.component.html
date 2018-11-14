@@ -21,7 +21,7 @@
       </ng-container>
       <ng-template #blockCountLoaded>
         <p>The NANOODLE node is {{
-          formatDecimals(+(+blockCountResults['count']/(+blockCountResults['count']++blockCountResults['unchecked']))*100)
+          formatDecimals(+(+blockCountResults['count']/(+blockCountResults['count']++blockCountResults['unchecked']))*100,3)
           }}% in sync with the Nano network</p>
       </ng-template>
       <ng-template #blockCountLoading>
@@ -34,7 +34,7 @@
         <p>
           <qrcode [qrdata]="accountResults['account']" [size]="128" [level]="'M'"></qrcode>
         </p>
-        <p><a class="account" [routerLink]="['/account',accountResults['account']]">{{ accountResults['account'] }}</a></p>
+        <p>{{ accountResults['account'] }}</p>
       </ng-template>
       <ng-template #accountLoading>
         <div>
@@ -94,21 +94,25 @@
       </mat-form-field>
     </div>
     <div class="container">
-      <h3>Balance</h3>
+      <h3>NANO Balance</h3>
       <ng-container *ngIf="balanceResults; then balanceLoaded; else balanceLoading">
       </ng-container>
       <ng-template #balanceLoaded>
-        <p>Nano (XNO): {{ formatAmount(+balanceResults['balance'] + +balanceResults['pending'],4) }} (including
-          {{formatAmount(balanceResults['pending'],4)}}
+        <p>XRB (Mnano): {{ formatAmount('XRB',+balanceResults['balance'] + +balanceResults['pending'],true) }} (including
+          {{formatAmount('XRB',balanceResults['pending'],true)}}
           pending)</p>
-          <ng-container *ngIf="priceResults; then priceLoaded; else priceLoading">
-          </ng-container>
-          <ng-template #priceLoaded>
-            <p>{{ currencyType }} Value: {{ formatAmount((+balanceResults['balance'] + +balanceResults['pending']) * priceResults[currencyType],4) }} </p>
-          </ng-template>
-          <ng-template #priceLoading>
-              <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
-          </ng-template>
+        <p>XNO (nano): {{ formatAmount('XNO',+balanceResults['balance'] + +balanceResults['pending'],true) }} (including
+          {{formatAmount('XNO',balanceResults['pending'],true)}}
+          pending)</p>
+        <ng-container *ngIf="priceResults; then priceLoaded; else priceLoading">
+        </ng-container>
+        <ng-template #priceLoaded>
+          <p>{{ currencyType }}: {{ formatAmount(currencyType, +formatAmount('XRB',+balanceResults['balance'] +
+            +balanceResults['pending']) * priceResults[currencyType],true) }} </p>
+        </ng-template>
+        <ng-template #priceLoading>
+          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+        </ng-template>
       </ng-template>
       <ng-template #balanceLoading>
         <div>
@@ -133,6 +137,7 @@
                 <thead>
                   <tr>
                     <th scope="col">Time (UTC{{utcOffset}})</th>
+                    <th scope="col">XRB</th>
                     <th scope="col">XNO</th>
                     <th scope="col">{{currencyType}} Now</th>
                     <th scope="col">{{currencyType}} Then</th>
@@ -140,8 +145,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr app-transactionRow *ngFor="let key of keys;" [rate]=this.priceResults [hash]=key [type]='"receive"' [utcOffset]=utcOffset
-                    [currencyType]=currencyType [account]='blockResults["blocks"][key]["block_account"]' [amount]='blockResults["blocks"][key]["amount"]'>
+                  <tr app-transactionRow *ngFor="let key of keys;" [rate]=this.priceResults [hash]=key [type]='"receive"'
+                    [utcOffset]=utcOffset [currencyType]=currencyType [account]='blockResults["blocks"][key]["block_account"]'
+                    [amount]='blockResults["blocks"][key]["amount"]'>
                   </tr>
                 </tbody>
               </table>
@@ -173,6 +179,7 @@
                 <thead>
                   <tr>
                     <th scope="col">Time (UTC{{utcOffset}})</th>
+                    <th scope="col">XRB</th>
                     <th scope="col">XNO</th>
                     <th scope="col">{{currencyType}} Now</th>
                     <th scope="col">{{currencyType}} Then</th>
@@ -181,8 +188,8 @@
                 </thead>
                 <tbody>
                   <tr app-transactionRow *ngFor="let transaction of accountResults['history']" [rate]=this.priceResults
-                    [type]=transaction.type [utcOffset]=utcOffset [currencyType]=currencyType [hash]=transaction.hash [account]=transaction.account
-                    [amount]=transaction.amount>
+                    [type]=transaction.type [utcOffset]=utcOffset [currencyType]=currencyType [hash]=transaction.hash
+                    [account]=transaction.account [amount]=transaction.amount>
                   </tr>
                 </tbody>
               </table>
@@ -223,7 +230,8 @@
       <ng-container *ngIf="weightResults; then weightLoaded; else weightloading">
       </ng-container>
       <ng-template #weightLoaded>
-        <p>This account has {{formatAmount(weightResults['weight'],4)}} voting weight</p>
+        <p>{{formatAmount('XRB',weightResults['weight'],true)}} XRB voting weight</p>
+        <p>{{formatAmount('XNO',weightResults['weight'],true)}} XNO voting weight</p>
       </ng-template>
       <ng-template #weightloading>
         <div>
