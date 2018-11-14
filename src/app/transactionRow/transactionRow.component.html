@@ -28,15 +28,15 @@
     </ng-template>
 </td>
 <td [attr.id]="hash+'d'">
-    <ng-container *ngIf="pastPriceFetch==true; then pastShow;">
+    <ng-container *ngIf="pastRateFetch==true; then pastShow;">
     </ng-container>
     <ng-template #pastShow>
-        <ng-container *ngIf="pastPrice; then pastPriceLoaded; else pastPriceLoading">
+        <ng-container *ngIf="pastRate; then pastRateLoaded; else pastRateLoading">
         </ng-container>
-        <ng-template #pastPriceLoaded>
+        <ng-template #pastRateLoaded>
             {{ formatAmount(currencyType, pastRate * +formatAmount('XRB',this.amount,false),true) }}
         </ng-template>
-        <ng-template #pastPriceLoading>
+        <ng-template #pastRateLoading>
             <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </ng-template>
     </ng-template>

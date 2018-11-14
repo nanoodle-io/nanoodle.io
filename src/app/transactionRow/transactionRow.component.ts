@@ -13,7 +13,7 @@ export class TransactionRowComponent implements OnInit {
   //Results
   blockTime: BlockTime[] = [];
   pastRate: number;
-  pastPriceFetch: boolean;
+  pastRateFetch: boolean;
   tempRate: FiatResults;
 
   error: string;
@@ -53,7 +53,7 @@ export class TransactionRowComponent implements OnInit {
   ngOnInit(): void {
     this.blockTime = [];
     this.pastRate = null;
-    this.pastPriceFetch = false;
+    this.pastRateFetch = false;
     this.getBlockDetails(this.hash, this.currencyType);
   }
 
@@ -68,7 +68,7 @@ export class TransactionRowComponent implements OnInit {
   getMarketRate() {
     if (this.blockTime.length > 0) {
       if (this.blockTime[0]['log'].hasOwnProperty('epochTimeStamp')) {
-        this.pastPriceFetch = true;
+        this.pastRateFetch = true;
         let timestamp = +this.blockTime[0]['log']['epochTimeStamp'].$date;
         this.marketService.getMarketPrice(timestamp, this.currencyType)
           .subscribe(data => {
@@ -81,7 +81,7 @@ export class TransactionRowComponent implements OnInit {
               this.pastRate = returnRate / data.length;
             }
             else {
-              this.pastPriceFetch = false;
+              this.pastRateFetch = false;
             }
           });
       }
