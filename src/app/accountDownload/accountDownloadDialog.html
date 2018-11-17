@@ -2,11 +2,12 @@
   <mat-form-field>
     <mat-select name="format" [(ngModel)]="data.format" placeholder="Select Format" required #format="ngModel">
       <mat-option value="csv">CSV - Comma Separated Value</mat-option>
-      <!-- <mat-option value="ofx">OFX - Open Financial Exchange</mat-option> -->
+      <mat-option value="ofx">OFX - Open Financial Exchange (Beta)</mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field>
     <mat-select name="last" [(ngModel)]="data.last" placeholder="Previous Transactions" required #last="ngModel">
+      <mat-option value="25">25</mat-option>
       <mat-option value="50">50</mat-option>
       <mat-option value="100">100</mat-option>
       <mat-option value="200">200</mat-option>

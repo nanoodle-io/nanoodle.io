@@ -101,7 +101,7 @@
         <p>XRB (Mnano): {{ formatAmount('XRB',+balanceResults['balance'] + +balanceResults['pending'],true) }} (including
           {{formatAmount('XRB',balanceResults['pending'],true)}}
           pending)</p>
-        <p>XNO (nano): {{ formatAmount('XNO',+balanceResults['balance'] + +balanceResults['pending'],true) }} (including
+        <p>XNO (knano): {{ formatAmount('XNO',+balanceResults['balance'] + +balanceResults['pending'],true) }} (including
           {{formatAmount('XNO',balanceResults['pending'],true)}}
           pending)</p>
         <ng-container *ngIf="priceResults; then priceLoaded; else priceLoading">

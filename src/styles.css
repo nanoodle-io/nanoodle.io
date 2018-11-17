@@ -3,9 +3,6 @@
 @import "node_modules/font-awesome/css/font-awesome.min.css";
 @import "node_modules/fork-awesome/css/fork-awesome.min.css";
 @import "node_modules/simple-line-icons/css/simple-line-icons.css";
-@import "https://fonts.googleapis.com/css?family=Lato";
-@import "https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900";
-@import "https://fonts.googleapis.com/css?family=Muli";
 @import "device-mockups/device-mockups.css";
 @import "device-mockups/device-mockups2.css";
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";

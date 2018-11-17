@@ -123,10 +123,10 @@ export class TransactionRowComponent implements OnInit {
       }
     }
     else if (type == 'XNO') {
-      let raw = 1000000000000000000000000;
+      let raw = 1000000000000000000000000000;
       let temp = amount / raw;
       if (returnSymbol) {
-        return 'N̶' + temp.toFixed(0);
+        return '₦' + temp.toFixed(0);
       }
       else {
         return temp.toFixed(0);
