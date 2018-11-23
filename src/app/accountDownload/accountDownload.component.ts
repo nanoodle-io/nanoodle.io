@@ -368,8 +368,10 @@ export class AccountDownloadComponent {
   pad2(n) { return n < 10 ? '0' + n : n }
 
   formatAmount(type: string, amount: number, returnSymbol: boolean): string {
+    //Mnano
     if (type == 'XRB') {
       let raw = 1000000000000000000000000000000;
+      
       let temp = amount / raw;
       if (returnSymbol) {
         return temp.toFixed(2);
@@ -379,6 +381,7 @@ export class AccountDownloadComponent {
 
       }
     }
+    //nano
     else if (type == 'XNO') {
       let raw = 1000000000000000000000000000;
       let temp = amount / raw;
@@ -436,7 +439,7 @@ export class AccountDownloadComponent {
     else if (type == 'SEK') {
       if (returnSymbol) {
 
-        return 'kr' + amount.toFixed(2);
+        return amount.toFixed(2) + 'kr';
       }
       else {
         return amount.toFixed(2);
@@ -481,7 +484,7 @@ export class AccountDownloadComponent {
     else if (type == 'CAD') {
       if (returnSymbol) {
 
-        return '$' + amount.toFixed(2);
+        return 'C$' + amount.toFixed(2);
       }
       else {
         return amount.toFixed(2);
@@ -500,6 +503,24 @@ export class AccountDownloadComponent {
       if (returnSymbol) {
 
         return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'BRL') {
+      if (returnSymbol) {
+
+        return 'R$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'VES') {
+      if (returnSymbol) {
+
+        return 'Bs.' + amount.toFixed(2);
       }
       else {
         return amount.toFixed(2);

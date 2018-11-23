@@ -206,7 +206,7 @@ export class AccountComponent implements OnInit {
     else if (type == 'SEK') {
       if (returnSymbol) {
 
-        return 'kr' + amount.toFixed(2);
+        return amount.toFixed(2) + 'kr';
       }
       else {
         return amount.toFixed(2);
@@ -251,7 +251,7 @@ export class AccountComponent implements OnInit {
     else if (type == 'CAD') {
       if (returnSymbol) {
 
-        return '$' + amount.toFixed(2);
+        return 'C$' + amount.toFixed(2);
       }
       else {
         return amount.toFixed(2);
@@ -270,6 +270,24 @@ export class AccountComponent implements OnInit {
       if (returnSymbol) {
 
         return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'BRL') {
+      if (returnSymbol) {
+
+        return 'R$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'VES') {
+      if (returnSymbol) {
+
+        return 'Bs.' + amount.toFixed(2);
       }
       else {
         return amount.toFixed(2);

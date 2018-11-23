@@ -111,8 +111,10 @@ export class TransactionRowComponent implements OnInit {
   }
 
   formatAmount(type: string, amount: number, returnSymbol: boolean): string {
+    //Mnano
     if (type == 'XRB') {
       let raw = 1000000000000000000000000000000;
+      
       let temp = amount / raw;
       if (returnSymbol) {
         return temp.toFixed(2);
@@ -122,6 +124,7 @@ export class TransactionRowComponent implements OnInit {
 
       }
     }
+    //nano
     else if (type == 'XNO') {
       let raw = 1000000000000000000000000000;
       let temp = amount / raw;
@@ -179,7 +182,7 @@ export class TransactionRowComponent implements OnInit {
     else if (type == 'SEK') {
       if (returnSymbol) {
 
-        return 'kr' + amount.toFixed(2);
+        return amount.toFixed(2) + 'kr';
       }
       else {
         return amount.toFixed(2);
@@ -224,7 +227,7 @@ export class TransactionRowComponent implements OnInit {
     else if (type == 'CAD') {
       if (returnSymbol) {
 
-        return '$' + amount.toFixed(2);
+        return 'C$' + amount.toFixed(2);
       }
       else {
         return amount.toFixed(2);
@@ -243,6 +246,24 @@ export class TransactionRowComponent implements OnInit {
       if (returnSymbol) {
 
         return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'BRL') {
+      if (returnSymbol) {
+
+        return 'R$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'VES') {
+      if (returnSymbol) {
+
+        return 'Bs.' + amount.toFixed(2);
       }
       else {
         return amount.toFixed(2);
