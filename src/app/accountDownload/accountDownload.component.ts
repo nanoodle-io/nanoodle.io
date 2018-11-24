@@ -163,7 +163,7 @@ export class AccountDownloadComponent {
                         if (+this.blockTimeResults[i][0]['log']['epochTimeStamp'].$date > latest) {
                           latest = +this.blockTimeResults[i][0]['log']['epochTimeStamp'].$date;
                         }
-                        this.date = new Date(+this.blockTimeResults[i][0]['log']['epochTimeStamp'].$date);
+                        this.date = new Date(+this.blockTimeResults[i][0]['log']['epochTimeStamp'].$date + (+utcOffset * 3600000));
                         time = this.date.getFullYear().toString() + this.pad2(this.date.getMonth() + 1) + this.pad2(this.date.getDate()) + this.pad2(this.date.getHours()) + this.pad2(this.date.getMinutes()) + this.pad2(this.date.getSeconds());
                       }
                     }
@@ -219,7 +219,7 @@ export class AccountDownloadComponent {
                         this.transactionString.push("<TRNTYPE>CREDIT\n");
 
                       }
-                      this.transactionString.push("<DTPOSTED>" + time + "[0:GMT]\n");
+                      this.transactionString.push("<DTPOSTED>" + time + "[" + utcOffset + "]\n");
                       if (direction == "send") {
                         this.transactionString.push("<TRNAMT>-" + this.formatAmount('XRB', +this.detail.amount, false) + "\n");
 
@@ -231,26 +231,26 @@ export class AccountDownloadComponent {
                       this.transactionString.push("<FITID>" + this.key + "\n");
 
                       if (direction == "send") {
-                        memo = "from " + accountParam;
+                        memo = "from: " + accountParam;
                         name = this.accountResults['history'][i - y].account;
                       }
                       else {
                         if (status == "unprocessed") {
-                          memo = "from " + this.contents.account;
+                          memo = "from: " + this.contents.account;
                           name = accountParam;
                         }
                         else {
-                          memo = "from " + this.accountResults['history'][i - y].account;
+                          memo = "from: " + this.accountResults['history'][i - y].account;
                           name = accountParam;
                         }
                       }
-                      this.transactionString.push("<MEMO>" + memo + "\n");
+                      this.transactionString.push("<MEMO>" + memo + " " + this.currencyType + " rate:" + this.pastPrice + "\n");
                       this.transactionString.push("<NAME>" + name + "\n");
                       this.transactionString.push("</STMTTRN>\n");
                     }
                   }
 
-                  this.date = new Date();
+                  this.date = new Date(Date.now() + (+utcOffset * 3600000));  
                   time = this.date.getFullYear().toString() + this.pad2(this.date.getMonth() + 1) + this.pad2(this.date.getDate()) + this.pad2(this.date.getHours()) + this.pad2(this.date.getMinutes()) + this.pad2(this.date.getSeconds());
 
                   if (this.selection.format == "csv") {
@@ -289,7 +289,7 @@ export class AccountDownloadComponent {
                         this.downloadString.push("<SEVERITY>INFO\n");
                         this.downloadString.push("<MESSAGE>OK\n");
                         this.downloadString.push("</STATUS>\n");
-                        this.downloadString.push("<DTSERVER>" + time + "[0:GMT]\n");
+                        this.downloadString.push("<DTSERVER>" + time + "[" + utcOffset + "]\n");
                         this.downloadString.push("<USERKEY>--NoUserKey--\n");
                         this.downloadString.push("<LANGUAGE>ENG\n");
                         //Bank identification string 3000 is default
@@ -317,13 +317,13 @@ export class AccountDownloadComponent {
                         this.downloadString.push("</BANKACCTFROM>\n");
                         this.downloadString.push("<BANKTRANLIST>\n");
                         //earliest date
-                        this.date = new Date(+earliest);
+                        this.date = new Date(+earliest + (+utcOffset * 3600000));
                         time = this.date.getFullYear().toString() + this.pad2(this.date.getMonth() + 1) + this.pad2(this.date.getDate()) + this.pad2(this.date.getHours()) + this.pad2(this.date.getMinutes()) + this.pad2(this.date.getSeconds());
-                        this.downloadString.push("<DTSTART>" + time + "[0:GMT]\n");
+                        this.downloadString.push("<DTSTART>" + time + "[" + utcOffset + "]\n");
                         //latest date
-                        this.date = new Date(+latest);
+                        this.date = new Date(+latest + (+utcOffset * 3600000));
                         time = this.date.getFullYear().toString() + this.pad2(this.date.getMonth() + 1) + this.pad2(this.date.getDate()) + this.pad2(this.date.getHours()) + this.pad2(this.date.getMinutes()) + this.pad2(this.date.getSeconds());
-                        this.downloadString.push("<DTEND>" + time + "[0:GMT]\n");
+                        this.downloadString.push("<DTEND>" + time + "[" + utcOffset + "]\n");
 
                         //add in transactions, without comma
                         for (var x = 0; x < this.transactionString.length; x++) {
@@ -334,14 +334,14 @@ export class AccountDownloadComponent {
                         this.downloadString.push("<LEDGERBAL>\n");
                         this.downloadString.push("<BALAMT>" + this.formatAmount('XRB', (+this.balanceResults.balance + +this.balanceResults.pending), false) + "\n");
                         //current datetime
-                        this.date = new Date();
+                        this.date = new Date(Date.now() + (+utcOffset * 3600000));
                         time = this.date.getFullYear().toString() + this.pad2(this.date.getMonth() + 1) + this.pad2(this.date.getDate()) + this.pad2(this.date.getHours()) + this.pad2(this.date.getMinutes()) + this.pad2(this.date.getSeconds());
-                        this.downloadString.push("<DTASOF>" + time + "[0:GMT]\n");
+                        this.downloadString.push("<DTASOF>" + time + "[" + utcOffset + "]\n");
                         this.downloadString.push("</LEDGERBAL>\n");
                         this.downloadString.push("<AVAILBAL>\n");
                         this.downloadString.push("<BALAMT>" + this.formatAmount('XRB', +this.balanceResults.balance, false) + "\n");
                         //re-use current datetime
-                        this.downloadString.push("<DTASOF>" + time + "[0:GMT]\n");
+                        this.downloadString.push("<DTASOF>" + time + "[" + utcOffset + "]\n");
                         this.downloadString.push("</AVAILBAL>\n");
                         this.downloadString.push("</STMTRS>\n");
                         this.downloadString.push("</STMTTRNRS>\n");

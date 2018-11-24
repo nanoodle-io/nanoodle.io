@@ -34,7 +34,7 @@
         <p>
           <qrcode [qrdata]="accountResults['account']" [size]="128" [level]="'M'"></qrcode>
         </p>
-        <p id="identifier">{{ accountResults['account'] }} <i (click)="copyMessage(accountResults['account'])" class="fa fa-clipboard fa-1"></i></p>
+        <p id="identifier">{{ accountResults['account'] }} <i (click)="copyToClipboard(accountResults['account'])" class="fa fa-clipboard fa-1"></i></p>
       </ng-template>
       <ng-template #accountLoading>
         <div>

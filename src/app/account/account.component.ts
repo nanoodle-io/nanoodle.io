@@ -310,23 +310,47 @@ export class AccountComponent implements OnInit {
     this.messageService.add(`Account Component: ${message}`);
   }
 
-  copyMessage(val: string){
-    let selBox = document.createElement('textarea');
-    selBox.style.position = 'fixed';
-    selBox.style.left = '0';
-    selBox.style.top = '0';
-    selBox.style.opacity = '0';
-    selBox.value = val;
-    document.body.appendChild(selBox);
-    selBox.focus();
-    selBox.select();
-    document.execCommand('copy');
-    document.body.removeChild(selBox);
-  }
-
   trackElement(index: number, element: any) {
     return element ? element.guid : null;
   }
+
+ copyToClipboard(str: string) {
+  var el = document.createElement('textarea');
+  el.value = str;
+  el.setAttribute('readonly', '');
+  el.style.position = 'absolute';
+  el.style.left = '-9999px';
+  document.body.appendChild(el);
+
+  if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
+      // save current contentEditable/readOnly status
+      var editable = el.contentEditable;
+      var readOnly = el.readOnly;
+
+      // convert to editable with readonly to stop iOS keyboard opening
+      el.contentEditable = editable;
+      el.readOnly = true;
+
+      // create a selectable range
+      var range = document.createRange();
+      range.selectNodeContents(el);
+
+      // select the range
+      var selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      el.setSelectionRange(0, 999999);
+
+      // restore contentEditable/readOnly to original state
+      el.contentEditable = editable;
+      el.readOnly = readOnly;
+  } else {
+      el.select(); 
+  }
+
+  document.execCommand('copy');
+  document.body.removeChild(el);
+}
 }
 
 interface Transaction {
