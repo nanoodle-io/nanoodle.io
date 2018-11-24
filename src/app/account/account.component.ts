@@ -298,6 +298,10 @@ export class AccountComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    this.paramsub.unsubscribe();
+  }
+
   formatDate(rawDate: string): string {
     return rawDate.match(/\d{2}\/[A-Za-z]{3}\/\d{4}/) + " " + ("" + rawDate.match(/\d{2}:\d{2}:\d{2} /)).trim();
   }
@@ -306,8 +310,18 @@ export class AccountComponent implements OnInit {
     this.messageService.add(`Account Component: ${message}`);
   }
 
-  ngOnDestroy() {
-    this.paramsub.unsubscribe();
+  copyMessage(val: string){
+    let selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = val;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
   }
 
   trackElement(index: number, element: any) {

@@ -27,6 +27,11 @@ button:focus {
     width: 350px;
 }
 
+.fa-clipboard
+{
+  cursor: pointer;
+}
+
 p
 {
   font-size: 14px;

@@ -207,7 +207,7 @@ export class AccountDownloadComponent {
 
                     //add transaction
                     if (this.selection.format == "csv") {
-                      this.transactionString.push(time + "," + direction + "," + this.contents.type + "," + status + "," + this.contents.account + "," + this.formatAmount('XRB', +this.detail.amount, true) + "," + this.pastPrice + "," + this.key + "\n");
+                      this.transactionString.push("\"" + time + "\"," + direction + "," + this.contents.type + "," + status + "," + this.contents.account + "," + this.formatAmount('XRB', +this.detail.amount, true) + "," + this.pastPrice + "," + this.key + "\n");
                     }
                     else {
                       this.transactionString.push("<STMTTRN>\n");
@@ -255,8 +255,10 @@ export class AccountDownloadComponent {
 
                   if (this.selection.format == "csv") {
                     this.downloadString.push("time utc" + utcOffset + ",transaction type,block type,processing status,account,xrb amount," + currencyType.toLowerCase() + " amount then,hash\n");
-                    this.downloadString.push(this.transactionString.toString());
-
+                    //add in transactions, without comma
+                    for (var x = 0; x < this.transactionString.length; x++) {
+                      this.downloadString.push(this.transactionString[x]);
+                    }
                     //save csv
                     this.processing = false;
                     const blob = new Blob(this.downloadString, { type: 'text/plain' });
@@ -322,12 +324,12 @@ export class AccountDownloadComponent {
                         this.date = new Date(+latest);
                         time = this.date.getFullYear().toString() + this.pad2(this.date.getMonth() + 1) + this.pad2(this.date.getDate()) + this.pad2(this.date.getHours()) + this.pad2(this.date.getMinutes()) + this.pad2(this.date.getSeconds());
                         this.downloadString.push("<DTEND>" + time + "[0:GMT]\n");
-                        
+
                         //add in transactions, without comma
                         for (var x = 0; x < this.transactionString.length; x++) {
                           this.downloadString.push(this.transactionString[x]);
                         }
-                        
+
                         this.downloadString.push("</BANKTRANLIST>\n");
                         this.downloadString.push("<LEDGERBAL>\n");
                         this.downloadString.push("<BALAMT>" + this.formatAmount('XRB', (+this.balanceResults.balance + +this.balanceResults.pending), false) + "\n");
@@ -371,7 +373,7 @@ export class AccountDownloadComponent {
     //Mnano
     if (type == 'XRB') {
       let raw = 1000000000000000000000000000000;
-      
+
       let temp = amount / raw;
       if (returnSymbol) {
         return temp.toFixed(2);
