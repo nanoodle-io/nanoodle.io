@@ -244,7 +244,7 @@ export class AccountDownloadComponent {
                           name = accountParam;
                         }
                       }
-                      this.transactionString.push("<MEMO>" + memo + " " + this.currencyType + " rate:" + this.pastPrice + "\n");
+                      this.transactionString.push("<MEMO>" + memo + ", " + this.currencyType + " then:" + this.pastPrice + "\n");
                       this.transactionString.push("<NAME>" + name + "\n");
                       this.transactionString.push("</STMTTRN>\n");
                     }
@@ -273,7 +273,7 @@ export class AccountDownloadComponent {
                         this.downloadString.push("OFXHEADER:100\n");
                         this.downloadString.push("DATA:OFXSGML\n");
                         //version, type
-                        this.downloadString.push("VERSION:102\n");
+                        this.downloadString.push("VERSION:202\n");
                         this.downloadString.push("SECURITY:TYPE1\n");
                         this.downloadString.push("ENCODING:USASCII\n");
                         this.downloadString.push("CHARSET:1252\n");
@@ -299,7 +299,7 @@ export class AccountDownloadComponent {
                         this.downloadString.push("<BANKMSGSRSV1>\n");
                         this.downloadString.push("<STMTTRNRS>\n");
                         //?
-                        this.downloadString.push("<TRNUID>XXXX - 20090211000000\n");
+                        this.downloadString.push("<TRNUID>XXXX - XXXX\n");
                         this.downloadString.push("<STATUS>\n");
                         this.downloadString.push("<CODE>0\n");
                         this.downloadString.push("<SEVERITY>INFO\n");
