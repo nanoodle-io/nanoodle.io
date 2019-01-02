@@ -13,6 +13,7 @@ export class TransactionRowComponent implements OnInit {
   //Results
   blockTime: BlockTime[] = [];
   pastRate: number;
+  timeFetch: boolean;
   pastRateFetch: boolean;
   tempRate: FiatResults;
 
@@ -35,12 +36,14 @@ export class TransactionRowComponent implements OnInit {
   type: string;
 
   @Input()
-  rate: FiatResults;
+  rate: number;
 
   //detect changes on currency type
   _currencyType: string;
   @Input() set currencyType(value: string) {
     this._currencyType = value;
+    this.pastRate = null;
+    this.pastRateFetch = false;
     this.getMarketRate();
   }
 
@@ -54,6 +57,7 @@ export class TransactionRowComponent implements OnInit {
     this.blockTime = [];
     this.pastRate = null;
     this.pastRateFetch = false;
+    this.timeFetch = true;
     this.getBlockDetails(this.hash, this.currencyType);
   }
 
@@ -61,6 +65,7 @@ export class TransactionRowComponent implements OnInit {
     this.blockService.getBlockTime(blockParam)
       .subscribe(data => {
         this.blockTime = data;
+        this.timeFetch = false;
         this.getMarketRate();
       });
   }

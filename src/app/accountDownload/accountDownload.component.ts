@@ -207,18 +207,25 @@ export class AccountDownloadComponent {
 
                     //add transaction
                     if (this.selection.format == "csv") {
-                      this.transactionString.push("\"" + time + "\"," + direction + "," + this.contents.type + "," + status + "," + this.contents.account + "," + this.formatAmount('XRB', +this.detail.amount, true) + "," + this.pastPrice + "," + this.key + "\n");
+                      if (direction == "send") {
+                        memo = accountParam;
+                        name = this.accountResults['history'][i - y].account;
+                      }
+                      else {
+                        if (status == "unprocessed") {
+                          memo = this.contents.account;
+                          name = accountParam;
+                        }
+                        else {
+                          memo = this.accountResults['history'][i - y].account;
+                          name = accountParam;
+                        }
+                      }
+                      this.transactionString.push("\"" + time + "\"," + direction + "," + this.contents.type + "," + status + "," + name + "," + memo + "," +this.formatAmount('XRB', +this.detail.amount, true) + "," + this.pastPrice + "," + this.key + "\n");
                     }
                     else {
                       this.transactionString.push("<STMTTRN>\n");
-                      if (direction == "send") {
-                        this.transactionString.push("<TRNTYPE>DEBIT\n");
-
-                      }
-                      else {
-                        this.transactionString.push("<TRNTYPE>CREDIT\n");
-
-                      }
+                      this.transactionString.push("<TRNTYPE>XFER\n");
                       this.transactionString.push("<DTPOSTED>" + time + "[" + utcOffset + "]\n");
                       if (direction == "send") {
                         this.transactionString.push("<TRNAMT>-" + this.formatAmount('XRB', +this.detail.amount, false) + "\n");
@@ -254,7 +261,7 @@ export class AccountDownloadComponent {
                   time = this.date.getFullYear().toString() + this.pad2(this.date.getMonth() + 1) + this.pad2(this.date.getDate()) + this.pad2(this.date.getHours()) + this.pad2(this.date.getMinutes()) + this.pad2(this.date.getSeconds());
 
                   if (this.selection.format == "csv") {
-                    this.downloadString.push("time utc" + utcOffset + ",transaction type,block type,processing status,account,xrb amount," + currencyType.toLowerCase() + " amount then,hash\n");
+                    this.downloadString.push("time utc" + utcOffset + ",transaction type,block type,processing status,payee,payer,xrb amount," + currencyType.toLowerCase() + " amount then,hash\n");
                     //add in transactions, without comma
                     for (var x = 0; x < this.transactionString.length; x++) {
                       this.downloadString.push(this.transactionString[x]);
@@ -375,11 +382,12 @@ export class AccountDownloadComponent {
       let raw = 1000000000000000000000000000000;
 
       let temp = amount / raw;
+      //more dp as download might be for accounting software
       if (returnSymbol) {
-        return temp.toFixed(2);
+        return temp.toFixed(10);
       }
       else {
-        return temp.toFixed(2);
+        return temp.toFixed(10);
 
       }
     }

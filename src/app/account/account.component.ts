@@ -3,8 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { AccountService } from '../account.service';
 import { BlockService } from '../block.service';
 import { MessageService } from '../message.service';
+import { MarketService } from '../market.service';
 import { NodeService } from '../node.service';
-import { CryptoCompareService } from '../cryptocompare.service';
+import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
 
 @Component({
   selector: "app-account",
@@ -20,9 +21,13 @@ export class AccountComponent implements OnInit {
   representativeResults: Representative;
   weightResults: Weight;
   currencyType: string;
+  pastRate: number;
+  copied: boolean;
+  nanoUrl: SafeUrl;
+  tempRate: FiatResults;
   utcOffset: string;
   blockTime: BlockTime;
-  priceResults: FiatResults;
+  priceResults: number;
   balanceResults: Balance;
   blockCountResults: BlockCountResults;
   keys: string[];
@@ -32,7 +37,7 @@ export class AccountComponent implements OnInit {
   error: string;
   reg = new RegExp('"error"');
 
-  constructor(private messageService: MessageService, private cryptoCompareService: CryptoCompareService, private NodeService: NodeService, private route: ActivatedRoute, private accountService: AccountService, private blockService: BlockService) { }
+  constructor(private sanitizer: DomSanitizer, private messageService: MessageService, private marketService: MarketService, private NodeService: NodeService, private route: ActivatedRoute, private accountService: AccountService, private blockService: BlockService) { }
 
   ngOnInit(): void {
     this.paramsub = this.route.params.subscribe(sub => {
@@ -41,6 +46,7 @@ export class AccountComponent implements OnInit {
       this.representativeResults = null;
       this.weightResults = null;
       this.keys = null;
+      this.copied = false;
       this.currencyType = 'GBP';
       this.error = null;
       let tz = Math.floor(new Date().getTimezoneOffset() / -60);
@@ -61,13 +67,25 @@ export class AccountComponent implements OnInit {
       this.getRepresentative(this.identifier);
       this.getWeight(this.identifier);
       this.getBalance(this.identifier);
+      this.nanoUrl = this.sanitizer.bypassSecurityTrustResourceUrl("nano:"+this.identifier);
     });
   }
 
   getPrice() {
     this.priceResults = null;
-    this.cryptoCompareService.getPrice(this.currencyType).subscribe(data => {
-      this.priceResults = data;
+    this.marketService.getMarketPrice(Date.now(), this.currencyType)
+    .subscribe(data => {
+      let returnRate = 0;
+      if (data.length > 0) {
+        for (var i = 0; i < data.length; i++) {
+          this.tempRate = data[i];
+          returnRate = returnRate + this.tempRate[this.currencyType];
+        }
+        this.priceResults = returnRate / data.length;
+      }
+      else {
+        console.log("no price data");
+      }
     });
   }
 
@@ -317,6 +335,7 @@ export class AccountComponent implements OnInit {
  copyToClipboard(str: string) {
   var el = document.createElement('textarea');
   el.value = str;
+  this.copied = true;
   el.setAttribute('readonly', '');
   el.style.position = 'absolute';
   el.style.left = '-9999px';

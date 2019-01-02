@@ -32,7 +32,7 @@
       </ng-container>
       <ng-template #accountLoaded>
         <p>
-          <qrcode [qrdata]="accountResults['account']" [size]="128" [level]="'M'"></qrcode>
+         <a [href]="nanoUrl"><qrcode [qrdata]="accountResults['account']" [size]="128" [level]="'M'"></qrcode></a>
         </p>
         <p id="identifier">{{ accountResults['account'] }} <i (click)="copyToClipboard(accountResults['account'])" class="fa fa-clipboard fa-1"></i></p>
       </ng-template>
@@ -40,6 +40,12 @@
         <div>
           <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </div>
+      </ng-template>
+      <ng-container *ngIf="copied; then copyMessage;">
+      </ng-container>
+      <ng-template #copyMessage>
+        <p class="success">Account identifier copied to clipboard
+        </p>
       </ng-template>
     </div>
     <div class="container">
@@ -110,7 +116,7 @@
         </ng-container>
         <ng-template #priceLoaded>
           <p>{{ currencyType }}: {{ formatAmount(currencyType, +formatAmount('XRB',+balanceResults['balance'] +
-            +balanceResults['pending']) * priceResults[currencyType],true) }} </p>
+            +balanceResults['pending']) * +priceResults,true) }} </p>
         </ng-template>
         <ng-template #priceLoading>
           <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
