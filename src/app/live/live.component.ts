@@ -18,7 +18,7 @@ export class LiveComponent implements OnInit {
   ];
   transactionLabels = [1, 2, 3, 4]
  
-  chartoptions = {
+  chartOptions = {
     responsive: true
   };
   
