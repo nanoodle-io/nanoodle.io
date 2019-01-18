@@ -16,7 +16,6 @@ export class WatchService {
   constructor(private messageService: MessageService, private http: HttpClient) { }
 
   putWatch(account: string, email: string) {
-    let response = "";
     let httpHeaders = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': "Basic " + btoa(environment.dbUser + ":" + environment.dbPassword)

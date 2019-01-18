@@ -9,23 +9,28 @@ import { environment } from '../environments/environment';
   providedIn: 'root',
 })
 
-export class CryptoCompareService {
-  cryptocompareUrl = '';
+export class NetworkService {
+  greaterThan: number;
 
   constructor(private messageService: MessageService, private http: HttpClient) { }
 
-  getPrice(currencyType: string ): Observable<FiatResults> {
-    this.cryptocompareUrl = 'https://min-api.cryptocompare.com/data/price?fsym=NANO&tsyms=' + currencyType + '&extraParams=nanoodle.io';
-    let httpHeaders = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-    
-    let options = {
-      headers: httpHeaders
+  getChartData(hoursPrevious: number): Observable<Object[]>{
+    let nowDate = new Date();
+    this.greaterThan = nowDate.getTime() - (hoursPrevious * (1000 * 60 * 60));
+
+    const httpOptions = {
+      params: new HttpParams({
+        fromString: "filter={'log.epochTimeStamp':{$gte: new Date(" + this.greaterThan + ")}}&sort={'log.epochTimeStamp':1}&np"
+      }),
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': "Basic " + btoa(environment.dbUser + ":" + environment.dbPassword)
+      })
     };
-    return this.http.get<FiatResults>(this.cryptocompareUrl, options).pipe(
+
+    return this.http.get(environment.reporting, httpOptions).pipe(
       //tap(_ => this.log(`found account matching "${params}"`)),
-      catchError(this.handleError<FiatResults>('getPrice', null))
+      catchError(this.handleError('getTrx', null))
     );
   };
 
@@ -46,8 +51,4 @@ export class CryptoCompareService {
     this.messageService.add(`CryptoCompare Service: ${message}`);
   }
 
-}
-
-interface FiatResults {
-  [currencyType: string]: number;
 }

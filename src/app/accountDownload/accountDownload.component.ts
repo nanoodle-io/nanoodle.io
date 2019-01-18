@@ -536,6 +536,33 @@ export class AccountDownloadComponent {
         return amount.toFixed(2);
       }
     }
+    else if (type == 'PEN') {
+      if (returnSymbol) {
+
+        return 'S/.' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'COP') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'ARS') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
     else {
       return amount.toFixed(2);
     }

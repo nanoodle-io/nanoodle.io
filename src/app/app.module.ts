@@ -30,6 +30,7 @@ import { DonateComponent, DonateComponentDialog } from './donate/donate.componen
 import { UnsubscribeComponent  } from './unsubscribe/unsubscribe.component';
 import { VerifyComponent } from './verify/verify.component';
 import { TransactionGraphComponent } from './transactionGraph/transactionGraph.component';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 
 @Component({
   selector: 'my-app',
@@ -54,7 +55,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [BrowserModule, MatDialogModule, FormsModule, BrowserAnimationsModule, MatButtonModule, MatSelectModule, MatInputModule, QRCodeModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
+  imports: [BrowserModule, ChartsModule, MatDialogModule, FormsModule, BrowserAnimationsModule, MatButtonModule, MatSelectModule, MatInputModule, QRCodeModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
     appRoutes//,{ enableTracing: true } // <-- debugging purposes only
   )],
   declarations: [App, NavbarComponent, TransactionRowComponent, TransactionGraphComponent, UnsubscribeComponent, VerifyComponent, AccountWatchComponent, AccountWatchComponentDialog, AccountDownloadComponent,AccountDownloadComponentDialog, DonateComponent, DonateComponentDialog, AccountComponent, HomeComponent, LiveComponent, ProductComponent, RepsComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],

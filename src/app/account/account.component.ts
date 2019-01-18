@@ -5,7 +5,7 @@ import { BlockService } from '../block.service';
 import { MessageService } from '../message.service';
 import { MarketService } from '../market.service';
 import { NodeService } from '../node.service';
-import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: "app-account",
@@ -67,26 +67,26 @@ export class AccountComponent implements OnInit {
       this.getRepresentative(this.identifier);
       this.getWeight(this.identifier);
       this.getBalance(this.identifier);
-      this.nanoUrl = this.sanitizer.bypassSecurityTrustResourceUrl("nano:"+this.identifier);
+      this.nanoUrl = this.sanitizer.bypassSecurityTrustResourceUrl("nano:" + this.identifier);
     });
   }
 
   getPrice() {
     this.priceResults = null;
     this.marketService.getMarketPrice(Date.now(), this.currencyType)
-    .subscribe(data => {
-      let returnRate = 0;
-      if (data.length > 0) {
-        for (var i = 0; i < data.length; i++) {
-          this.tempRate = data[i];
-          returnRate = returnRate + this.tempRate[this.currencyType];
+      .subscribe(data => {
+        let returnRate = 0;
+        if (data.length > 0) {
+          for (var i = 0; i < data.length; i++) {
+            this.tempRate = data[i];
+            returnRate = returnRate + this.tempRate[this.currencyType];
+          }
+          this.priceResults = returnRate / data.length;
         }
-        this.priceResults = returnRate / data.length;
-      }
-      else {
-        console.log("no price data");
-      }
-    });
+        else {
+          console.log("no price data");
+        }
+      });
   }
 
   getBlockCount(): void {
@@ -156,7 +156,7 @@ export class AccountComponent implements OnInit {
     //Mnano
     if (type == 'XRB') {
       let raw = 1000000000000000000000000000000;
-      
+
       let temp = amount / raw;
       if (returnSymbol) {
         return temp.toFixed(2);
@@ -311,6 +311,33 @@ export class AccountComponent implements OnInit {
         return amount.toFixed(2);
       }
     }
+    else if (type == 'PEN') {
+      if (returnSymbol) {
+
+        return 'S/.' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'COP') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'ARS') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
     else {
       return amount.toFixed(2);
     }
@@ -332,16 +359,16 @@ export class AccountComponent implements OnInit {
     return element ? element.guid : null;
   }
 
- copyToClipboard(str: string) {
-  var el = document.createElement('textarea');
-  el.value = str;
-  this.copied = true;
-  el.setAttribute('readonly', '');
-  el.style.position = 'absolute';
-  el.style.left = '-9999px';
-  document.body.appendChild(el);
+  copyToClipboard(str: string) {
+    var el = document.createElement('textarea');
+    el.value = str;
+    this.copied = true;
+    el.setAttribute('readonly', '');
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';
+    document.body.appendChild(el);
 
-  if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
+    if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
       // save current contentEditable/readOnly status
       var editable = el.contentEditable;
       var readOnly = el.readOnly;
@@ -363,13 +390,13 @@ export class AccountComponent implements OnInit {
       // restore contentEditable/readOnly to original state
       el.contentEditable = editable;
       el.readOnly = readOnly;
-  } else {
-      el.select(); 
-  }
+    } else {
+      el.select();
+    }
 
-  document.execCommand('copy');
-  document.body.removeChild(el);
-}
+    document.execCommand('copy');
+    document.body.removeChild(el);
+  }
 }
 
 interface Transaction {

@@ -42,10 +42,11 @@
               representative. This can result in a more centralised Nano network. The long term aim is to have a wider
               selection of good representatives for an individual to choose from so that Nano becomes more
               decentralised.</p>
-            <p>For further reading, see the <a href="https://github.com/NanoTools/wiki/blob/master/Rebroadcasting-Elections.md">NanoTools
+            <p>For further reading on the protocol, see the <a href="https://github.com/NanoTools/wiki/blob/master/Rebroadcasting-Elections.md">NanoTools
                 wiki</a></p>
+            <p>See <a href="https://mynano.ninja/">My Nano Ninja</a> for a list of reliable representatives that require voting weight.</p>
             <div class="header-content mx-auto wrapper">
-              <iframe src="https://www.youtube.com/embed/l8AGmcApD44?rel=0&amp;showinfo=0" frameborder="0"
+              <iframe src="https://www.youtube.com/embed/LZ8TZFfYDcY?rel=0&amp;showinfo=0" frameborder="0"
                 webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""> </iframe></div>
             <p>Video created by <a href="https://twitter.com/Thunder_Draws">Thunder Draws</a></p>
         </div>
@@ -86,7 +87,7 @@
           </ng-container>
           <ng-template #weightLoaded>
             <p>Voting Weight: {{ formatAmount(weightResults['weight']) }}</p>
-            <ng-container *ngIf="+formatDecimals(+formatAmount(weightResults['weight']) / 133248.289 * 100) < 133248.289; then displayProgress; else displayThanks">
+            <ng-container *ngIf="+formatDecimals(+formatAmount(weightResults['weight'])) < 133248.289; then displayProgress; else displayThanks">
             </ng-container>
             <ng-template #displayProgress>
               <p>The NANOODLE representative is {{formatDecimals(+formatAmount(weightResults['weight']) / 133248.289 *
