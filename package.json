@@ -30,6 +30,7 @@
     "chart.js": "^2.7.3",
     "core-js": "^2.5.4",
     "d3": "^5.7.0",
+    "fork-awesome": "^1.1.1",
     "font-awesome": "^4.7.0",
     "jquery": "1.9.1",
     "jquery.easing": "^1.4.1",
@@ -39,7 +40,7 @@
     "popper.js": "^1.14.6",
     "rxjs": "^6.0.0",
     "zone.js": "~0.8.26",
-    "simple-line-icons": "^2.4.1",
+    "simple-line-icons": "^2.4.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.7.5",
@@ -60,13 +61,13 @@
     "protractor": "~5.4.0",
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1",
-    "typescript": "~2.7.2",
+    "typescript": "~2.7.2"
   },
   "peerDependencies": {
     "jquery": "1.9.1",
     "popper.js": "^1.14.6",
     "@angular/core": "^6.1.9"
-},
+  },
   "description": "This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.1.5.",
   "main": "index.js",
   "repository": {
