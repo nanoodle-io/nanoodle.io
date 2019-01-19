@@ -23,8 +23,8 @@
       </div>
     </div>
     <div class="row h-100">
-        <div class="col-lg-12 my-auto">
-      <h3>Live Transactions</h3>
+      <div class="col-lg-12 my-auto">
+        <h3>Live Transactions</h3>
       </div>
     </div>
     <div class="row h-100">
@@ -32,29 +32,44 @@
         <app-transactionGraph></app-transactionGraph>
       </div>
       <div class="col-lg-4 my-auto">
-        <p>Number of transactions detected on the Nano network, within a 15 second window. An indicator of the current
-          activity on the Nano network.</p>
+        <p>Number of Nano "value" transactions detected within a previous 15 second window; this chart is derived from
+          the number of 'send' state blocks.</p>
+        <p>An indicator of the current activity that should react to live events on the network.</p>
       </div>
     </div>
     <div class="row h-100">
-        <div class="col-lg-12 my-auto">
-            <h3>Hourly Transactions</h3>
-          </div>
+      <div class="col-lg-12 my-auto">
+        <h3>Hourly Transactions</h3>
+      </div>
     </div>
     <div class="row h-100">
       <div class="col-lg-4 my-auto">
-          <p>The number of Nano "value" transactions captured each hour; serves as an indicator for how much Nano is being utilised for its core purchasing/value transfer use case.</p>
-          <p>This chart is derived from the number of 'send' state blocks.</p>
-        </div>
+        <p>The number of Nano "value" transactions captured each hour; this chart is derived from the number of 'send'
+          state blocks.</p>
+        <p>Serves as a longer term indicator for how much Nano is being utilised for its core value transfer use case,
+          and identify any daily/weekly patterns.</p>
+      </div>
       <div class="col-lg-8 my-auto chart">
-        <canvas baseChart #baseChart="base-chart" [chartType]="'line'" [datasets]="transactionDatasets" [labels]="transactionLabels" [options]="chartOptions"
-          [legend]="false" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+        <canvas baseChart #baseChart='base-chart' [chartType]="'line'" [datasets]="transactionDatasets" [labels]="transactionLabels"
+          [options]="chartOptions" [legend]="false" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
       </div>
     </div>
     <div class="row h-100">
-        <div class="col-lg-12 my-auto">
-            <h3>Hourly Price</h3>
-          </div>
+      <div class="col-lg-12 my-auto">
+        <h3>Value of Currency Transacted</h3>
+      </div>
+    </div>
+    <div class="row h-100">
+      <div class="col-lg-8 my-auto">
+        <canvas baseChart #baseChart1='base-chart' [chartType]="'line'" [datasets]="currencyDatasets" [labels]="transactionLabels"
+        [options]="chartOptions" [legend]="true" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+      </div>
+      <div class="col-lg-4 my-auto chart">
+        <p>The sum total of Nano transferred each hour; this chart is derived from the number of 'send'
+          state blocks and the amount of Nano transferred. The value of this Nano is also available in other
+          currencies, based on the average rate of the currency during this hour.</p>
+        <p>Serves as a longer term indicator for how much value is being transferred on the Nano network.</p>
+      </div>
     </div>
   </div>
 </section>

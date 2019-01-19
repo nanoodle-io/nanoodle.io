@@ -30,7 +30,6 @@
               "node_modules/jquery/jquery.min.js",
               "node_modules/bootstrap/js/bootstrap.bundle.min.js",
               "node_modules/jquery-easing/jquery.easing.min.js",
-              "node_modules/chart.js/src/chart.js",
               "js/nanoodle.js"
             ]
           },

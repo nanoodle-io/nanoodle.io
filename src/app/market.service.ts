@@ -12,7 +12,7 @@ import { catchError } from 'rxjs/operators';
 
 export class MarketService {
   //x minutes either side
-  minutes: number = 5;
+  minutes: number = 3;
   private sub: any;
    greaterThan: number;
    lessThan: number;
