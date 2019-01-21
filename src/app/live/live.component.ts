@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from '../message.service';
 import { NodeService } from '../node.service';
 import { NetworkService } from '../network.service';
+import { MarketService } from '../market.service';
 import { BaseChartDirective } from 'ng2-charts/ng2-charts';
 
 @Component({
@@ -24,6 +25,8 @@ export class LiveComponent implements OnInit {
     responsive: true
   };
 
+  lastPriceTime = null;
+
   currencyDatasets = [
     { data: [1, 1, 1, 1], label: 'Nano' },
     { data: [1, 1, 1, 1], label: 'GBP' },
@@ -43,11 +46,12 @@ export class LiveComponent implements OnInit {
     { data: [1, 1, 1, 1], label: 'BTC' , hidden: true}
   ];
 
-  constructor(private messageService: MessageService, private NodeService: NodeService, private NetworkService: NetworkService) { }
+  constructor(private messageService: MessageService, private NodeService: NodeService, private marketService: MarketService, private NetworkService: NetworkService) { }
 
   ngOnInit() {
     this.getBlockCount();
     this.getChartData();
+    this.getLastPrice();
   }
 
   getBlockCount(): void {
@@ -55,6 +59,14 @@ export class LiveComponent implements OnInit {
       .subscribe(data => {
         this.blockCountResults = data;
       });
+  }
+
+  getLastPrice(): void {
+    this.marketService.getLastMarketPrice()
+    .subscribe(data => {
+      let tempDate = new Date(data[0]['log']['epochTimeStamp']['$date']);
+      this.lastPriceTime = this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + "-" + this.pad2(tempDate.getFullYear()) + " " + this.pad2(tempDate.getHours()) + ":" + this.pad2(tempDate.getMinutes());
+    });
   }
 
   getChartData(): void {
@@ -82,22 +94,22 @@ export class LiveComponent implements OnInit {
           trxTemp.push(data[i]['transactions']);
           //work out values
           nanoTemp.push(this.formatAmount('XRB', +data[i]['rawTotal'], false));
-          gbpTemp.push(+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['GBP']);
-          usdTemp.push(+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['USD']);
-          cnyTemp.push(+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['CNY']);
-          jpyTemp.push(+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['JPY']);
-          eurTemp.push(+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['EUR']);
-          btcTemp.push(+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['BTC']);
+          gbpTemp.push(this.formatAmount('GBP',+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['GBP'],false));
+          usdTemp.push(this.formatAmount('USD',+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['USD'],false));
+          cnyTemp.push(this.formatAmount('CNY',+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['CNY'],false));
+          jpyTemp.push(this.formatAmount('JPY',+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['JPY'],false));
+          eurTemp.push(this.formatAmount('EUR',+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['EUR'],false));
+          btcTemp.push(this.formatAmount('BTC',+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['BTC'],false));
 
-          gbpPriceTemp.push(data[i]['GBP']);
-          usdPriceTemp.push(data[i]['USD']);
-          cnyPriceTemp.push(data[i]['CNY']);
-          jpyPriceTemp.push(data[i]['JPY']);
-          eurPriceTemp.push(data[i]['EUR']);
-          btcPriceTemp.push(data[i]['BTC']);
+          gbpPriceTemp.push(this.formatAmount('GBP',+data[i]['GBP'],false));
+          usdPriceTemp.push(this.formatAmount('USD',+data[i]['USD'],false));
+          cnyPriceTemp.push(this.formatAmount('CNY',+data[i]['CNY'],false));
+          jpyPriceTemp.push(this.formatAmount('JPY',+data[i]['JPY'],false));
+          eurPriceTemp.push(this.formatAmount('EUR',+data[i]['EUR'],false));
+          btcPriceTemp.push(this.formatAmount('BTC',+data[i]['BTC'],false));
 
           let tempDate = new Date(data[i]['log']['epochTimeStamp']['$date']);
-          timestampTemp.push(this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + "-" + tempDate.getFullYear().toString() + " " + this.pad2(tempDate.getHours()) + ":" + this.pad2(tempDate.getMinutes()));
+          timestampTemp.push(this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + " " + this.pad2(tempDate.getHours()) + ":" + this.pad2(tempDate.getMinutes()));
         }
         this.transactionLabels = timestampTemp;
         this.transactionDatasets = [

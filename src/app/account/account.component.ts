@@ -36,6 +36,7 @@ export class AccountComponent implements OnInit {
   paramsub: any;
   error: string;
   reg = new RegExp('"error"');
+  lastPriceTime: string;
 
   constructor(private sanitizer: DomSanitizer, private messageService: MessageService, private marketService: MarketService, private NodeService: NodeService, private route: ActivatedRoute, private accountService: AccountService, private blockService: BlockService) { }
 
@@ -68,8 +69,22 @@ export class AccountComponent implements OnInit {
       this.getWeight(this.identifier);
       this.getBalance(this.identifier);
       this.nanoUrl = this.sanitizer.bypassSecurityTrustResourceUrl("nano:" + this.identifier);
+      this.lastPriceTime = null;
+      this.getLastPrice();
     });
   }
+
+  getLastPrice(): void {
+    this.marketService.getLastMarketPrice()
+    .subscribe(data => {
+      let tempDate = new Date(data[0]['log']['epochTimeStamp']['$date']);
+      this.lastPriceTime = this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + "-" + this.pad2(tempDate.getFullYear()) + " " + this.pad2(tempDate.getHours()) + ":" + this.pad2(tempDate.getMinutes());
+    });
+  }
+
+  //date helper functions
+  pad2(n) { return n < 10 ? '0' + n : n }
+
 
   getPrice() {
     this.priceResults = null;

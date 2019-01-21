@@ -20,6 +20,14 @@
         <ng-template #blockCountLoading>
           <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </ng-template>
+        <ng-container *ngIf="lastPriceTime; then lastPriceTimeLoaded; else lastPriceTimeLoading">
+        </ng-container>
+        <ng-template #lastPriceTimeLoaded>
+          <p>The last receipt of price data from CryptoCompare was at {{lastPriceTime}}</p>
+        </ng-template>
+        <ng-template #lastPriceTimeLoading>
+          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+        </ng-template>
       </div>
     </div>
     <div class="row h-100">
@@ -56,7 +64,7 @@
     </div>
     <div class="row h-100">
       <div class="col-lg-12 my-auto">
-        <h3>Value of Currency Transacted</h3>
+        <h3>Hourly Transactions Value</h3>
       </div>
     </div>
     <div class="row h-100">
@@ -67,7 +75,7 @@
       <div class="col-lg-4 my-auto chart">
         <p>The sum total of Nano transferred each hour; this chart is derived from the number of 'send'
           state blocks and the amount of Nano transferred. The value of this Nano is also available in other
-          currencies, based on the average rate of the currency during this hour.</p>
+          currencies, based on the average rate of the other currency during this hour.</p>
         <p>Serves as a longer term indicator for how much value is being transferred on the Nano network.</p>
       </div>
     </div>
@@ -80,8 +88,7 @@
       <div class="col-lg-4 my-auto chart">
         <p>The average hourly rate at which Nano can be exchanged for other currencies.</p>
         <p>As there is a fixed (or even reducing) supply of Nano, in a simple market the price of Nano would move with
-          its
-          demand; this itself would increase with adoption. In reality, markets are more complex than this.</p>
+          its demand; this itself would increase with adoption. In reality, markets are more complex than this.</p>
       </div>
       <div class="col-lg-8 my-auto">
         <canvas baseChart #priceChart='base-chart' [chartType]="'line'" [datasets]="priceDatasets" [labels]="transactionLabels"
