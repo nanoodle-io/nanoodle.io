@@ -14,6 +14,7 @@ export class LiveComponent implements OnInit {
   @ViewChild("transactionChart") chart: BaseChartDirective;
   @ViewChild("currencyChart") chart1: BaseChartDirective;
   @ViewChild("priceChart") chart2: BaseChartDirective;
+  @ViewChild("sizeChart") chart3: BaseChartDirective;
 
   blockCountResults: BlockCountResults;
   transactionDatasets = [
@@ -25,25 +26,29 @@ export class LiveComponent implements OnInit {
     responsive: true
   };
 
+  doughnutChartLabels = ['Microtransaction ( < $0.01)', 'Small ( < $1)', 'Standard', 'Large ( > $1000)'];
+  doughnutChartData = [1, 1, 1, 1];
+  doughnutChartType = 'doughnut';
+
   lastPriceTime = null;
 
   currencyDatasets = [
     { data: [1, 1, 1, 1], label: 'Nano' },
     { data: [1, 1, 1, 1], label: 'GBP' },
     { data: [1, 1, 1, 1], label: 'USD' },
-    { data: [1, 1, 1, 1], label: 'CNY' , hidden: true},
-    { data: [1, 1, 1, 1], label: 'JPY' , hidden: true},
-    { data: [1, 1, 1, 1], label: 'EUR' },
-    { data: [1, 1, 1, 1], label: 'BTC' , hidden: true}
+    { data: [1, 1, 1, 1], label: 'CNY', hidden: true },
+    { data: [1, 1, 1, 1], label: 'JPY', hidden: true },
+    { data: [1, 1, 1, 1], label: 'EUR', hidden: true  },
+    { data: [1, 1, 1, 1], label: 'BTC', hidden: true }
   ];
 
   priceDatasets = [
     { data: [1, 1, 1, 1], label: 'GBP' },
     { data: [1, 1, 1, 1], label: 'USD' },
-    { data: [1, 1, 1, 1], label: 'CNY' , hidden: true},
-    { data: [1, 1, 1, 1], label: 'JPY' , hidden: true},
-    { data: [1, 1, 1, 1], label: 'EUR' },
-    { data: [1, 1, 1, 1], label: 'BTC' , hidden: true}
+    { data: [1, 1, 1, 1], label: 'CNY', hidden: true },
+    { data: [1, 1, 1, 1], label: 'JPY', hidden: true },
+    { data: [1, 1, 1, 1], label: 'EUR', hidden: true  },
+    { data: [1, 1, 1, 1], label: 'BTC', hidden: true }
   ];
 
   constructor(private messageService: MessageService, private NodeService: NodeService, private marketService: MarketService, private NetworkService: NetworkService) { }
@@ -63,10 +68,10 @@ export class LiveComponent implements OnInit {
 
   getLastPrice(): void {
     this.marketService.getLastMarketPrice()
-    .subscribe(data => {
-      let tempDate = new Date(data[0]['log']['epochTimeStamp']['$date']);
-      this.lastPriceTime = this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + "-" + this.pad2(tempDate.getFullYear()) + " " + this.pad2(tempDate.getHours()) + ":" + this.pad2(tempDate.getMinutes());
-    });
+      .subscribe(data => {
+        let tempDate = new Date(data[0]['log']['epochTimeStamp']['$date']);
+        this.lastPriceTime = this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + "-" + this.pad2(tempDate.getFullYear()) + " " + this.pad2(tempDate.getHours()) + ":" + this.pad2(tempDate.getMinutes());
+      });
   }
 
   getChartData(): void {
@@ -88,25 +93,39 @@ export class LiveComponent implements OnInit {
     let jpyPriceTemp = [];
     let eurPriceTemp = [];
 
+    let nanoMicro = 0;
+    let nanoSmall = 0;
+    let nanoNormal = 0;
+    let nanoLarge = 0;
+
     this.NetworkService.getChartData(168)
       .subscribe(data => {
         for (var i = 0; i < data.length; i++) {
           trxTemp.push(data[i]['transactions']);
           //work out values
           nanoTemp.push(this.formatAmount('XRB', +data[i]['rawTotal'], false));
-          gbpTemp.push(this.formatAmount('GBP',+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['GBP'],false));
-          usdTemp.push(this.formatAmount('USD',+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['USD'],false));
-          cnyTemp.push(this.formatAmount('CNY',+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['CNY'],false));
-          jpyTemp.push(this.formatAmount('JPY',+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['JPY'],false));
-          eurTemp.push(this.formatAmount('EUR',+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['EUR'],false));
-          btcTemp.push(this.formatAmount('BTC',+this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['BTC'],false));
+          gbpTemp.push(this.formatAmount('GBP', +this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['GBP'], false));
+          usdTemp.push(this.formatAmount('USD', +this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['USD'], false));
+          cnyTemp.push(this.formatAmount('CNY', +this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['CNY'], false));
+          jpyTemp.push(this.formatAmount('JPY', +this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['JPY'], false));
+          eurTemp.push(this.formatAmount('EUR', +this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['EUR'], false));
+          btcTemp.push(this.formatAmount('BTC', +this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['BTC'], false));
 
-          gbpPriceTemp.push(this.formatAmount('GBP',+data[i]['GBP'],false));
-          usdPriceTemp.push(this.formatAmount('USD',+data[i]['USD'],false));
-          cnyPriceTemp.push(this.formatAmount('CNY',+data[i]['CNY'],false));
-          jpyPriceTemp.push(this.formatAmount('JPY',+data[i]['JPY'],false));
-          eurPriceTemp.push(this.formatAmount('EUR',+data[i]['EUR'],false));
-          btcPriceTemp.push(this.formatAmount('BTC',+data[i]['BTC'],false));
+          gbpPriceTemp.push(this.formatAmount('GBP', +data[i]['GBP'], false));
+          usdPriceTemp.push(this.formatAmount('USD', +data[i]['USD'], false));
+          cnyPriceTemp.push(this.formatAmount('CNY', +data[i]['CNY'], false));
+          jpyPriceTemp.push(this.formatAmount('JPY', +data[i]['JPY'], false));
+          eurPriceTemp.push(this.formatAmount('EUR', +data[i]['EUR'], false));
+          btcPriceTemp.push(this.formatAmount('BTC', +data[i]['BTC'], false));
+
+          //size stats gathered in alter increment so check first
+          if (data[i].hasOwnProperty('nanoSmall'))
+          {
+            nanoMicro = nanoMicro + +data[i]['nanoMicro'];
+            nanoSmall = nanoSmall + +data[i]['nanoSmall'];
+            nanoNormal = nanoNormal + +data[i]['nanoNormal'];
+            nanoLarge = nanoLarge + +data[i]['nanoLarge'];
+          }
 
           let tempDate = new Date(data[i]['log']['epochTimeStamp']['$date']);
           timestampTemp.push(this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + " " + this.pad2(tempDate.getHours()) + ":" + this.pad2(tempDate.getMinutes()));
@@ -120,19 +139,20 @@ export class LiveComponent implements OnInit {
           { data: nanoTemp, label: 'Nano' },
           { data: gbpTemp, label: 'GBP' },
           { data: usdTemp, label: 'USD' },
-          { data: cnyTemp, label: 'CNY', hidden: true},
-          { data: jpyTemp, label: 'JPY' , hidden: true},
-          { data: eurTemp, label: 'EUR' },
-          { data: btcTemp, label: 'BTC' , hidden: true}
+          { data: cnyTemp, label: 'CNY', hidden: true },
+          { data: jpyTemp, label: 'JPY', hidden: true },
+          { data: eurTemp, label: 'EUR', hidden: true },
+          { data: btcTemp, label: 'BTC', hidden: true }
         ];
 
+        this.doughnutChartData = [+nanoMicro, +nanoSmall, +nanoNormal, +nanoLarge];
         this.priceDatasets = [
           { data: gbpPriceTemp, label: 'GBP' },
           { data: usdPriceTemp, label: 'USD' },
-          { data: cnyPriceTemp, label: 'CNY' , hidden: true},
-          { data: jpyPriceTemp, label: 'JPY' , hidden: true},
-          { data: eurPriceTemp, label: 'EUR' },
-          { data: btcPriceTemp, label: 'BTC' , hidden: true}
+          { data: cnyPriceTemp, label: 'CNY', hidden: true },
+          { data: jpyPriceTemp, label: 'JPY', hidden: true },
+          { data: eurPriceTemp, label: 'EUR', hidden: true },
+          { data: btcPriceTemp, label: 'BTC', hidden: true }
         ];
 
         this.reloadChart();
@@ -166,6 +186,14 @@ export class LiveComponent implements OnInit {
       this.chart2.datasets = this.priceDatasets;
       this.chart2.labels = this.transactionLabels;
       this.chart2.ngOnInit();
+    }
+
+    if (this.chart3 !== undefined) {
+      this.chart3.chart.destroy();
+      this.chart3.chart = 0;
+      this.chart3.labels = this.doughnutChartLabels;
+      this.chart3.data = this.doughnutChartData;
+      this.chart3.ngOnInit();
     }
   }
 

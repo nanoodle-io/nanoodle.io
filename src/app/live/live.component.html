@@ -94,7 +94,27 @@
         <canvas baseChart #priceChart='base-chart' [chartType]="'line'" [datasets]="priceDatasets" [labels]="transactionLabels"
           [options]="chartOptions" [legend]="true" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
       </div>
-
+    </div>
+    <div class="row h-100">
+      <div class="col-lg-12 my-auto">
+        <h3>Transaction Size</h3>
+      </div>
+    </div>
+    <div class="row h-100">
+      <div class="col-lg-8 my-auto chart">
+        <canvas baseChart #sizeChart='base-chart' [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"
+          (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+      </div>
+      <div class="col-lg-4 my-auto">
+        <p>The total number of transfers conducted during the week period covered, categorised based on their $ value.</p>
+        <p>Nano is feeless for all sizes of transaction.</p>
+        <p>Microtransactions offer a unique use case for cryptocurrencies due to their divisibility, and are more
+          viable without transaction fees.</p>
+        <p>Small transactions are those where a significant % of the transaction would have been comprised of fees in
+          traditional payment systems.</p>
+        <p>Large transactions are those of sufficient size that the transactions costs can be significant in
+          traditional payment systems.</p>
+      </div>
     </div>
   </div>
 </section>
