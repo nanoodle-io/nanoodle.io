@@ -40,9 +40,12 @@
       </ng-container>
       <ng-template #accountLoaded>
         <p>
-         <a [href]="nanoUrl"><qrcode [qrdata]="accountResults['account']" [size]="128" [level]="'M'"></qrcode></a>
+          <a [href]="nanoUrl">
+            <qrcode [qrdata]="accountResults['account']" [size]="128" [level]="'M'"></qrcode>
+          </a>
         </p>
-        <p id="identifier">{{ accountResults['account'] }} <i (click)="copyToClipboard(accountResults['account'])" class="fa fa-clipboard fa-1"></i></p>
+        <p id="identifier">{{ accountResults['account'] }} <i (click)="copyToClipboard(accountResults['account'])"
+            class="fa fa-clipboard fa-1"></i></p>
       </ng-template>
       <ng-template #accountLoading>
         <div>
@@ -117,10 +120,12 @@
       <ng-container *ngIf="balanceResults; then balanceLoaded; else balanceLoading">
       </ng-container>
       <ng-template #balanceLoaded>
-        <p>XRB (Mnano): {{ formatAmount('XRB',+balanceResults['balance'] + +balanceResults['pending'],true) }} (including
+        <p>XRB (Mnano): {{ formatAmount('XRB',+balanceResults['balance'] + +balanceResults['pending'],true) }}
+          (including
           {{formatAmount('XRB',balanceResults['pending'],true)}}
           pending)</p>
-        <p>XNO (knano): {{ formatAmount('XNO',+balanceResults['balance'] + +balanceResults['pending'],true) }} (including
+        <p>XNO (knano): {{ formatAmount('XNO',+balanceResults['balance'] + +balanceResults['pending'],true) }}
+          (including
           {{formatAmount('XNO',balanceResults['pending'],true)}}
           pending)</p>
         <ng-container *ngIf="priceResults; then priceLoaded; else priceLoading">
@@ -140,7 +145,7 @@
       </ng-template>
     </div>
     <div class="container">
-      <h3>Unprocessed Blocks</h3>
+      <h3>Unprocessed Transactions</h3>
       <ng-container *ngIf="keys; then blocksloaded; else blocksloading">
       </ng-container>
       <ng-template #blocksloaded>
@@ -148,8 +153,7 @@
         </ng-container>
         <ng-template #blocksShow>
           <p>Showing up to the last 20 incoming blocks, in no order, for which this account has not published a block
-            to complete
-            the transaction</p>
+            to complete the transaction</p>
           <div class="row">
             <div class="col-lg-12 my-auto">
               <table class="table table-hover">

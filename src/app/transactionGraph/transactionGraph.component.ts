@@ -46,7 +46,7 @@ export class TransactionGraphComponent implements OnInit {
       .range([height, 0])
 
     var line = d3.line()
-      .curve(d3.curveNatural)
+      .curve(d3.curveBasis)
       .x(function (d, i) {
         return x(Date.now() - (limit - 1 - i) * duration)
       })

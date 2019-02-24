@@ -4,11 +4,11 @@
     future products and features</p>
     <br>
   <div class="centre">
-    <img src="../../assets/donate.png">
+    <a [href]="donateUrl"><img src="../../assets/donate.png"></a>
   </div>
   <br>
   <div class="centre">
-    <p>xrb_1e6e41up4x5e4jke6wy4k6nnuagagspfx4tjafghub6cw46ueimqt657nx4a</p>
+    <p>xrb_1e6e41up4x5e4jke6wy4k6nnuagagspfx4tjafghub6cw46ueimqt657nx4a <i (click)="copyToClipboard('xrb_1e6e41up4x5e4jke6wy4k6nnuagagspfx4tjafghub6cw46ueimqt657nx4a')" class="fa fa-clipboard fa-1"></i></p>
     <button mat-raised-button (click)="dialogRef.close()">Close</button>
   </div>
 </div>

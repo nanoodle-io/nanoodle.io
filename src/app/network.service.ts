@@ -20,7 +20,7 @@ export class NetworkService {
 
     const httpOptions = {
       params: new HttpParams({
-        fromString: "filter={'log.epochTimeStamp':{$gte: new Date(" + this.greaterThan + ")}}&sort={'log.epochTimeStamp':1}&pagesize=1000&np"
+        fromString: "filter={'log.epochTimeStamp':{$gte: new Date(" + this.greaterThan + ")}}&sort={'_id':1}&pagesize=1000&np"
       }),
       headers: new HttpHeaders({
         'Content-Type': 'application/json',

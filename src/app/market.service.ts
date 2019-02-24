@@ -42,7 +42,7 @@ export class MarketService {
   getLastMarketPrice() {
     const httpOptions = {
       params: new HttpParams({
-        fromString: "keys={'log.epochTimeStamp':1}&sort={'log.epochTimeStamp':-1}&pagesize=1&np"
+        fromString: "keys={'log.epochTimeStamp':1}&sort={'_id':-1}&pagesize=1&np"
       }),
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
