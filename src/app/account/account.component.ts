@@ -4,6 +4,7 @@ import { AccountService } from '../account.service';
 import { BlockService } from '../block.service';
 import { MessageService } from '../message.service';
 import { MarketService } from '../market.service';
+import { MyNanoNinjaService } from '../mynanoninja.service';
 import { NodeService } from '../node.service';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 
@@ -28,6 +29,8 @@ export class AccountComponent implements OnInit {
   utcOffset: string;
   blockTime: BlockTime;
   priceResults: number;
+  alias: Object;
+  temp: Object;
   balanceResults: Balance;
   blockCountResults: BlockCountResults;
   keys: string[];
@@ -38,7 +41,7 @@ export class AccountComponent implements OnInit {
   reg = new RegExp('"error"');
   lastPriceTime: string;
 
-  constructor(private sanitizer: DomSanitizer, private messageService: MessageService, private marketService: MarketService, private NodeService: NodeService, private route: ActivatedRoute, private accountService: AccountService, private blockService: BlockService) { }
+  constructor(private sanitizer: DomSanitizer, private messageService: MessageService, private myNanoNinjaService: MyNanoNinjaService, private marketService: MarketService, private NodeService: NodeService, private route: ActivatedRoute, private accountService: AccountService, private blockService: BlockService) { }
 
   ngOnInit(): void {
     this.paramsub = this.route.params.subscribe(sub => {
@@ -47,6 +50,8 @@ export class AccountComponent implements OnInit {
       this.representativeResults = null;
       this.weightResults = null;
       this.keys = null;
+      this.temp = new Object();
+      this.alias = null;
       this.copied = false;
       this.currencyType = 'GBP';
       this.error = null;
@@ -63,6 +68,7 @@ export class AccountComponent implements OnInit {
       this.blockCountResults = null;
       this.getBlockCount();
       this.getPrice();
+      this.getAliases();
       this.getAccount(this.identifier, 20);
       this.getUnprocessedBlocks(this.identifier, 20);
       this.getRepresentative(this.identifier);
@@ -74,12 +80,24 @@ export class AccountComponent implements OnInit {
     });
   }
 
+  getAliases(): void {
+    this.myNanoNinjaService.getAliases()
+      .subscribe(data => {
+        if (data != null) {
+          for (var i = 0; i < data.length; i++) {
+            this.temp[data[i]['account']] = data[i]['alias'];
+          }
+        }
+        this.alias = this.temp;
+      });
+  }
+
   getLastPrice(): void {
     this.marketService.getLastMarketPrice()
-    .subscribe(data => {
-      let tempDate = new Date(data[0]['log']['epochTimeStamp']['$date']);
-      this.lastPriceTime = this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + "-" + this.pad2(tempDate.getFullYear()) + " " + this.pad2(tempDate.getHours()) + ":" + this.pad2(tempDate.getMinutes());
-    });
+      .subscribe(data => {
+        let tempDate = new Date(data[0]['log']['epochTimeStamp']['$date']);
+        this.lastPriceTime = this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + "-" + this.pad2(tempDate.getFullYear()) + " " + this.pad2(tempDate.getHours()) + ":" + this.pad2(tempDate.getMinutes());
+      });
   }
 
   //date helper functions
@@ -99,9 +117,18 @@ export class AccountComponent implements OnInit {
           this.priceResults = returnRate / data.length;
         }
         else {
-          console.log("no price data");
+          this.log("no price data");
         }
       });
+  }
+
+  displayAccountIdentifier(account: string): string {
+    if (account in this.alias) {
+      return this.alias[account];
+    }
+    else {
+      return account;
+    }
   }
 
   getBlockCount(): void {

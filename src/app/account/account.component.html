@@ -168,8 +168,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr app-transactionRow *ngFor="let key of keys;" [rate]=this.priceResults [hash]=key [type]='"receive"'
-                    [utcOffset]=utcOffset [currencyType]=currencyType [account]='blockResults["blocks"][key]["block_account"]'
+                  <tr app-transactionRow *ngFor="let key of keys;" [alias]=this.alias [rate]=this.priceResults
+                    [hash]=key [type]='"receive"' [utcOffset]=utcOffset [currencyType]=currencyType
+                    [account]='blockResults["blocks"][key]["block_account"]'
                     [amount]='blockResults["blocks"][key]["amount"]'>
                   </tr>
                 </tbody>
@@ -210,9 +211,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr app-transactionRow *ngFor="let transaction of accountResults['history']" [rate]=this.priceResults
-                    [type]=transaction.type [utcOffset]=utcOffset [currencyType]=currencyType [hash]=transaction.hash
-                    [account]=transaction.account [amount]=transaction.amount>
+                  <tr app-transactionRow *ngFor="let transaction of accountResults['history']" [alias]=this.alias
+                    [rate]=this.priceResults [type]=transaction.type [utcOffset]=utcOffset [currencyType]=currencyType
+                    [hash]=transaction.hash [account]=transaction.account [amount]=transaction.amount>
                   </tr>
                 </tbody>
               </table>
@@ -234,12 +235,22 @@
       <ng-container *ngIf="representativeResults; then representativeLoaded; else representativeLoading">
       </ng-container>
       <ng-template #representativeLoaded>
-        <ng-container *ngIf="representativeResults['representative']; then representativeShow; else representativeEmpty">
+        <ng-container
+          *ngIf="representativeResults['representative']; then representativeShow; else representativeEmpty">
         </ng-container>
         <ng-template #representativeShow>
-          <p>This account's representative is:
-            <a class=account [routerLink]="['/account',representativeResults['representative']]">{{
-              representativeResults['representative'] }}</a>
+          <ng-container *ngIf="alias; then aliasRep; else nonAliasRep">
+          </ng-container>
+          <ng-template #aliasRep>
+            <p>This account's representative is:
+              <a class=account [routerLink]="['/account',representativeResults['representative']]">{{
+              displayAccountIdentifier(representativeResults['representative']) }}</a></p>
+          </ng-template>
+          <ng-template #nonAliasRep>
+            <p>This account's representative is:
+              <a class=account [routerLink]="['/account',representativeResults['representative']]">{{
+              representativeResults['representative'] }}</a></p>
+          </ng-template>
         </ng-template>
         <ng-template #representativeEmpty>
           <p>This account has no representative set</p>
@@ -264,7 +275,8 @@
       <h3>NANOODLE Products</h3>
       <h4>NANOODLE Books</h4>
       <p>Download this account's transactions in a variety of formats (unprocessed transactions are included)</p>
-      <app-accountDownload [identifier]=identifier [currencyType]=currencyType [utcOffset]=utcOffset></app-accountDownload>
+      <app-accountDownload [identifier]=identifier [currencyType]=currencyType [utcOffset]=utcOffset>
+      </app-accountDownload>
       <h4>NANOODLE Watch</h4>
       <p>Receive an email when transactions are detected on this account</p>
       <app-accountWatch [identifier]=identifier></app-accountWatch>

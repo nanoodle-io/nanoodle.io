@@ -38,6 +38,9 @@ export class TransactionRowComponent implements OnInit {
   @Input()
   rate: number;
 
+  @Input()
+  alias: Object;
+
   //detect changes on currency type
   _currencyType: string;
   @Input() set currencyType(value: string) {
@@ -91,6 +94,18 @@ export class TransactionRowComponent implements OnInit {
           });
       }
     }
+  }
+
+  displayAccountIdentifier(account: string): string
+  {
+      if (account in this.alias)
+      {
+        return this.alias[account];
+      }
+      else
+      {
+        return account;
+      }
   }
 
   formatType(type: string, cellID: string): void {

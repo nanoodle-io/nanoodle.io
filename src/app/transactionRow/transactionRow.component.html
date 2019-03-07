@@ -5,7 +5,8 @@
         <ng-container *ngIf="blockTime.length > 0; then blockTimeResults; else blockTimeEmpty">
         </ng-container>
         <ng-template #blockTimeResults>
-            <a [routerLink]="['/block',hash]">{{ formatDate(+(+blockTime[0]['log']['epochTimeStamp'].$date + (+utcOffset * 3600000))) }}</a>
+            <a
+                [routerLink]="['/block',hash]">{{ formatDate(+(+blockTime[0]['log']['epochTimeStamp'].$date + (+utcOffset * 3600000))) }}</a>
         </ng-template>
         <ng-template #blockTimeEmpty>
             <a [routerLink]="['/block',hash]"> Not Recorded</a>
@@ -41,8 +42,18 @@
         </ng-template>
     </ng-template>
 </td>
-<td><a [routerLink]="['/account',account]">{{
-        account }}</a></td>
+<td>
+    <a [routerLink]="['/account',account]">
+        <ng-container *ngIf="alias; then aliasLoaded; else aliasLoading">
+        </ng-container>
+        <ng-template #aliasLoaded>
+            {{ displayAccountIdentifier(account) }}
+        </ng-template>
+        <ng-template #aliasLoading>
+            <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+        </ng-template>
+    </a>
+</td>
 {{ formatType(type, hash+"a") }}
 {{ formatType(type, hash+"b") }}
 {{ formatType(type, hash+"c") }}
