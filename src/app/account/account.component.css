@@ -26,6 +26,11 @@ button:focus {
     letter-spacing: 1.5px;
     width: 350px;
 }
+.qrelement
+{
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
 
 .fa-clipboard
 {

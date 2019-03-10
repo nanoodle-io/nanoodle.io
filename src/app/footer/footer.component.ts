@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { TACComponent } from '../tac/tac.component'
+import { PrivacyComponent } from '../privacy/privacy.component'
 
 @Component({
   selector: 'app-footer',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FooterComponent implements OnInit {
 
-  constructor() { }
+  constructor(public tac: TACComponent, public privacy: PrivacyComponent) { }
 
   ngOnInit() {
   }
 
+  openTAC() {
+    this.tac.openTACDialog();
+  }
+
+  openPrivacy() {
+    this.privacy.openPrivacyDialog();
+  }
 }

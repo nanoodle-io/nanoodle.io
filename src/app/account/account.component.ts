@@ -7,6 +7,8 @@ import { MarketService } from '../market.service';
 import { MyNanoNinjaService } from '../mynanoninja.service';
 import { NodeService } from '../node.service';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
+import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 @Component({
   selector: "app-account",
@@ -25,6 +27,10 @@ export class AccountComponent implements OnInit {
   pastRate: number;
   copied: boolean;
   nanoUrl: SafeUrl;
+  invoiceUrl: SafeUrl;
+  invoiceMessage: string;
+  invoiceAmount: string;
+  invoiceLabel: string;
   tempRate: FiatResults;
   utcOffset: string;
   blockTime: BlockTime;
@@ -66,6 +72,9 @@ export class AccountComponent implements OnInit {
       this.blockResults = null;
       this.unprocessedBlocksResults = null;
       this.blockCountResults = null;
+      this.invoiceMessage = null;
+      this.invoiceAmount = null;
+      this.invoiceLabel = null;
       this.getBlockCount();
       this.getPrice();
       this.getAliases();
@@ -75,21 +84,101 @@ export class AccountComponent implements OnInit {
       this.getWeight(this.identifier);
       this.getBalance(this.identifier);
       this.nanoUrl = this.sanitizer.bypassSecurityTrustResourceUrl("nano:" + this.identifier);
+      this.invoiceUrl = this.sanitizer.bypassSecurityTrustResourceUrl("nano:" + this.identifier);
       this.lastPriceTime = null;
       this.getLastPrice();
     });
   }
 
+  stringFormControl = new FormControl('', [
+    Validators.pattern(/^.+$/)
+  ]);
+
+  numberFormControl = new FormControl('', [
+    Validators.pattern(/^((0\.\d*[1-9]+\d*)|([1-9]\d*(\.\d+)?))$/)
+  ]);
+
+  matcher = new MyErrorStateMatcher();
+
+  invoiceString(invoiceAmount: string, invoiceLabel: string, invoiceMessage: string): string {
+    let validCount = 0;
+    let tempString = "";
+    if (!isNaN(+invoiceAmount) && /^((0\.\d*[1-9]+\d*)|([1-9]\d*(\.\d+)?))$/.test(invoiceAmount))
+    {
+      validCount++;
+      tempString = tempString + "?amount="+ this.calculateRaw(this.invoiceAmount);
+    }
+    if (invoiceLabel != null && /^.+$/.test(invoiceLabel))
+    {
+      if (validCount > 0)
+      {
+      tempString = tempString + "&";
+      }
+      else
+      {
+        tempString = tempString + "?";
+      }
+      tempString = tempString + "label=" + encodeURIComponent(invoiceLabel);
+      validCount++;
+    }
+    if (invoiceMessage != null && /^.+$/.test(""+invoiceMessage))
+    {
+      if (validCount > 0)
+      {
+      tempString = tempString + "&";
+      }
+      else
+      {
+        tempString = tempString + "?";
+      }
+      tempString = tempString + "message=" + encodeURIComponent(invoiceMessage);
+    }
+    tempString = "nano:" + this.identifier + tempString;
+    this.invoiceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(tempString);
+    return tempString;  
+}
+
+//initial conversion methods
+calculateRaw(inputNumber: string) : string {
+  //console.log(inputNumber);
+  let rawtoMnano = 1000000000000000000000000000000;
+  let decimalOffset = inputNumber.indexOf('.');
+  //handle decimal
+  if (decimalOffset > -1)
+  {
+    let mf = inputNumber.length - decimalOffset -1;
+    //console.log(mf);
+    inputNumber = inputNumber.replace('.','');
+    //console.log(inputNumber);
+    let bigInt = inputNumber + "000000000000000000000000000000";
+    bigInt = bigInt.substring(0, bigInt.length-mf) ;
+    bigInt = bigInt.replace(/^0/, '');
+    //console.log(bigInt);
+    return bigInt;
+  }
+  else
+  {
+    let tempValue = inputNumber + "000000000000000000000000000000";
+    //console.log(tempValue);
+    return tempValue;
+  }
+}
+
   getAliases(): void {
-    this.myNanoNinjaService.getAliases()
+    try {
+          this.myNanoNinjaService.getAliases()
       .subscribe(data => {
-        if (data != null) {
+        if (data != null)
+        {
           for (var i = 0; i < data.length; i++) {
             this.temp[data[i]['account']] = data[i]['alias'];
           }
         }
         this.alias = this.temp;
       });
+    } catch (error) {
+      
+    }
   }
 
   getLastPrice(): void {
@@ -117,17 +206,18 @@ export class AccountComponent implements OnInit {
           this.priceResults = returnRate / data.length;
         }
         else {
-          this.log("no price data");
+          this.log("Cannot Retrieve Price Data");
         }
       });
   }
 
-  displayAccountIdentifier(account: string): string {
+  hasAlias(account: string): boolean
+  {
     if (account in this.alias) {
-      return this.alias[account];
+      return true;
     }
     else {
-      return account;
+      return false;
     }
   }
 
@@ -532,4 +622,11 @@ interface Time {
 
 interface DateTime {
   $date: DateTime;
+}
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+  }
 }

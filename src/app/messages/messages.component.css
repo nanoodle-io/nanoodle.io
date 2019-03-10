@@ -1,19 +1,25 @@
 /* MessagesComponent's private CSS styles */
 h2 {
     color: red;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: lighter;
+    width: 100%;
+    font-size: 20px;
+    font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    margin-top: 30px;
   }
   body {
     margin: 2em;
   }
   body, input[text], button {
     color: crimson;
-    font-family: Cambria, Georgia;
+    font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+    letter-spacing: 1.5px;
   }
   
   button.clear {
-    font-family: Arial;
+    font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
     background-color: #eee;
     border: none;
     padding: 5px 10px;

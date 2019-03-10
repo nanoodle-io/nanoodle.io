@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DonateComponent } from './donate.component';
+import { DecentralisationComponent } from './decentralisation.component';
 
-describe('DonateComponent', () => {
-  let component: DonateComponent;
-  let fixture: ComponentFixture<DonateComponent>;
+describe('DecentralisationComponent', () => {
+  let component: DecentralisationComponent;
+  let fixture: ComponentFixture<DecentralisationComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [DonateComponent]
+      declarations: [DecentralisationComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DonateComponent);
+    fixture = TestBed.createComponent(DecentralisationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

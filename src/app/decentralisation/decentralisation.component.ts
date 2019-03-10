@@ -5,10 +5,10 @@ import { NodeService } from '../node.service';
 import { AccountService } from '../account.service';
 @Component({
   selector: 'app-reps',
-  templateUrl: './reps.component.html',
-  styleUrls: ['./reps.component.css']
+  templateUrl: './decentralisation.component.html',
+  styleUrls: ['./decentralisation.component.css']
 })
-export class RepsComponent implements OnInit {
+export class DecentralisationComponent implements OnInit {
 
   error: string;
   reg = new RegExp('"error"');

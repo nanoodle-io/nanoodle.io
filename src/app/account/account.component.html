@@ -35,13 +35,33 @@
       <ng-template #lastPriceTimeLoading>
         <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
       </ng-template>
-      <h3>Identifier</h3>
+
+
+      <ng-container *ngIf="alias; then IdentifierLoad; else IdentiferLoading">
+      </ng-container>
+      
+      <ng-template #IdentifierLoad>
+          <ng-container *ngIf="hasAlias(identifier); then identifierAliasShow; else noIdentifierAliasDisplay">
+          </ng-container>
+          <ng-template #identifierAliasShow>
+            <h3>{{ alias[identifier] }} </h3>
+          </ng-template>
+          <ng-template #noIdentifierAliasDisplay>
+            <h3>Identifier</h3>          
+          </ng-template>
+      </ng-template>
+
+      <ng-template #IdentiferLoading>
+        <h3>Identifier</h3>
+      </ng-template>
+
+
       <ng-container *ngIf="accountResults; then accountLoaded; else accountLoading">
       </ng-container>
       <ng-template #accountLoaded>
         <p>
           <a [href]="nanoUrl">
-            <qrcode [qrdata]="accountResults['account']" [size]="128" [level]="'M'"></qrcode>
+            <qrcode [qrdata]="'nano:' + accountResults['account']" [size]="128" [level]="'M'"></qrcode>
           </a>
         </p>
         <p id="identifier">{{ accountResults['account'] }} <i (click)="copyToClipboard(accountResults['account'])"
@@ -57,7 +77,7 @@
       <ng-template #copyMessage>
         <p class="success">Account identifier copied to clipboard
         </p>
-      </ng-template>
+      </ng-template>    
     </div>
     <div class="container">
       <h3>Options</h3>
@@ -239,18 +259,21 @@
           *ngIf="representativeResults['representative']; then representativeShow; else representativeEmpty">
         </ng-container>
         <ng-template #representativeShow>
-          <ng-container *ngIf="alias; then aliasRep; else nonAliasRep">
+          <ng-container *ngIf="alias; then aliasDisplay; else showRep">
           </ng-container>
-          <ng-template #aliasRep>
-            <p>This account's representative is:
-              <a class=account [routerLink]="['/account',representativeResults['representative']]">{{
-              displayAccountIdentifier(representativeResults['representative']) }}</a></p>
+          <ng-template #aliasDisplay>
+           <ng-container *ngIf="hasAlias(representativeResults['representative']); then aliasShow; else noAliasDisplay">
+          </ng-container>
+          <ng-template #aliasShow>
+            <p>This account's representative is: <a [routerLink]="['/account',representativeResults['representative']]">{{ alias[representativeResults['representative']] }}</a></p>
           </ng-template>
-          <ng-template #nonAliasRep>
-            <p>This account's representative is:
-              <a class=account [routerLink]="['/account',representativeResults['representative']]">{{
-              representativeResults['representative'] }}</a></p>
+          <ng-template #noAliasDisplay>
+            <p>This account's representative is: <a [routerLink]="['/account',representativeResults['representative']]">{{ representativeResults['representative'] }}</a></p>
           </ng-template>
+          </ng-template>
+          <ng-template #showRep>
+                      <p>This account's representative is: <a [routerLink]="['/account',representativeResults['representative']]">{{ representativeResults['representative'] }}</a></p>
+                  </ng-template>
         </ng-template>
         <ng-template #representativeEmpty>
           <p>This account has no representative set</p>
@@ -261,6 +284,7 @@
           <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </div>
       </ng-template>
+
       <ng-container *ngIf="weightResults; then weightLoaded; else weightloading">
       </ng-container>
       <ng-template #weightLoaded>
@@ -280,6 +304,48 @@
       <h4>NANOODLE Watch</h4>
       <p>Receive an email when transactions are detected on this account</p>
       <app-accountWatch [identifier]=identifier></app-accountWatch>
+      <h4>NANOODLE Invoice - Beta</h4>
+      <p>QR code generator for this account</p>
+      <p class="qrelement">
+      <mat-form-field>
+        <input matInput [(ngModel)]="invoiceAmount" placeholder="Amount" [formControl]="numberFormControl"
+               [errorStateMatcher]="matcher">
+        <mat-error *ngIf="numberFormControl.hasError('pattern')">
+          Please enter a valid amount in Nano (Mnano). Excluded from QR Code until valid.
+        </mat-error>
+        <mat-hint>Nano (Mnano) amount for the invoice</mat-hint>
+      </mat-form-field>
+    </p>
+          <p class="qrelement">
+      <mat-form-field>
+        <input matInput [(ngModel)]="invoiceLabel" placeholder="Label" [formControl]="stringFormControl"
+               [errorStateMatcher]="matcher">
+        <mat-error *ngIf="stringFormControl.hasError('pattern')">
+          Please enter a valid label. Excluded from QR Code until valid.
+        </mat-error>
+        <mat-hint>Label for the invoice</mat-hint>
+      </mat-form-field>
+    </p>
+          <p class="qrelement">
+      <mat-form-field>
+        <input matInput [(ngModel)]="invoiceMessage" placeholder="Message" [formControl]="stringFormControl"
+               [errorStateMatcher]="matcher">
+        <mat-error *ngIf="stringFormControl.hasError('pattern')">
+          Please enter a message. Excluded from QR Code until valid.
+        </mat-error>
+        <mat-hint>Message for the invoice</mat-hint>
+      </mat-form-field>
+    </p>
+      <ng-container *ngIf="accountResults; then accountLoadedInvoice;">
+      </ng-container>
+      <ng-template #accountLoadedInvoice>
+          <p>Note: Not all products/services can utilise all of the information within the QR code</p>
+      <p>
+          <a [href]="invoiceUrl">
+            <qrcode [qrdata]="invoiceString(invoiceAmount,invoiceLabel,invoiceMessage)" [size]="128" [level]="'M'"></qrcode>
+          </a>
+        </p>
+      </ng-template>
     </div>
   </ng-template>
 </section>
