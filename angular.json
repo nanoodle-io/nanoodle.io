@@ -27,7 +27,11 @@
             ],
             "scripts": [
               "node_modules/d3/dist/d3.min.js",
+<<<<<<< HEAD
               "node_modules/jquery/dist/jquery.min.js",
+=======
+              "node_modules/jquery/jquery.min.js",
+>>>>>>> 4bb47df2d978f33eb4f6eff0e7aee8765adeb618
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
               "node_modules/jquery.easing/jquery.easing.min.js",
               "js/nanoodle.js"
