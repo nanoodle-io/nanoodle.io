@@ -27,9 +27,9 @@
             ],
             "scripts": [
               "node_modules/d3/dist/d3.min.js",
-              "node_modules/jquery/jquery.min.js",
-              "node_modules/bootstrap/js/bootstrap.bundle.min.js",
-              "node_modules/jquery-easing/jquery.easing.min.js",
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "node_modules/jquery.easing/jquery.easing.min.js",
               "js/nanoodle.js"
             ]
           },
