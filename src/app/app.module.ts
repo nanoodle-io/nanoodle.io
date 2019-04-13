@@ -24,12 +24,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AccountDownloadComponent  } from './accountDownload/accountDownload.component';
 import { TransactionRowComponent  } from './transactionRow/transactionRow.component';
 import { AccountDownloadComponentDialog  } from './accountDownload/accountDownload.component';
-import { AccountWatchComponent, AccountWatchComponentDialog  } from './accountWatch/accountWatch.component';
+import { AccountInvoiceComponent, AccountInvoiceComponentDialog  } from './accountInvoice/accountInvoice.component';
 import { MatDialogModule } from '@angular/material';
 import { DonateComponent, DonateComponentDialog } from './donate/donate.component';
 import { TACComponent, TACComponentDialog } from './tac/tac.component';
 import { PrivacyComponent, PrivacyComponentDialog } from './privacy/privacy.component';
-
+import { AccountWatchComponent, AccountWatchComponentDialog  } from './accountWatch/accountWatch.component';
 import { UnsubscribeComponent  } from './unsubscribe/unsubscribe.component';
 import { VerifyComponent } from './verify/verify.component';
 import { TransactionGraphComponent } from './transactionGraph/transactionGraph.component';
@@ -61,8 +61,8 @@ const appRoutes: Routes = [
   imports: [BrowserModule, ChartsModule, MatDialogModule, FormsModule, BrowserAnimationsModule, MatButtonModule, MatSelectModule, MatInputModule, QRCodeModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
     appRoutes//,{ enableTracing: true } // <-- debugging purposes only
   )],
-  declarations: [App, NavbarComponent, TransactionRowComponent, TransactionGraphComponent, UnsubscribeComponent, VerifyComponent, AccountWatchComponent, AccountWatchComponentDialog, AccountDownloadComponent,AccountDownloadComponentDialog, PrivacyComponent, PrivacyComponentDialog, TACComponent, TACComponentDialog, DonateComponent, DonateComponentDialog, AccountComponent, HomeComponent, LiveComponent, ProductComponent, DecentralisationComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
-  entryComponents: [ AccountDownloadComponentDialog, PrivacyComponentDialog, TACComponentDialog, DonateComponentDialog, AccountWatchComponentDialog ],
+  declarations: [App, NavbarComponent, TransactionRowComponent, TransactionGraphComponent, UnsubscribeComponent, VerifyComponent, AccountWatchComponent, AccountWatchComponentDialog, AccountInvoiceComponent, AccountInvoiceComponentDialog,AccountDownloadComponent,AccountDownloadComponentDialog, PrivacyComponent, PrivacyComponentDialog, TACComponent, TACComponentDialog, DonateComponent, DonateComponentDialog, AccountComponent, HomeComponent, LiveComponent, ProductComponent, DecentralisationComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
+  entryComponents: [ AccountDownloadComponentDialog, PrivacyComponentDialog, TACComponentDialog, DonateComponentDialog, AccountWatchComponentDialog, AccountInvoiceComponentDialog ],
   bootstrap: [App]
 })
 export class AppModule { }

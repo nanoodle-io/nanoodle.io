@@ -27,12 +27,12 @@ export class AccountComponent implements OnInit {
   pastRate: number;
   copied: boolean;
   nanoUrl: SafeUrl;
-  invoiceUrl: SafeUrl;
-  invoiceMessage: string;
-  invoiceAmount: string;
-  invoiceLabel: string;
   tempRate: FiatResults;
+  repScore: string;
   utcOffset: string;
+  repDelegators: string;
+  repLastVoted: string;
+  repUptime: number;
   blockTime: BlockTime;
   priceResults: number;
   alias: Object;
@@ -72,9 +72,10 @@ export class AccountComponent implements OnInit {
       this.blockResults = null;
       this.unprocessedBlocksResults = null;
       this.blockCountResults = null;
-      this.invoiceMessage = null;
-      this.invoiceAmount = null;
-      this.invoiceLabel = null;
+      this.repScore = null;
+      this.repDelegators = null;
+      this.repLastVoted = null;
+      this.repUptime = null;
       this.getBlockCount();
       this.getPrice();
       this.getAliases();
@@ -84,100 +85,46 @@ export class AccountComponent implements OnInit {
       this.getWeight(this.identifier);
       this.getBalance(this.identifier);
       this.nanoUrl = this.sanitizer.bypassSecurityTrustResourceUrl("nano:" + this.identifier);
-      this.invoiceUrl = this.sanitizer.bypassSecurityTrustResourceUrl("nano:" + this.identifier);
       this.lastPriceTime = null;
       this.getLastPrice();
     });
   }
 
-  stringFormControl = new FormControl('', [
-    Validators.pattern(/^.+$/)
-  ]);
-
-  numberFormControl = new FormControl('', [
-    Validators.pattern(/^((0\.\d*[1-9]+\d*)|([1-9]\d*(\.\d+)?))$/)
-  ]);
-
-  matcher = new MyErrorStateMatcher();
-
-  invoiceString(invoiceAmount: string, invoiceLabel: string, invoiceMessage: string): string {
-    let validCount = 0;
-    let tempString = "";
-    if (!isNaN(+invoiceAmount) && /^((0\.\d*[1-9]+\d*)|([1-9]\d*(\.\d+)?))$/.test(invoiceAmount))
-    {
-      validCount++;
-      tempString = tempString + "?amount="+ this.calculateRaw(this.invoiceAmount);
-    }
-    if (invoiceLabel != null && /^.+$/.test(invoiceLabel))
-    {
-      if (validCount > 0)
-      {
-      tempString = tempString + "&";
-      }
-      else
-      {
-        tempString = tempString + "?";
-      }
-      tempString = tempString + "label=" + encodeURIComponent(invoiceLabel);
-      validCount++;
-    }
-    if (invoiceMessage != null && /^.+$/.test(""+invoiceMessage))
-    {
-      if (validCount > 0)
-      {
-      tempString = tempString + "&";
-      }
-      else
-      {
-        tempString = tempString + "?";
-      }
-      tempString = tempString + "message=" + encodeURIComponent(invoiceMessage);
-    }
-    tempString = "nano:" + this.identifier + tempString;
-    this.invoiceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(tempString);
-    return tempString;  
-}
-
-//initial conversion methods
-calculateRaw(inputNumber: string) : string {
-  //console.log(inputNumber);
-  let rawtoMnano = 1000000000000000000000000000000;
-  let decimalOffset = inputNumber.indexOf('.');
-  //handle decimal
-  if (decimalOffset > -1)
-  {
-    let mf = inputNumber.length - decimalOffset -1;
-    //console.log(mf);
-    inputNumber = inputNumber.replace('.','');
-    //console.log(inputNumber);
-    let bigInt = inputNumber + "000000000000000000000000000000";
-    bigInt = bigInt.substring(0, bigInt.length-mf) ;
-    bigInt = bigInt.replace(/^0/, '');
-    //console.log(bigInt);
-    return bigInt;
-  }
-  else
-  {
-    let tempValue = inputNumber + "000000000000000000000000000000";
-    //console.log(tempValue);
-    return tempValue;
-  }
-}
-
   getAliases(): void {
     try {
-          this.myNanoNinjaService.getAliases()
-      .subscribe(data => {
-        if (data != null)
-        {
-          for (var i = 0; i < data.length; i++) {
-            this.temp[data[i]['account']] = data[i]['alias'];
+      this.myNanoNinjaService.getAliases()
+        .subscribe(data => {
+          if (data != null) {
+            for (var i = 0; i < data.length; i++) {
+              this.temp[data[i]['account']] = data[i]['alias'];
+            }
           }
-        }
-        this.alias = this.temp;
-      });
+          this.alias = this.temp;
+        });
     } catch (error) {
-      
+
+    }
+  }
+
+  getAccountDetails(account: string): void {
+    try {
+      this.myNanoNinjaService.getAccountDetails(account)
+        .subscribe(data => {
+          if (data.hasOwnProperty('score')) {
+            this.repScore = data['score'];
+          }
+          if (data.hasOwnProperty('delegators')) {
+            this.repDelegators = data['delegators'];
+          }
+          if (data.hasOwnProperty('lastVoted')) {
+            this.repLastVoted = data['lastVoted'];
+          }
+          if (data.hasOwnProperty('uptime')) {
+            this.repUptime = +data['uptime'];
+          }
+        });
+    } catch (error) {
+
     }
   }
 
@@ -211,8 +158,7 @@ calculateRaw(inputNumber: string) : string {
       });
   }
 
-  hasAlias(account: string): boolean
-  {
+  hasAlias(account: string): boolean {
     if (account in this.alias) {
       return true;
     }
@@ -281,6 +227,7 @@ calculateRaw(inputNumber: string) : string {
     this.accountService.getRepresentative(accountParam)
       .subscribe(data => {
         this.representativeResults = data;
+        this.getAccountDetails(this.representativeResults['representative']);
       });
   }
 

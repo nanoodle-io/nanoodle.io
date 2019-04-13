@@ -1,0 +1,48 @@
+<p class="qrelement">
+  <mat-form-field>
+    <input matInput [(ngModel)]="invoiceAmount" placeholder="Amount" [formControl]="numberFormControl"
+      [errorStateMatcher]="matcher">
+    <mat-error *ngIf="numberFormControl.hasError('pattern')">
+      Please enter a valid amount in NANO (Mnano). Excluded from QR Code until valid.
+    </mat-error>
+    <mat-hint>Nano (Mnano) amount for the invoice</mat-hint>
+  </mat-form-field>
+</p>
+<p class="qrelement">
+  <mat-form-field>
+    <input matInput [(ngModel)]="invoiceLabel" placeholder="Label" [formControl]="stringFormControl"
+      [errorStateMatcher]="matcher">
+    <mat-error *ngIf="stringFormControl.hasError('pattern')">
+      Please enter a valid label. Excluded from QR Code until valid.
+    </mat-error>
+    <mat-hint>Label for the invoice</mat-hint>
+  </mat-form-field>
+</p>
+<p class="qrelement">
+  <mat-form-field>
+    <input matInput [(ngModel)]="invoiceMessage" placeholder="Message" [formControl]="stringFormControl"
+      [errorStateMatcher]="matcher">
+    <mat-error *ngIf="stringFormControl.hasError('pattern')">
+      Please enter a message. Excluded from QR Code until valid.
+    </mat-error>
+    <mat-hint>Message for the invoice</mat-hint>
+  </mat-form-field>
+</p>
+<ng-container *ngIf="identifier; then identifierLoadedInvoice;">
+</ng-container>
+<ng-template #identifierLoadedInvoice>
+  <p>Note: Not all products/services can utilise all of the information within the QR code. The QR code PNG image can
+    be saved.</p>
+  <div class="qr1" >
+      <div class="qr2" >
+    <a [href]="invoiceUrl">
+      <qrcode [qrdata]="invoiceString(invoiceAmount,invoiceLabel,invoiceMessage)" [size]="128" [level]="'M'">
+      </qrcode>
+    </a>
+  </div>
+</div>
+
+</ng-template>
+<div class="controls" mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Return</button>
+</div>  

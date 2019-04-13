@@ -16,7 +16,7 @@
         <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
     </ng-template>
 </td>
-<td [attr.id]="hash+'a'">{{addType()}}{{formatAmount('XRB',this.amount,true)}}</td>
+<td [attr.id]="hash+'a'">{{addType()}}{{formatAmount('XRB',this.amount,true)}} NANO</td>
 <td [attr.id]="hash+'b'">{{formatAmount('XNO',this.amount,true)}}</td>
 <td [attr.id]="hash+'c'">
     <ng-container *ngIf="rate; then priceLoaded; else priceLoading">

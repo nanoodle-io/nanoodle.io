@@ -35,27 +35,21 @@
       <ng-template #lastPriceTimeLoading>
         <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
       </ng-template>
-
-
       <ng-container *ngIf="alias; then IdentifierLoad; else IdentiferLoading">
       </ng-container>
-      
       <ng-template #IdentifierLoad>
-          <ng-container *ngIf="hasAlias(identifier); then identifierAliasShow; else noIdentifierAliasDisplay">
-          </ng-container>
-          <ng-template #identifierAliasShow>
-            <h3>{{ alias[identifier] }} </h3>
-          </ng-template>
-          <ng-template #noIdentifierAliasDisplay>
-            <h3>Identifier</h3>          
-          </ng-template>
+        <ng-container *ngIf="hasAlias(identifier); then identifierAliasShow; else noIdentifierAliasDisplay">
+        </ng-container>
+        <ng-template #identifierAliasShow>
+          <h3>{{ alias[identifier] }} </h3>
+        </ng-template>
+        <ng-template #noIdentifierAliasDisplay>
+          <h3>Identifier</h3>
+        </ng-template>
       </ng-template>
-
       <ng-template #IdentiferLoading>
         <h3>Identifier</h3>
       </ng-template>
-
-
       <ng-container *ngIf="accountResults; then accountLoaded; else accountLoading">
       </ng-container>
       <ng-template #accountLoaded>
@@ -64,7 +58,8 @@
             <qrcode [qrdata]="'nano:' + accountResults['account']" [size]="128" [level]="'M'"></qrcode>
           </a>
         </p>
-        <p id="identifier">{{ accountResults['account'] }} <i (click)="copyToClipboard(accountResults['account'])"
+        <p id="identifier">{{ accountResults['account'] }} <i
+          (click)="copyToClipboard(accountResults['account'])"
             class="fa fa-clipboard fa-1"></i></p>
       </ng-template>
       <ng-template #accountLoading>
@@ -77,10 +72,43 @@
       <ng-template #copyMessage>
         <p class="success">Account identifier copied to clipboard
         </p>
-      </ng-template>    
+      </ng-template>
+    </div>
+    <div class="container">
+      <h3>Balance</h3>
+      <ng-container *ngIf="balanceResults; then balanceLoaded; else balanceLoading">
+      </ng-container>
+      <ng-template #balanceLoaded>
+        <p>XRB: {{ formatAmount('XRB',+balanceResults['balance'] + +balanceResults['pending'],true) }} NANO
+          (including
+          {{formatAmount('XRB',balanceResults['pending'],true)}} NANO
+          unprocessed)</p>
+        <p>XNO: {{ formatAmount('XNO',+balanceResults['balance'] + +balanceResults['pending'],true) }}
+          (including
+          {{formatAmount('XNO',balanceResults['pending'],true)}}
+          unprocessed)</p>
+        <ng-container *ngIf="priceResults; then priceLoaded; else priceLoading">
+        </ng-container>
+        <ng-template #priceLoaded>
+          <p>{{ currencyType }}: {{ formatAmount(currencyType, +formatAmount('XRB',+balanceResults['balance'] +
+            +balanceResults['pending']) * +priceResults,true) }} (including
+            {{ formatAmount(currencyType, +formatAmount('XRB', +balanceResults['pending']) * +priceResults,true) }}
+            unprocessed)</p>
+        </ng-template>
+        <ng-template #priceLoading>
+          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+        </ng-template>
+      </ng-template>
+      <ng-template #balanceLoading>
+        <div>
+          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+        </div>
+      </ng-template>
     </div>
     <div class="container">
       <h3>Options</h3>
+      <h4>Customise Results</h4>
+      <p>
       <mat-form-field>
         <mat-select name="currencyType" [(ngModel)]="currencyType" placeholder="Currency" required #last="ngModel"
           (selectionChange)="getPrice($event)">
@@ -104,75 +132,57 @@
           <mat-option value="COP">COP - Columbian Peso</mat-option>
         </mat-select>
       </mat-form-field>
+    </p>
+  <p>
+        <mat-form-field>
+          <mat-select name="utcOffset" [(ngModel)]="utcOffset" placeholder="UTC Time Offset" required #last="ngModel">
+            <mat-option value="-11">-11 e.g. Midway, Pago Pago</mat-option>
+            <mat-option value="-10">-10 e.g. Honolulu, Tahiti</mat-option>
+            <mat-option value="-9">-9 e.g. Anchorage</mat-option>
+            <mat-option value="-8">-8 e.g. Los Angeles, Tijuana, Vancouver</mat-option>
+            <mat-option value="-7">-7 e.g. Denver, Edmonton, Phoenix</mat-option>
+            <mat-option value="-6">-6 e.g. Belize, Chicago, Costa Rica, El Salvador, Mexico City</mat-option>
+            <mat-option value="-5">-5 e.g. Jamaica, Lima, New York, Peru</mat-option>
+            <mat-option value="-4">-4 e.g. Caracas, Barbados, Halifax, Santiago, Bermuda</mat-option>
+            <mat-option value="-3">-3 e.g. Buenos Aires, Sao Paulo, Rio de Janeiro</mat-option>
+            <mat-option value="-2">-2 e.g. South Georgia, Noronha</mat-option>
+            <mat-option value="-1">-1 e.g. Scoresbysund, Azores, Cape Verde</mat-option>
+            <mat-option value="+0">+0 e.g. London, Abidjan, Accra, Casablanca, Dublin, Lisbon</mat-option>
+            <mat-option value="+1">+1 e.g. Madrid, Berlin, Stockholm, Rome, Kinshasa, Lagos </mat-option>
+            <mat-option value="+2">+2 e.g. Johannesburg, Cairo, Athens, Tripoli, Instanbul</mat-option>
+            <mat-option value="+3">+3 e.g. Djibouti, Mogadishu, Riyadh, Baghdad, Moscow</mat-option>
+            <mat-option value="+4">+4 e.g. Tbilisi, Dubai</mat-option>
+            <mat-option value="+5">+5 e.g. Karachi, Maldvies</mat-option>
+            <mat-option value="+6">+6 e.g. Dhaka, Vostok</mat-option>
+            <mat-option value="+7">+7 e.g. Ho Chi Minh, Bangkok, Jakarta</mat-option>
+            <mat-option value="+8">+8 e.g. Kuala Lumpur, Hong Kong, Shanghai, Singapore, Perth</mat-option>
+            <mat-option value="+9">+9 e.g. Seoul, Tokyo</mat-option>
+            <mat-option value="+10">+10 e.g. Sydney, Guam</mat-option>
+            <mat-option value="+11">+11 e.g. Micronesia</mat-option>
+            <mat-option value="+12">+12 e.g. Auckland, Fiji</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+      <h4>NANOODLE Books</h4>
+      <p>Download this account's transactions in a variety of formats (unprocessed transactions are included)</p>
+      <app-accountDownload [identifier]=identifier [currencyType]=currencyType [utcOffset]=utcOffset>
+      </app-accountDownload>
+      <h4>NANOODLE Watch</h4>
+      <p>Receive an email when transactions are detected on this account</p>
+      <app-accountWatch [identifier]=identifier></app-accountWatch>
+      <h4>NANOODLE Invoice</h4>
+      <p>QR code generator for this account</p>
+      <app-accountInvoice [identifier]=identifier></app-accountInvoice>
     </div>
     <div class="container">
-      <mat-form-field>
-        <mat-select name="utcOffset" [(ngModel)]="utcOffset" placeholder="UTC Time Offset" required #last="ngModel">
-          <mat-option value="-11">-11 e.g. Midway, Pago Pago</mat-option>
-          <mat-option value="-10">-10 e.g. Honolulu, Tahiti</mat-option>
-          <mat-option value="-9">-9 e.g. Anchorage</mat-option>
-          <mat-option value="-8">-8 e.g. Los Angeles, Tijuana, Vancouver</mat-option>
-          <mat-option value="-7">-7 e.g. Denver, Edmonton, Phoenix</mat-option>
-          <mat-option value="-6">-6 e.g. Belize, Chicago, Costa Rica, El Salvador, Mexico City</mat-option>
-          <mat-option value="-5">-5 e.g. Jamaica, Lima, New York, Peru</mat-option>
-          <mat-option value="-4">-4 e.g. Caracas, Barbados, Halifax, Santiago, Bermuda</mat-option>
-          <mat-option value="-3">-3 e.g. Buenos Aires, Sao Paulo, Rio de Janeiro</mat-option>
-          <mat-option value="-2">-2 e.g. South Georgia, Noronha</mat-option>
-          <mat-option value="-1">-1 e.g. Scoresbysund, Azores, Cape Verde</mat-option>
-          <mat-option value="+0">+0 e.g. London, Abidjan, Accra, Casablanca, Dublin, Lisbon</mat-option>
-          <mat-option value="+1">+1 e.g. Madrid, Berlin, Stockholm, Rome, Kinshasa, Lagos </mat-option>
-          <mat-option value="+2">+2 e.g. Johannesburg, Cairo, Athens, Tripoli, Instanbul</mat-option>
-          <mat-option value="+3">+3 e.g. Djibouti, Mogadishu, Riyadh, Baghdad, Moscow</mat-option>
-          <mat-option value="+4">+4 e.g. Tbilisi, Dubai</mat-option>
-          <mat-option value="+5">+5 e.g. Karachi, Maldvies</mat-option>
-          <mat-option value="+6">+6 e.g. Dhaka, Vostok</mat-option>
-          <mat-option value="+7">+7 e.g. Ho Chi Minh, Bangkok, Jakarta</mat-option>
-          <mat-option value="+8">+8 e.g. Kuala Lumpur, Hong Kong, Shanghai, Singapore, Perth</mat-option>
-          <mat-option value="+9">+9 e.g. Seoul, Tokyo</mat-option>
-          <mat-option value="+10">+10 e.g. Sydney, Guam</mat-option>
-          <mat-option value="+11">+11 e.g. Micronesia</mat-option>
-          <mat-option value="+12">+12 e.g. Auckland, Fiji</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div class="container">
-      <h3>NANO Balance</h3>
-      <ng-container *ngIf="balanceResults; then balanceLoaded; else balanceLoading">
-      </ng-container>
-      <ng-template #balanceLoaded>
-        <p>XRB (Mnano): {{ formatAmount('XRB',+balanceResults['balance'] + +balanceResults['pending'],true) }}
-          (including
-          {{formatAmount('XRB',balanceResults['pending'],true)}}
-          pending)</p>
-        <p>XNO (knano): {{ formatAmount('XNO',+balanceResults['balance'] + +balanceResults['pending'],true) }}
-          (including
-          {{formatAmount('XNO',balanceResults['pending'],true)}}
-          pending)</p>
-        <ng-container *ngIf="priceResults; then priceLoaded; else priceLoading">
-        </ng-container>
-        <ng-template #priceLoaded>
-          <p>{{ currencyType }}: {{ formatAmount(currencyType, +formatAmount('XRB',+balanceResults['balance'] +
-            +balanceResults['pending']) * +priceResults,true) }} </p>
-        </ng-template>
-        <ng-template #priceLoading>
-          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
-        </ng-template>
-      </ng-template>
-      <ng-template #balanceLoading>
-        <div>
-          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
-        </div>
-      </ng-template>
-    </div>
-    <div class="container">
-      <h3>Unprocessed Transactions</h3>
+      <h3>Received Transactions</h3>
       <ng-container *ngIf="keys; then blocksloaded; else blocksloading">
       </ng-container>
       <ng-template #blocksloaded>
         <ng-container *ngIf="keys.length > 0; then blocksShow; else blocksEmpty">
         </ng-container>
         <ng-template #blocksShow>
-          <p>Showing up to the last 20 incoming blocks, in no order, for which this account has not published a block
+          <p>Showing up to the last 20 incoming blocks, in no order, for which this account has not processed a block
             to complete the transaction</p>
           <div class="row">
             <div class="col-lg-12 my-auto">
@@ -200,7 +210,7 @@
         </ng-template>
       </ng-template>
       <ng-template #blocksEmpty>
-        <p>No incoming blocks</p>
+        <p>No incoming blocks to process</p>
       </ng-template>
       <ng-template #blocksloading>
         <div>
@@ -216,7 +226,7 @@
         <ng-container *ngIf="accountResults['history'].length > 0; then transactionsShow; else transactionsEmpty">
         </ng-container>
         <ng-template #transactionsShow>
-          <p>Showing up to the last 20 transactions</p>
+          <p>Showing up to the last 20 processed transactions</p>
           <div class="row">
             <div class="col-lg-12 my-auto">
               <table class="table table-hover">
@@ -241,7 +251,7 @@
           </div>
         </ng-template>
         <ng-template #transactionsEmpty>
-          <p>No transactions in account history</p>
+          <p>No processed transactions in account history</p>
         </ng-template>
       </ng-template>
       <ng-template #transactionLoading>
@@ -262,18 +272,25 @@
           <ng-container *ngIf="alias; then aliasDisplay; else showRep">
           </ng-container>
           <ng-template #aliasDisplay>
-           <ng-container *ngIf="hasAlias(representativeResults['representative']); then aliasShow; else noAliasDisplay">
-          </ng-container>
-          <ng-template #aliasShow>
-            <p>This account's representative is: <a [routerLink]="['/account',representativeResults['representative']]">{{ alias[representativeResults['representative']] }}</a></p>
-          </ng-template>
-          <ng-template #noAliasDisplay>
-            <p>This account's representative is: <a [routerLink]="['/account',representativeResults['representative']]">{{ representativeResults['representative'] }}</a></p>
-          </ng-template>
+            <ng-container
+              *ngIf="hasAlias(representativeResults['representative']); then aliasShow; else noAliasDisplay">
+            </ng-container>
+            <ng-template #aliasShow>
+              <p>This account's representative is: <a
+                  [routerLink]="['/account',representativeResults['representative']]">{{ alias[representativeResults['representative']] }}</a>
+              </p>
+            </ng-template>
+            <ng-template #noAliasDisplay>
+              <p>This account's representative is: <a
+                  [routerLink]="['/account',representativeResults['representative']]">{{ representativeResults['representative'] }}</a>
+              </p>
+            </ng-template>
           </ng-template>
           <ng-template #showRep>
-                      <p>This account's representative is: <a [routerLink]="['/account',representativeResults['representative']]">{{ representativeResults['representative'] }}</a></p>
-                  </ng-template>
+            <p>This account's representative is: <a
+                [routerLink]="['/account',representativeResults['representative']]">{{ representativeResults['representative'] }}</a>
+            </p>
+          </ng-template>
         </ng-template>
         <ng-template #representativeEmpty>
           <p>This account has no representative set</p>
@@ -284,67 +301,40 @@
           <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </div>
       </ng-template>
-
       <ng-container *ngIf="weightResults; then weightLoaded; else weightloading">
       </ng-container>
       <ng-template #weightLoaded>
-        <p>{{formatAmount('XRB',weightResults['weight'],true)}} XRB voting weight</p>
-        <p>{{formatAmount('XNO',weightResults['weight'],true)}} XNO voting weight</p>
+        <p>XRB: {{formatAmount('XRB',weightResults['weight'],true)}} NANO voting weight</p>
+        <p>XNO: {{formatAmount('XNO',weightResults['weight'],true)}} voting weight</p>
       </ng-template>
       <ng-template #weightloading>
         <div>
           <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </div>
       </ng-template>
-      <h3>NANOODLE Products</h3>
-      <h4>NANOODLE Books</h4>
-      <p>Download this account's transactions in a variety of formats (unprocessed transactions are included)</p>
-      <app-accountDownload [identifier]=identifier [currencyType]=currencyType [utcOffset]=utcOffset>
-      </app-accountDownload>
-      <h4>NANOODLE Watch</h4>
-      <p>Receive an email when transactions are detected on this account</p>
-      <app-accountWatch [identifier]=identifier></app-accountWatch>
-      <h4>NANOODLE Invoice - Beta</h4>
-      <p>QR code generator for this account</p>
-      <p class="qrelement">
-      <mat-form-field>
-        <input matInput [(ngModel)]="invoiceAmount" placeholder="Amount" [formControl]="numberFormControl"
-               [errorStateMatcher]="matcher">
-        <mat-error *ngIf="numberFormControl.hasError('pattern')">
-          Please enter a valid amount in Nano (Mnano). Excluded from QR Code until valid.
-        </mat-error>
-        <mat-hint>Nano (Mnano) amount for the invoice</mat-hint>
-      </mat-form-field>
-    </p>
-          <p class="qrelement">
-      <mat-form-field>
-        <input matInput [(ngModel)]="invoiceLabel" placeholder="Label" [formControl]="stringFormControl"
-               [errorStateMatcher]="matcher">
-        <mat-error *ngIf="stringFormControl.hasError('pattern')">
-          Please enter a valid label. Excluded from QR Code until valid.
-        </mat-error>
-        <mat-hint>Label for the invoice</mat-hint>
-      </mat-form-field>
-    </p>
-          <p class="qrelement">
-      <mat-form-field>
-        <input matInput [(ngModel)]="invoiceMessage" placeholder="Message" [formControl]="stringFormControl"
-               [errorStateMatcher]="matcher">
-        <mat-error *ngIf="stringFormControl.hasError('pattern')">
-          Please enter a message. Excluded from QR Code until valid.
-        </mat-error>
-        <mat-hint>Message for the invoice</mat-hint>
-      </mat-form-field>
-    </p>
-      <ng-container *ngIf="accountResults; then accountLoadedInvoice;">
+      <ng-container *ngIf="repScore; then repScoreLoaded;">
       </ng-container>
-      <ng-template #accountLoadedInvoice>
-          <p>Note: Not all products/services can utilise all of the information within the QR code</p>
-      <p>
-          <a [href]="invoiceUrl">
-            <qrcode [qrdata]="invoiceString(invoiceAmount,invoiceLabel,invoiceMessage)" [size]="128" [level]="'M'"></qrcode>
-          </a>
-        </p>
+      <ng-template #repScoreLoaded>
+        <p><a href="https://mynano.ninja/account/{{representativeResults['representative']}}"><img
+              src="../../assets/ninja-icon.png" width="30px"></a>Ninja Score of {{ repScore }} out of 100</p>
+      </ng-template>
+      <ng-container *ngIf="repDelegators; then repDelegatorsLoaded;">
+      </ng-container>
+      <ng-template #repDelegatorsLoaded>
+        <p><a href="https://mynano.ninja/account/{{representativeResults['representative']}}"><img
+              src="../../assets/ninja-icon.png" width="30px"></a>{{ repDelegators }} Delegators</p>
+      </ng-template>
+      <ng-container *ngIf="repLastVoted; then repLastVotedLoaded;">
+      </ng-container>
+      <ng-template #repLastVotedLoaded>
+        <p><a href="https://mynano.ninja/account/{{representativeResults['representative']}}"><img
+              src="../../assets/ninja-icon.png" width="30px"></a>Last voted on {{ repLastVoted }}</p>
+      </ng-template>
+      <ng-container *ngIf="repUptime; then repUptimeLoaded;">
+      </ng-container>
+      <ng-template #repUptimeLoaded>
+        <p><a href="https://mynano.ninja/account/{{representativeResults['representative']}}"><img
+              src="../../assets/ninja-icon.png" width="30px"></a>{{ repUptime.toFixed(2) }}% Uptime</p>
       </ng-template>
     </div>
   </ng-template>

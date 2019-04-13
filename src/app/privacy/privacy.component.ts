@@ -22,7 +22,8 @@ export class PrivacyComponent {
   public openPrivacyDialog(): void {
     let dialogRef = this.dialog.open(PrivacyComponentDialog, {
       width: '400px',
-      height: '500px',   
+      height: '500px',
+      autoFocus: false, 
       data: { }
     });
 

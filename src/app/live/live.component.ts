@@ -15,12 +15,20 @@ export class LiveComponent implements OnInit {
   @ViewChild("currencyChart") chart1: BaseChartDirective;
   @ViewChild("priceChart") chart2: BaseChartDirective;
   @ViewChild("sizeChart") chart3: BaseChartDirective;
+  @ViewChild("transactionDayChart") chart4: BaseChartDirective;
 
   blockCountResults: BlockCountResults;
+
   transactionDatasets = [
-    { data: [1, 1, 1, 1], label: 'Value Transactions' }
+    { data: [1, 1, 1, 1], label: 'Hourly Value Transactions' }
   ];
-  transactionLabels = [1, 2, 3, 4]
+  transactionLabels = [1, 2, 3, 4];
+  transactionLabelsExtended = [1, 2, 3, 4];
+
+  transactionDayDatasets = [
+    { data: [1, 1, 1, 1], label: 'Daily Value Transactions' }
+  ];
+  transactionDayLabels = [1, 2, 3, 4];
 
   chartOptions = {
     responsive: true
@@ -38,7 +46,7 @@ export class LiveComponent implements OnInit {
     { data: [1, 1, 1, 1], label: 'USD' },
     { data: [1, 1, 1, 1], label: 'CNY', hidden: true },
     { data: [1, 1, 1, 1], label: 'JPY', hidden: true },
-    { data: [1, 1, 1, 1], label: 'EUR', hidden: true  },
+    { data: [1, 1, 1, 1], label: 'EUR', hidden: true },
     { data: [1, 1, 1, 1], label: 'BTC', hidden: true }
   ];
 
@@ -47,7 +55,7 @@ export class LiveComponent implements OnInit {
     { data: [1, 1, 1, 1], label: 'USD' },
     { data: [1, 1, 1, 1], label: 'CNY', hidden: true },
     { data: [1, 1, 1, 1], label: 'JPY', hidden: true },
-    { data: [1, 1, 1, 1], label: 'EUR', hidden: true  },
+    { data: [1, 1, 1, 1], label: 'EUR', hidden: true },
     { data: [1, 1, 1, 1], label: 'BTC', hidden: true }
   ];
 
@@ -55,7 +63,8 @@ export class LiveComponent implements OnInit {
 
   ngOnInit() {
     this.getBlockCount();
-    this.getChartData();
+    this.getHourlyChartData();
+    this.getDailyChartData();
     this.getLastPrice();
   }
 
@@ -74,7 +83,27 @@ export class LiveComponent implements OnInit {
       });
   }
 
-  getChartData(): void {
+  getDailyChartData(): void {
+    let trxTemp = [];
+    let timestampTemp = [];
+
+    //get up to a years worth of daily data
+    this.NetworkService.getDailyChartData(365)
+      .subscribe(data => {
+        for (var i = 0; i < data.length; i++) {
+          trxTemp.push(data[i]['dailyTransactions']);
+          let tempDate = new Date(data[i]['log']['epochTimeStamp']['$date']);
+          timestampTemp.push(this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + "-" + this.pad2(tempDate.getFullYear() + 1));
+        }
+        this.transactionDayLabels = timestampTemp;
+        this.transactionDayDatasets = [
+          { data: trxTemp, label: 'Daily Value Transactions' }
+        ];
+        this.reloadDailyChart();
+      });
+  }
+
+  getHourlyChartData(): void {
     let trxTemp = [];
     let timestampTemp = [];
     //totals
@@ -98,9 +127,34 @@ export class LiveComponent implements OnInit {
     let nanoNormal = 0;
     let nanoLarge = 0;
 
-    this.NetworkService.getChartData(168)
+    this.NetworkService.getHourlyChartData(672)
       .subscribe(data => {
+        //4 weeks hourly price data
         for (var i = 0; i < data.length; i++) {
+          let tempDate = new Date(data[i]['log']['epochTimeStamp']['$date']);
+          timestampTemp.push(this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + " " + this.pad2(tempDate.getHours()) + ":" + this.pad2(tempDate.getMinutes()));
+       
+          gbpPriceTemp.push(this.formatAmount('GBP', +data[i]['GBP'], false));
+          usdPriceTemp.push(this.formatAmount('USD', +data[i]['USD'], false));
+          cnyPriceTemp.push(this.formatAmount('CNY', +data[i]['CNY'], false));
+          jpyPriceTemp.push(this.formatAmount('JPY', +data[i]['JPY'], false));
+          eurPriceTemp.push(this.formatAmount('EUR', +data[i]['EUR'], false));
+          btcPriceTemp.push(this.formatAmount('BTC', +data[i]['BTC'], false));
+        }
+        this.priceDatasets = [
+          { data: gbpPriceTemp, label: 'GBP' },
+          { data: usdPriceTemp, label: 'USD' },
+          { data: cnyPriceTemp, label: 'CNY', hidden: true },
+          { data: jpyPriceTemp, label: 'JPY', hidden: true },
+          { data: eurPriceTemp, label: 'EUR', hidden: true },
+          { data: btcPriceTemp, label: 'BTC', hidden: true }
+        ];
+        this.transactionLabelsExtended = timestampTemp;
+        //reset
+        timestampTemp = [];
+
+        //get last week size and value
+        for (var i = data.length - 168; i < data.length; i++) {
           trxTemp.push(data[i]['transactions']);
           //work out values
           nanoTemp.push(this.formatAmount('XRB', +data[i]['rawTotal'], false));
@@ -111,28 +165,17 @@ export class LiveComponent implements OnInit {
           eurTemp.push(this.formatAmount('EUR', +this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['EUR'], false));
           btcTemp.push(this.formatAmount('BTC', +this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['BTC'], false));
 
-          gbpPriceTemp.push(this.formatAmount('GBP', +data[i]['GBP'], false));
-          usdPriceTemp.push(this.formatAmount('USD', +data[i]['USD'], false));
-          cnyPriceTemp.push(this.formatAmount('CNY', +data[i]['CNY'], false));
-          jpyPriceTemp.push(this.formatAmount('JPY', +data[i]['JPY'], false));
-          eurPriceTemp.push(this.formatAmount('EUR', +data[i]['EUR'], false));
-          btcPriceTemp.push(this.formatAmount('BTC', +data[i]['BTC'], false));
-
-          //size stats gathered in alter increment so check first
-          if (data[i].hasOwnProperty('nanoSmall'))
-          {
-            nanoMicro = nanoMicro + +data[i]['nanoMicro'];
-            nanoSmall = nanoSmall + +data[i]['nanoSmall'];
-            nanoNormal = nanoNormal + +data[i]['nanoNormal'];
-            nanoLarge = nanoLarge + +data[i]['nanoLarge'];
-          }
+          nanoMicro = nanoMicro + +data[i]['nanoMicro'];
+          nanoSmall = nanoSmall + +data[i]['nanoSmall'];
+          nanoNormal = nanoNormal + +data[i]['nanoNormal'];
+          nanoLarge = nanoLarge + +data[i]['nanoLarge'];
 
           let tempDate = new Date(data[i]['log']['epochTimeStamp']['$date']);
           timestampTemp.push(this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + " " + this.pad2(tempDate.getHours()) + ":" + this.pad2(tempDate.getMinutes()));
         }
         this.transactionLabels = timestampTemp;
         this.transactionDatasets = [
-          { data: trxTemp, label: 'Nano Value Transactions' }
+          { data: trxTemp, label: 'Hourly Value Transactions' }
         ];
 
         this.currencyDatasets = [
@@ -146,21 +189,13 @@ export class LiveComponent implements OnInit {
         ];
 
         this.doughnutChartData = [+nanoMicro, +nanoSmall, +nanoNormal, +nanoLarge];
-        this.priceDatasets = [
-          { data: gbpPriceTemp, label: 'GBP' },
-          { data: usdPriceTemp, label: 'USD' },
-          { data: cnyPriceTemp, label: 'CNY', hidden: true },
-          { data: jpyPriceTemp, label: 'JPY', hidden: true },
-          { data: eurPriceTemp, label: 'EUR', hidden: true },
-          { data: btcPriceTemp, label: 'BTC', hidden: true }
-        ];
 
-        this.reloadChart();
+        this.reloadHourlyChart();
       });
 
   }
 
-  reloadChart() {
+  reloadHourlyChart() {
     if (this.chart !== undefined) {
       this.chart.chart.destroy();
       this.chart.chart = 0;
@@ -184,7 +219,7 @@ export class LiveComponent implements OnInit {
       this.chart2.chart = 0;
 
       this.chart2.datasets = this.priceDatasets;
-      this.chart2.labels = this.transactionLabels;
+      this.chart2.labels = this.transactionLabelsExtended;
       this.chart2.ngOnInit();
     }
 
@@ -194,6 +229,18 @@ export class LiveComponent implements OnInit {
       this.chart3.labels = this.doughnutChartLabels;
       this.chart3.data = this.doughnutChartData;
       this.chart3.ngOnInit();
+    }
+
+  }
+
+  reloadDailyChart() {
+    if (this.chart4 !== undefined) {
+      this.chart4.chart.destroy();
+      this.chart4.chart = 0;
+
+      this.chart4.datasets = this.transactionDayDatasets;
+      this.chart4.labels = this.transactionDayLabels;
+      this.chart4.ngOnInit();
     }
   }
 

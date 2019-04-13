@@ -9,15 +9,21 @@ import { catchError } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root',
 })
-
 export class MyNanoNinjaService {
   private sub: any;
-  aliasUrl = 'https://mynano.ninja/api/accounts/aliases'
+  ninjaUrl = 'https://mynano.ninja/api/accounts'
 
   constructor(private messageService: MessageService, private http: HttpClient) { }
 
   getAliases() {
-    return this.http.get(this.aliasUrl).pipe(
+    return this.http.get(this.ninjaUrl+"/aliases").pipe(
+      //tap(_ => this.log(`found account matching "${params}"`)),
+      catchError(this.handleError('getAliases', null))
+    );
+  };
+
+  getAccountDetails(accountInput: string) {
+    return this.http.get(this.ninjaUrl+"/"+accountInput).pipe(
       //tap(_ => this.log(`found account matching "${params}"`)),
       catchError(this.handleError('getAliases', null))
     );

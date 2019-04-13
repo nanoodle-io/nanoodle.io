@@ -19,17 +19,17 @@ button:focus {
   border: 0 !important;
 }
 
+qrcode
+{
+  border:4px solid white;
+}
+
 .mat-form-field
 {
     font-size: 12px;
     font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
     letter-spacing: 1.5px;
     width: 350px;
-}
-.qrelement
-{
-  margin-bottom: 20px;
-  margin-top: 10px;
 }
 
 .fa-clipboard
@@ -60,6 +60,33 @@ h3 {
   text-transform: uppercase;
   margin-bottom: 15px;
   margin-top: 30px;
+}
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }
 
 h4 {

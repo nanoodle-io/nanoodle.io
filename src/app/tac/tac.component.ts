@@ -23,6 +23,7 @@ export class TACComponent {
     let dialogRef = this.dialog.open(TACComponentDialog, {
       width: '400px',
       height: '500px',
+      autoFocus: false,
       data: { }
     });
 
