@@ -1,8 +1,12 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+<<<<<<< HEAD
     "baseUrl": "./",
     "importHelpers": true,
+=======
+"baseUrl": "./",
+>>>>>>> 0ce866d159e05dcccf4c5caa5661ac352ac0fa6b
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
