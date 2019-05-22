@@ -175,10 +175,6 @@ interface Block {
   [detail: string]: Detail;
 }
 
-interface UnprocessedBlocks {
-  blocks: string[];
-}
-
 interface Detail {
   block_account: string;
   amount: string;

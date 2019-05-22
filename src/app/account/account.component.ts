@@ -51,7 +51,7 @@ export class AccountComponent implements OnInit {
 
   ngOnInit(): void {
     this.paramsub = this.route.params.subscribe(sub => {
-      this.identifier = sub['id'];
+      this.identifier = sub['id'].replace(/^xrb/, 'nano');
       this.accountResults = null;
       this.representativeResults = null;
       this.weightResults = null;

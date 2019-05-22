@@ -25,7 +25,7 @@ export class DecentralisationComponent implements OnInit {
     this.getVersion();
     this.weightResults = null;
     //NANOODLE Representative
-    this.getWeight('xrb_1e6e41up4x5e4jke6wy4k6nnuagagspfx4tjafghub6cw46ueimqt657nx4a');
+    this.getWeight('nano_1e6e41up4x5e4jke6wy4k6nnuagagspfx4tjafghub6cw46ueimqt657nx4a');
   }
   
   formatDecimals(input: number, places: number): string {

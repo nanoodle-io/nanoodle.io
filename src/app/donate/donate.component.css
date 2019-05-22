@@ -16,6 +16,11 @@ p
     margin-bottom: 7px;
 }
 
+.fa-clipboard
+{
+  cursor: pointer;
+}
+
 .mat-form-field
 {
     font-size: 12px;

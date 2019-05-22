@@ -44,7 +44,7 @@ export class DonateComponentDialog {
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     ngOnInit(): void {
-      this.donateUrl = this.sanitizer.bypassSecurityTrustResourceUrl("nano:xrb_1e6e41up4x5e4jke6wy4k6nnuagagspfx4tjafghub6cw46ueimqt657nx4a");
+      this.donateUrl = this.sanitizer.bypassSecurityTrustResourceUrl("nano:nano_1e6e41up4x5e4jke6wy4k6nnuagagspfx4tjafghub6cw46ueimqt657nx4a");
     }
 
     copyToClipboard(str: string) {

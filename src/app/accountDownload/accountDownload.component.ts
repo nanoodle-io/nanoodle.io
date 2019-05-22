@@ -23,7 +23,7 @@ export class AccountDownloadComponent {
   processing: boolean = false;
   //raw results
   blockTimes: BlockTime[];
-  blockTimeResults: BlockTime[];
+  blockTimeResults: BlockTime[][];
   pastPrice: string;
   accountResults: Account;
   unprocessedBlocksResults: UnprocessedBlocks;
@@ -125,13 +125,13 @@ export class AccountDownloadComponent {
               queryTimes
             )
             //process results
-            combinedBlocks.subscribe(data => {
+            combinedBlocks.subscribe((data: Block[]) => {
               this.blockResults = data;
-              combinedTimes.subscribe(data => {
+              combinedTimes.subscribe((data: BlockTime[][]) => {
                 this.blockTimeResults = data;
-                for (var i = 0; i < data.length; i++) {
+                for (var i = 0; i < this.blockTimeResults.length; i++) {
 
-                  this.blockTimes = data[i];
+                  this.blockTimes = this.blockTimeResults[i];
 
                   if (this.blockTimes.length > 0) {
                     if (this.blockTimes[0]['log'].hasOwnProperty('epochTimeStamp')) {
@@ -148,7 +148,7 @@ export class AccountDownloadComponent {
                 const combinedPrice = forkJoin(
                   queryPrice
                 )
-                combinedPrice.subscribe(data => {
+                combinedPrice.subscribe((data: any[]) => {
                   for (var i = 0; i < this.blockTimeResults.length; i++) {
                     //time
                     if (Object.keys(this.blockTimeResults[i]).length > 0) {
