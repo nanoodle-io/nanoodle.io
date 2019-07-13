@@ -58,8 +58,7 @@
             <qrcode [qrdata]="'nano:' + accountResults['account']" [size]="128" [level]="'M'"></qrcode>
           </a>
         </p>
-        <p id="identifier">{{ accountResults['account'] }} <i
-          (click)="copyToClipboard(accountResults['account'])"
+        <p id="identifier">{{ accountResults['account'] }} <i (click)="copyToClipboard(accountResults['account'])"
             class="fa fa-clipboard fa-1"></i></p>
       </ng-template>
       <ng-template #accountLoading>
@@ -109,31 +108,37 @@
       <h3>Options</h3>
       <h4>Customise Results</h4>
       <p>
-      <mat-form-field>
-        <mat-select name="currencyType" [(ngModel)]="currencyType" placeholder="Currency" required #last="ngModel"
-          (selectionChange)="getPrice($event)">
-          <mat-option value="GBP">GBP - British Pound Sterling</mat-option>
-          <mat-option value="EUR">EUR - Euro</mat-option>
-          <mat-option value="USD">USD - United States Dollar</mat-option>
-          <mat-option value="BTC">BTC - Bitcoin </mat-option>
-          <mat-option value="ETH">ETH - Etherium</mat-option>
-          <mat-option value="JPY">JPY - Japanese Yen</mat-option>
-          <mat-option value="CHF">CHF - Swiss Franc</mat-option>
-          <mat-option value="CAD">CAD - Canadian Dollar</mat-option>
-          <mat-option value="AUD">AUD - Australian Dollar</mat-option>
-          <mat-option value="ZAR">ZAR - South African Rand</mat-option>
-          <mat-option value="SEK">SEK - Swedish Krona</mat-option>
-          <mat-option value="CNY">CNY - Chinese Yuan</mat-option>
-          <mat-option value="MXN">MXN - Mexican Peso</mat-option>
-          <mat-option value="BRL">BRL - Brazilian Real</mat-option>
-          <mat-option value="VES">VES - Venezuelan Bolívar</mat-option>
-          <mat-option value="PEN">PEN - Peruvian Sol</mat-option>
-          <mat-option value="ARS">ARS - Argentine Peso</mat-option>
-          <mat-option value="COP">COP - Columbian Peso</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </p>
-  <p>
+        <mat-form-field>
+          <mat-select name="currencyType" [(ngModel)]="currencyType" placeholder="Currency" required #last="ngModel"
+            (selectionChange)="getPrice($event)">
+            <mat-option value="GBP">GBP - British Pound Sterling</mat-option>
+            <mat-option value="EUR">EUR - Euro</mat-option>
+            <mat-option value="USD">USD - United States Dollar</mat-option>
+            <mat-option value="BTC">BTC - Bitcoin </mat-option>
+            <mat-option value="ETH">ETH - Etherium</mat-option>
+            <mat-divider></mat-divider>
+            <mat-option value="ARS">ARS - Argentine Peso</mat-option>
+            <mat-option value="AUD">AUD - Australian Dollar</mat-option>
+            <mat-option value="BRL">BRL - Brazilian Real</mat-option>
+            <mat-option value="CAD">CAD - Canadian Dollar</mat-option>
+            <mat-option value="CHF">CHF - Swiss Franc</mat-option>
+            <mat-option value="CNY">CNY - Chinese Yuan</mat-option>
+            <mat-option value="COP">COP - Columbian Peso</mat-option>
+            <mat-option value="GHS">GHS - Ghanaian Cedi</mat-option>
+            <mat-option value="INR">INR - Indian Rupee</mat-option>
+            <mat-option value="JPY">JPY - Japanese Yen</mat-option>
+            <mat-option value="MXN">MXN - Mexican Peso</mat-option>
+            <mat-option value="NGN">NGN - Nigerian Naira</mat-option>
+            <mat-option value="PEN">PEN - Peruvian Sol</mat-option>
+            <mat-option value="SEK">SEK - Swedish Krona</mat-option>
+            <mat-option value="TRY">TRY - Turkish Lira</mat-option>
+            <mat-option value="VES">VES - Venezuelan Bolívar</mat-option>
+            <mat-option value="VND">VND - Vietnamese Dong</mat-option>
+            <mat-option value="ZAR">ZAR - South African Rand</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+      <p>
         <mat-form-field>
           <mat-select name="utcOffset" [(ngModel)]="utcOffset" placeholder="UTC Time Offset" required #last="ngModel">
             <mat-option value="-11">-11 e.g. Midway, Pago Pago</mat-option>
@@ -147,14 +152,14 @@
             <mat-option value="-3">-3 e.g. Buenos Aires, Sao Paulo, Rio de Janeiro</mat-option>
             <mat-option value="-2">-2 e.g. South Georgia, Noronha</mat-option>
             <mat-option value="-1">-1 e.g. Scoresbysund, Azores, Cape Verde</mat-option>
-            <mat-option value="+0">+0 e.g. London, Abidjan, Accra, Casablanca, Dublin, Lisbon</mat-option>
+            <mat-option value="+0">+0 e.g. London, Freetown, Abidjan, Accra, Casablanca, Dublin, Lisbon</mat-option>
             <mat-option value="+1">+1 e.g. British Summer Time, Madrid, Berlin, Stockholm, Rome </mat-option>
             <mat-option value="+2">+2 e.g. Johannesburg, Cairo, Athens, Tripoli, Instanbul</mat-option>
-            <mat-option value="+3">+3 e.g. Djibouti, Mogadishu, Riyadh, Baghdad, Moscow</mat-option>
+            <mat-option value="+3">+3 e.g. Instanbul, Mogadishu, Riyadh, Baghdad, Moscow</mat-option>
             <mat-option value="+4">+4 e.g. Tbilisi, Dubai</mat-option>
             <mat-option value="+5">+5 e.g. Karachi, Maldvies</mat-option>
             <mat-option value="+6">+6 e.g. Dhaka, Vostok</mat-option>
-            <mat-option value="+7">+7 e.g. Ho Chi Minh, Bangkok, Jakarta</mat-option>
+            <mat-option value="+7">+7 e.g. Hanoi, Bangkok, Jakarta</mat-option>
             <mat-option value="+8">+8 e.g. Kuala Lumpur, Hong Kong, Shanghai, Singapore, Perth</mat-option>
             <mat-option value="+9">+9 e.g. Seoul, Tokyo</mat-option>
             <mat-option value="+10">+10 e.g. Sydney, Guam</mat-option>

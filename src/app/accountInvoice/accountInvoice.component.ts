@@ -73,24 +73,19 @@ export class AccountInvoiceComponentDialog {
 
     //initial conversion methods
     calculateRaw(inputNumber: string): string {
-      //console.log(inputNumber);
       let rawtoMnano = 1000000000000000000000000000000;
       let decimalOffset = inputNumber.indexOf('.');
       //handle decimal
       if (decimalOffset > -1) {
         let mf = inputNumber.length - decimalOffset - 1;
-        //console.log(mf);
         inputNumber = inputNumber.replace('.', '');
-        //console.log(inputNumber);
         let bigInt = inputNumber + "000000000000000000000000000000";
         bigInt = bigInt.substring(0, bigInt.length - mf);
         bigInt = bigInt.replace(/^0/, '');
-        //console.log(bigInt);
         return bigInt;
       }
       else {
         let tempValue = inputNumber + "000000000000000000000000000000";
-        //console.log(tempValue);
         return tempValue;
       }
     }

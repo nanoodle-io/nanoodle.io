@@ -322,6 +322,51 @@ export class LiveComponent implements OnInit {
         return amount.toFixed(2);
       }
     }
+    else if (type == 'VND') {
+      if (returnSymbol) {
+
+        return amount.toFixed(2) + '₫';
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'TRY') {
+      if (returnSymbol) {
+
+        return '₺' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'INR') {
+      if (returnSymbol) {
+
+        return '₹' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'GHS') {
+      if (returnSymbol) {
+
+        return 'Gh₵' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'NGN') {
+      if (returnSymbol) {
+
+        return '₦' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
     else if (type == 'USD') {
       if (returnSymbol) {
 

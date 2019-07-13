@@ -4,7 +4,7 @@ import { MessageService } from './message.service';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
-import {environment} from '../environments/environment';
+import { environment } from '../environments/environment';
 
 
 @Injectable({
@@ -68,10 +68,10 @@ export class AccountService {
     };
 
     let body = JSON.stringify(
-    {  
-      "action": "account_balance",  
-      "account": "" +params + ""  
-    }
+      {
+        "action": "account_balance",
+        "account": "" + params + ""
+      }
     );
 
     return this.http.post<Balance>(environment.serverUrl, body, options).pipe(
@@ -138,7 +138,7 @@ export class AccountService {
     this.messageService.add(`Account Service: ${message}`);
   }
 
-    
+
   formatDecimals(input: number): string {
     const dec = 3;
     return input.toFixed(dec);
@@ -180,5 +180,5 @@ interface Balance {
 interface BlockCountResults {
   error?: string;
   count?: number;
-  unchecked?: number;  
+  unchecked?: number;
 }

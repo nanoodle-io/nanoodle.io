@@ -59,7 +59,6 @@ export class AccountDownloadComponent {
       format: '',
       last: ''
     };
-    this.accountResults = null;
 
     const dialogRef = this.dialog.open(AccountDownloadComponentDialog, {
       width: '260px',
@@ -110,8 +109,10 @@ export class AccountDownloadComponent {
             for (y = 0; y < this.unprocessedBlocksResults['blocks'].length; y++) {
               hashes.push(this.unprocessedBlocksResults['blocks'][y]);
             }
-            for (var i = 0; i < this.accountResults['history'].length; i++) {
-              hashes.push(this.accountResults['history'][i]['hash']);
+            if (this.accountResults.hasOwnProperty('history')) {
+              for (var i = 0; i < this.accountResults['history'].length; i++) {
+                hashes.push(this.accountResults['history'][i]['hash']);
+              }
             }
             hashes.forEach((item) => {
               queryTimes.push(this.blockService.getBlockTime(item));
@@ -132,7 +133,6 @@ export class AccountDownloadComponent {
                 for (var i = 0; i < this.blockTimeResults.length; i++) {
 
                   this.blockTimes = this.blockTimeResults[i];
-
                   if (this.blockTimes.length > 0) {
                     if (this.blockTimes[0]['log'].hasOwnProperty('epochTimeStamp')) {
                       queryPrice.push(this.marketService.getMarketPrice(+this.blockTimes[0]['log']['epochTimeStamp'].$date, currencyType));
@@ -231,363 +231,407 @@ export class AccountDownloadComponent {
                         this.transactionString.push("<TRNTYPE>DEBIT\n");
 
                       }
-                      else
-                      {
-                      this.transactionString.push("<TRNTYPE>CREDIT\n");
-                    }
-                    this.transactionString.push("<DTPOSTED>" + time + "[" + utcOffset + "]\n");
-                    if (direction == "send") {
-                      this.transactionString.push("<TRNAMT>-" + new Intl.NumberFormat('en-GB', {
-                        style: 'decimal',
-                        useGrouping: false,
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 6
-                      }).format(+this.formatAmount('XRB', +this.detail.amount, false)));
+                      else {
+                        this.transactionString.push("<TRNTYPE>CREDIT\n");
+                      }
+                      this.transactionString.push("<DTPOSTED>" + time + "[" + utcOffset + "]\n");
+                      if (direction == "send") {
+                        this.transactionString.push("<TRNAMT>-" + new Intl.NumberFormat('en-GB', {
+                          style: 'decimal',
+                          useGrouping: false,
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 6
+                        }).format(+this.formatAmount('XRB', +this.detail.amount, false)));
 
-                    }
-                    else {
-                      this.transactionString.push("<TRNAMT>" + new Intl.NumberFormat('en-GB', {
-                        style: 'decimal',
-                        useGrouping: false,
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 6
-                      }).format(+this.formatAmount('XRB', +this.detail.amount, false)));
-
-                    }
-                    this.transactionString.push("<FITID>" + this.key + "\n");
-
-                    if (direction == "send") {
-                      memo = "from: " + accountParam;
-                      name = this.accountResults['history'][i - y].account;
-                    }
-                    else {
-                      if (status == "unprocessed") {
-                        memo = "from: " + this.contents.account;
-                        name = accountParam;
                       }
                       else {
-                        memo = "from: " + this.accountResults['history'][i - y].account;
-                        name = accountParam;
+                        this.transactionString.push("<TRNAMT>" + new Intl.NumberFormat('en-GB', {
+                          style: 'decimal',
+                          useGrouping: false,
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 6
+                        }).format(+this.formatAmount('XRB', +this.detail.amount, false)));
+
                       }
+                      this.transactionString.push("<FITID>" + this.key + "\n");
+
+                      if (direction == "send") {
+                        memo = "from: " + accountParam;
+                        name = this.accountResults['history'][i - y].account;
+                      }
+                      else {
+                        if (status == "unprocessed") {
+                          memo = "from: " + this.contents.account;
+                          name = accountParam;
+                        }
+                        else {
+                          memo = "from: " + this.accountResults['history'][i - y].account;
+                          name = accountParam;
+                        }
+                      }
+                      this.transactionString.push("<NAME>" + name + "\n");
+                      this.transactionString.push("<MEMO>" + memo + ", " + this.currencyType + " then:" + this.pastPrice + "\n");
+                      this.transactionString.push("</STMTTRN>\n");
                     }
-                    this.transactionString.push("<NAME>" + name + "\n");
-                    this.transactionString.push("<MEMO>" + memo + ", " + this.currencyType + " then:" + this.pastPrice + "\n");
-                    this.transactionString.push("</STMTTRN>\n");
                   }
-                }
 
                   this.date = new Date(Date.now() + (+utcOffset * 3600000));
-                time = this.date.getFullYear().toString() + this.pad2(this.date.getMonth() + 1) + this.pad2(this.date.getDate()) + this.pad2(this.date.getHours()) + this.pad2(this.date.getMinutes()) + this.pad2(this.date.getSeconds());
+                  time = this.date.getFullYear().toString() + this.pad2(this.date.getMonth() + 1) + this.pad2(this.date.getDate()) + this.pad2(this.date.getHours()) + this.pad2(this.date.getMinutes()) + this.pad2(this.date.getSeconds());
 
-                if (this.selection.format == "csv") {
-                  this.downloadString.push("time utc" + utcOffset + ",transaction type,block type,processing status,payee,payer,xrb amount," + currencyType.toLowerCase() + " amount then,hash\n");
-                  //add in transactions, without comma
-                  for (var x = 0; x < this.transactionString.length; x++) {
-                    this.downloadString.push(this.transactionString[x]);
+                  if (this.selection.format == "csv") {
+                    this.downloadString.push("time utc" + utcOffset + ",transaction type,block type,processing status,payee,payer,xrb amount," + currencyType.toLowerCase() + " amount then,hash\n");
+                    //add in transactions, without comma
+                    for (var x = 0; x < this.transactionString.length; x++) {
+                      this.downloadString.push(this.transactionString[x]);
+                    }
+                    //save csv
+                    this.processing = false;
+                    const blob = new Blob(this.downloadString, { type: 'text/plain' });
+                    saveAs(blob, "nanoodle_" + this.identifier + "." + this.selection.format);
                   }
-                  //save csv
-                  this.processing = false;
-                  const blob = new Blob(this.downloadString, { type: 'text/plain' });
-                  saveAs(blob, "nanoodle_" + this.identifier + "." + this.selection.format);
-                }
-                else {
-                  this.accountService.getBalance(accountParam)
-                    .subscribe(data => {
-                      this.balanceResults = data;
+                  else {
+                    this.accountService.getBalance(accountParam)
+                      .subscribe(data => {
+                        this.balanceResults = data;
 
-                      this.downloadString.push("OFXHEADER:100\n");
-                      this.downloadString.push("DATA:OFXSGML\n");
-                      this.downloadString.push("VERSION:102\n");
-                      this.downloadString.push("SECURITY:NONE\n");
-                      this.downloadString.push("ENCODING:USASCII\n");
-                      this.downloadString.push("CHARSET:1252\n");
-                      this.downloadString.push("COMPRESSION:NONE\n");
-                      this.downloadString.push("OLDFILEUID:NONE\n");
-                      this.downloadString.push("NEWFILEUID:NONE\n\n");
-                      
-                      this.downloadString.push("<OFX>\n");
-                      this.downloadString.push("<SIGNONMSGSRSV1>\n");
-                      this.downloadString.push("<SONRS>\n");
-                      this.downloadString.push("<STATUS>\n");
-                      //Code
-                      this.downloadString.push("<CODE>0\n");
-                      this.downloadString.push("<SEVERITY>INFO\n");
-                      this.downloadString.push("</STATUS>\n");
-                      this.downloadString.push("<DTSERVER>" + time + "[" + utcOffset + "]\n");
-                      this.downloadString.push("<LANGUAGE>ENG\n");                      
-                      this.downloadString.push("</SONRS>\n");
-                      this.downloadString.push("</SIGNONMSGSRSV1>\n");
-                      this.downloadString.push("<BANKMSGSRSV1>\n");
-                      this.downloadString.push("<STMTTRNRS>\n");
-                      //?
-                      this.downloadString.push("<TRNUID>1\n");
-                      this.downloadString.push("<STATUS>\n");
-                      this.downloadString.push("<CODE>0\n");
-                      this.downloadString.push("<SEVERITY>INFO\n");
-                      this.downloadString.push("</STATUS>\n");
-                      this.downloadString.push("<STMTRS>\n");
-                      //ticker
-                      this.downloadString.push("<CURDEF>XRB\n");
-                      this.downloadString.push("<BANKACCTFROM>\n");
-                      //bank is NANO
-                      this.downloadString.push("<BANKID>NANO\n");
-                      this.downloadString.push("<ACCTID>" + accountParam + "\n");
-                      //checking account
-                      this.downloadString.push("<ACCTTYPE>CHECKING\n");
-                      this.downloadString.push("</BANKACCTFROM>\n");
-                      this.downloadString.push("<BANKTRANLIST>\n");
-                      //earliest date
-                      this.date = new Date(+earliest + (+utcOffset * 3600000));
-                      time = this.date.getFullYear().toString() + this.pad2(this.date.getMonth() + 1) + this.pad2(this.date.getDate()) + this.pad2(this.date.getHours()) + this.pad2(this.date.getMinutes()) + this.pad2(this.date.getSeconds());
-                      this.downloadString.push("<DTSTART>" + time + "[" + utcOffset + "]\n");
-                      //latest date
-                      this.date = new Date(+latest + (+utcOffset * 3600000));
-                      time = this.date.getFullYear().toString() + this.pad2(this.date.getMonth() + 1) + this.pad2(this.date.getDate()) + this.pad2(this.date.getHours()) + this.pad2(this.date.getMinutes()) + this.pad2(this.date.getSeconds());
-                      this.downloadString.push("<DTEND>" + time + "[" + utcOffset + "]\n");
+                        this.downloadString.push("OFXHEADER:100\n");
+                        this.downloadString.push("DATA:OFXSGML\n");
+                        this.downloadString.push("VERSION:102\n");
+                        this.downloadString.push("SECURITY:NONE\n");
+                        this.downloadString.push("ENCODING:USASCII\n");
+                        this.downloadString.push("CHARSET:1252\n");
+                        this.downloadString.push("COMPRESSION:NONE\n");
+                        this.downloadString.push("OLDFILEUID:NONE\n");
+                        this.downloadString.push("NEWFILEUID:NONE\n\n");
 
-                      //add in transactions, without comma
-                      for (var x = 0; x < this.transactionString.length; x++) {
-                        this.downloadString.push(this.transactionString[x]);
-                      }
+                        this.downloadString.push("<OFX>\n");
+                        this.downloadString.push("<SIGNONMSGSRSV1>\n");
+                        this.downloadString.push("<SONRS>\n");
+                        this.downloadString.push("<STATUS>\n");
+                        //Code
+                        this.downloadString.push("<CODE>0\n");
+                        this.downloadString.push("<SEVERITY>INFO\n");
+                        this.downloadString.push("</STATUS>\n");
+                        this.downloadString.push("<DTSERVER>" + time + "[" + utcOffset + "]\n");
+                        this.downloadString.push("<LANGUAGE>ENG\n");
+                        this.downloadString.push("</SONRS>\n");
+                        this.downloadString.push("</SIGNONMSGSRSV1>\n");
+                        this.downloadString.push("<BANKMSGSRSV1>\n");
+                        this.downloadString.push("<STMTTRNRS>\n");
+                        //?
+                        this.downloadString.push("<TRNUID>1\n");
+                        this.downloadString.push("<STATUS>\n");
+                        this.downloadString.push("<CODE>0\n");
+                        this.downloadString.push("<SEVERITY>INFO\n");
+                        this.downloadString.push("</STATUS>\n");
+                        this.downloadString.push("<STMTRS>\n");
+                        //ticker
+                        this.downloadString.push("<CURDEF>XRB\n");
+                        this.downloadString.push("<BANKACCTFROM>\n");
+                        //bank is NANO
+                        this.downloadString.push("<BANKID>NANO\n");
+                        this.downloadString.push("<ACCTID>" + accountParam + "\n");
+                        //checking account
+                        this.downloadString.push("<ACCTTYPE>CHECKING\n");
+                        this.downloadString.push("</BANKACCTFROM>\n");
+                        this.downloadString.push("<BANKTRANLIST>\n");
+                        //earliest date
+                        this.date = new Date(+earliest + (+utcOffset * 3600000));
+                        time = this.date.getFullYear().toString() + this.pad2(this.date.getMonth() + 1) + this.pad2(this.date.getDate()) + this.pad2(this.date.getHours()) + this.pad2(this.date.getMinutes()) + this.pad2(this.date.getSeconds());
+                        this.downloadString.push("<DTSTART>" + time + "[" + utcOffset + "]\n");
+                        //latest date
+                        this.date = new Date(+latest + (+utcOffset * 3600000));
+                        time = this.date.getFullYear().toString() + this.pad2(this.date.getMonth() + 1) + this.pad2(this.date.getDate()) + this.pad2(this.date.getHours()) + this.pad2(this.date.getMinutes()) + this.pad2(this.date.getSeconds());
+                        this.downloadString.push("<DTEND>" + time + "[" + utcOffset + "]\n");
 
-                      this.downloadString.push("</BANKTRANLIST>\n");
-                      this.downloadString.push("<LEDGERBAL>\n");
-                      this.downloadString.push("<BALAMT>" + this.formatAmount('XRB', (+this.balanceResults.balance + +this.balanceResults.pending), false) + "\n");
-                      //current datetime
-                      this.date = new Date(Date.now() + (+utcOffset * 3600000));
-                      time = this.date.getFullYear().toString() + this.pad2(this.date.getMonth() + 1) + this.pad2(this.date.getDate()) + this.pad2(this.date.getHours()) + this.pad2(this.date.getMinutes()) + this.pad2(this.date.getSeconds());
-                      this.downloadString.push("<DTASOF>" + time + "[" + utcOffset + "]\n");
-                      this.downloadString.push("</LEDGERBAL>\n");
-                      this.downloadString.push("<AVAILBAL>\n");
-                      this.downloadString.push("<BALAMT>" + this.formatAmount('XRB', +this.balanceResults.balance, false) + "\n");
-                      //re-use current datetime
-                      this.downloadString.push("<DTASOF>" + time + "[" + utcOffset + "]\n");
-                      this.downloadString.push("</AVAILBAL>\n");
-                      this.downloadString.push("</STMTRS>\n");
-                      
-                      this.downloadString.push("</STMTTRNRS>\n");
-                      this.downloadString.push("</BANKMSGSRSV1>\n");
-                      this.downloadString.push("</OFX>\n");
+                        //add in transactions, without comma
+                        for (var x = 0; x < this.transactionString.length; x++) {
+                          this.downloadString.push(this.transactionString[x]);
+                        }
 
-                      //save ofx
-                      this.processing = false;
-                      const blob = new Blob(this.downloadString, { type: 'text/plain' });
-                      saveAs(blob, "nanoodle_" + this.identifier + "." + this.selection.format);
-                    })
-                }
+                        this.downloadString.push("</BANKTRANLIST>\n");
+                        this.downloadString.push("<LEDGERBAL>\n");
+                        this.downloadString.push("<BALAMT>" + this.formatAmount('XRB', (+this.balanceResults.balance + +this.balanceResults.pending), false) + "\n");
+                        //current datetime
+                        this.date = new Date(Date.now() + (+utcOffset * 3600000));
+                        time = this.date.getFullYear().toString() + this.pad2(this.date.getMonth() + 1) + this.pad2(this.date.getDate()) + this.pad2(this.date.getHours()) + this.pad2(this.date.getMinutes()) + this.pad2(this.date.getSeconds());
+                        this.downloadString.push("<DTASOF>" + time + "[" + utcOffset + "]\n");
+                        this.downloadString.push("</LEDGERBAL>\n");
+                        this.downloadString.push("<AVAILBAL>\n");
+                        this.downloadString.push("<BALAMT>" + this.formatAmount('XRB', +this.balanceResults.balance, false) + "\n");
+                        //re-use current datetime
+                        this.downloadString.push("<DTASOF>" + time + "[" + utcOffset + "]\n");
+                        this.downloadString.push("</AVAILBAL>\n");
+                        this.downloadString.push("</STMTRS>\n");
+
+                        this.downloadString.push("</STMTTRNRS>\n");
+                        this.downloadString.push("</BANKMSGSRSV1>\n");
+                        this.downloadString.push("</OFX>\n");
+
+                        //save ofx
+                        this.processing = false;
+                        const blob = new Blob(this.downloadString, { type: 'text/plain' });
+                        saveAs(blob, "nanoodle_" + this.identifier + "." + this.selection.format);
+                      })
+                  }
+                });
               });
             });
           });
       });
-  });
-}
-
-formatDate(rawDate: number): string {
-  let myDate = new Date(rawDate);
-  return myDate.toLocaleString();
-}
-
-//date helper functions
-pad2(n) { return n < 10 ? '0' + n : n }
-
-formatAmount(type: string, amount: number, returnSymbol: boolean): string {
-  //Mnano
-  if (type == 'XRB') {
-    let raw = 1000000000000000000000000000000;
-
-    let temp = amount / raw;
-    //more dp as download might be for accounting software
-    if (returnSymbol) {
-      return temp.toFixed(10);
-    }
-    else {
-      return temp.toFixed(10);
-
-    }
   }
-  //nano
-  else if (type == 'XNO') {
-    let raw = 1000000000000000000000000000;
-    let temp = amount / raw;
-    if (returnSymbol) {
-      return '₦' + temp.toFixed(0);
-    }
-    else {
-      return temp.toFixed(0);
-    }
-  }
-  else if (type == 'ETH') {
-    if (returnSymbol) {
-      return 'Ξ' + amount.toFixed(6);
-    }
-    else {
-      return amount.toFixed(6);
-    }
-  }
-  else if (type == 'BTC') {
-    if (returnSymbol) {
-      return '₿' + amount.toFixed(6);
-    }
-    else {
-      return amount.toFixed(6);
-    }
-  }
-  else if (type == 'JPY') {
-    if (returnSymbol) {
 
-      return '¥' + amount.toFixed(0);
-    }
-    else {
-      return amount.toFixed(0);
-    }
+  formatDate(rawDate: number): string {
+    let myDate = new Date(rawDate);
+    return myDate.toLocaleString();
   }
-  else if (type == 'CNY') {
-    if (returnSymbol) {
 
-      return '¥' + amount.toFixed(2);
+  //date helper functions
+  pad2(n) { return n < 10 ? '0' + n : n }
+
+  formatAmount(type: string, amount: number, returnSymbol: boolean): string {
+    //Mnano
+    if (type == 'XRB') {
+      let raw = 1000000000000000000000000000000;
+
+      let temp = amount / raw;
+      //more dp as download might be for accounting software
+      if (returnSymbol) {
+        return temp.toFixed(10);
+      }
+      else {
+        return temp.toFixed(10);
+
+      }
+    }
+    //nano
+    else if (type == 'XNO') {
+      let raw = 1000000000000000000000000000;
+      let temp = amount / raw;
+      if (returnSymbol) {
+        return '₦' + temp.toFixed(0);
+      }
+      else {
+        return temp.toFixed(0);
+      }
+    }
+    else if (type == 'ETH') {
+      if (returnSymbol) {
+        return 'Ξ' + amount.toFixed(6);
+      }
+      else {
+        return amount.toFixed(6);
+      }
+    }
+    else if (type == 'BTC') {
+      if (returnSymbol) {
+        return '₿' + amount.toFixed(6);
+      }
+      else {
+        return amount.toFixed(6);
+      }
+    }
+    else if (type == 'JPY') {
+      if (returnSymbol) {
+
+        return '¥' + amount.toFixed(0);
+      }
+      else {
+        return amount.toFixed(0);
+      }
+    }
+    else if (type == 'CNY') {
+      if (returnSymbol) {
+
+        return '¥' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'VND') {
+      if (returnSymbol) {
+
+        return amount.toFixed(2) + '₫';
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'TRY') {
+      if (returnSymbol) {
+
+        return '₺' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'INR') {
+      if (returnSymbol) {
+
+        return '₹' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'GHS') {
+      if (returnSymbol) {
+
+        return 'Gh₵' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'NGN') {
+      if (returnSymbol) {
+
+        return '₦' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'USD') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'SEK') {
+      if (returnSymbol) {
+
+        return amount.toFixed(2) + 'kr';
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'CHF') {
+      if (returnSymbol) {
+
+        return '₣' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'ZAR') {
+      if (returnSymbol) {
+
+        return 'R' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'EUR') {
+      if (returnSymbol) {
+
+        return '€' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'GBP') {
+      if (returnSymbol) {
+
+        return '£' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'CAD') {
+      if (returnSymbol) {
+
+        return 'C$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'MXN') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'AUD') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'BRL') {
+      if (returnSymbol) {
+
+        return 'R$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'VES') {
+      if (returnSymbol) {
+
+        return 'Bs.' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'PEN') {
+      if (returnSymbol) {
+
+        return 'S/.' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'COP') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'ARS') {
+      if (returnSymbol) {
+
+        return '$' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
     }
     else {
       return amount.toFixed(2);
     }
   }
-  else if (type == 'USD') {
-    if (returnSymbol) {
-
-      return '$' + amount.toFixed(2);
-    }
-
-    else {
-      return amount.toFixed(2);
-    }
-  }
-  else if (type == 'SEK') {
-    if (returnSymbol) {
-
-      return amount.toFixed(2) + 'kr';
-    }
-    else {
-      return amount.toFixed(2);
-    }
-  }
-  else if (type == 'CHF') {
-    if (returnSymbol) {
-
-      return '₣' + amount.toFixed(2);
-    }
-    else {
-      return amount.toFixed(2);
-    }
-  }
-  else if (type == 'ZAR') {
-    if (returnSymbol) {
-
-      return 'R' + amount.toFixed(2);
-    }
-    else {
-      return amount.toFixed(2);
-    }
-  }
-  else if (type == 'EUR') {
-    if (returnSymbol) {
-
-      return '€' + amount.toFixed(2);
-    }
-    else {
-      return amount.toFixed(2);
-    }
-  }
-  else if (type == 'GBP') {
-    if (returnSymbol) {
-
-      return '£' + amount.toFixed(2);
-    }
-    else {
-      return amount.toFixed(2);
-    }
-  }
-  else if (type == 'CAD') {
-    if (returnSymbol) {
-
-      return 'C$' + amount.toFixed(2);
-    }
-    else {
-      return amount.toFixed(2);
-    }
-  }
-  else if (type == 'MXN') {
-    if (returnSymbol) {
-
-      return '$' + amount.toFixed(2);
-    }
-    else {
-      return amount.toFixed(2);
-    }
-  }
-  else if (type == 'AUD') {
-    if (returnSymbol) {
-
-      return '$' + amount.toFixed(2);
-    }
-    else {
-      return amount.toFixed(2);
-    }
-  }
-  else if (type == 'BRL') {
-    if (returnSymbol) {
-
-      return 'R$' + amount.toFixed(2);
-    }
-    else {
-      return amount.toFixed(2);
-    }
-  }
-  else if (type == 'VES') {
-    if (returnSymbol) {
-
-      return 'Bs.' + amount.toFixed(2);
-    }
-    else {
-      return amount.toFixed(2);
-    }
-  }
-  else if (type == 'PEN') {
-    if (returnSymbol) {
-
-      return 'S/.' + amount.toFixed(2);
-    }
-    else {
-      return amount.toFixed(2);
-    }
-  }
-  else if (type == 'COP') {
-    if (returnSymbol) {
-
-      return '$' + amount.toFixed(2);
-    }
-    else {
-      return amount.toFixed(2);
-    }
-  }
-  else if (type == 'ARS') {
-    if (returnSymbol) {
-
-      return '$' + amount.toFixed(2);
-    }
-    else {
-      return amount.toFixed(2);
-    }
-  }
-  else {
-    return amount.toFixed(2);
-  }
-}
 
   private log(message: string) {
-  this.messageService.add(`Account Download Component: ${message}`);
-}
+    this.messageService.add(`Account Download Component: ${message}`);
+  }
 
-modalClose($event) {
-}
+  modalClose($event) {
+  }
 
 }
 

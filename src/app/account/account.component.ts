@@ -52,6 +52,16 @@ export class AccountComponent implements OnInit {
   ngOnInit(): void {
     this.paramsub = this.route.params.subscribe(sub => {
       this.identifier = sub['id'].replace(/^xrb/, 'nano');
+      //check if the local storage has the currency set
+      let storedCurrency = localStorage.getItem('currencyType'); 
+      if(storedCurrency) 
+      {
+        this.currencyType = storedCurrency;
+      }
+      else
+      {
+        this.currencyType = 'GBP';
+      }
       this.accountResults = null;
       this.representativeResults = null;
       this.weightResults = null;
@@ -59,7 +69,6 @@ export class AccountComponent implements OnInit {
       this.temp = new Object();
       this.alias = null;
       this.copied = false;
-      this.currencyType = 'GBP';
       this.error = null;
       let tz = Math.floor(new Date().getTimezoneOffset() / -60);
       if (tz > -1) {
@@ -141,6 +150,7 @@ export class AccountComponent implements OnInit {
 
 
   getPrice() {
+    localStorage.setItem('currencyType',this.currencyType);
     this.priceResults = null;
     this.marketService.getMarketPrice(Date.now(), this.currencyType)
       .subscribe(data => {
@@ -290,6 +300,24 @@ export class AccountComponent implements OnInit {
         return amount.toFixed(2);
       }
     }
+    else if (type == 'GHS') {
+      if (returnSymbol) {
+
+        return 'Gh₵' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'NGN') {
+      if (returnSymbol) {
+
+        return '₦' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
     else if (type == 'USD') {
       if (returnSymbol) {
 
@@ -394,6 +422,33 @@ export class AccountComponent implements OnInit {
       if (returnSymbol) {
 
         return 'S/.' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'VND') {
+      if (returnSymbol) {
+
+        return amount.toFixed(2) + '₫';
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'TRY') {
+      if (returnSymbol) {
+
+        return '₺' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'INR') {
+      if (returnSymbol) {
+
+        return '₹' + amount.toFixed(2);
       }
       else {
         return amount.toFixed(2);

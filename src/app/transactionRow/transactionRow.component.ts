@@ -180,10 +180,55 @@ export class TransactionRowComponent implements OnInit {
         return amount.toFixed(0);
       }
     }
+    else if (type == 'VND') {
+      if (returnSymbol) {
+
+        return amount.toFixed(2) + '₫';
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'TRY') {
+      if (returnSymbol) {
+
+        return '₺' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'INR') {
+      if (returnSymbol) {
+
+        return '₹' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
     else if (type == 'CNY') {
       if (returnSymbol) {
 
         return '¥' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'GHS') {
+      if (returnSymbol) {
+
+        return 'Gh₵' + amount.toFixed(2);
+      }
+      else {
+        return amount.toFixed(2);
+      }
+    }
+    else if (type == 'NGN') {
+      if (returnSymbol) {
+
+        return '₦' + amount.toFixed(2);
       }
       else {
         return amount.toFixed(2);
