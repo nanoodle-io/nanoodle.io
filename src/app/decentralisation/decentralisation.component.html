@@ -21,11 +21,12 @@
               href="https://github.com/nanocurrency/raiblocks/wiki/Docker-node">here</a>
             for details on how to run a Nano node.</p>
           <p>Nano nodes hold a wallet with 1 or more accounts associated accounts, all of which can be nominated as a
-            Representative by other accounts; nomination means that an account will delegate their own balance as voting weight to the Representative
+            Representative by other accounts; nomination means that an account will delegate their own balance as voting
+            weight to the Representative
             (account). This is
             a sensible approach where an individual is not running a node
             themselves (so they wouldn't be able to represent the voting power of the Nano in their own accounts).</p>
-            <p>A
+          <p>A
             Representative will vote on behalf of all the delegated Nano, in all the accounts that have nominated the
             Representative. Once a Representative gains 0.1% of the Nano supply in delegated weight, they are considered
             Principal Representative, and have their votes sent onward by the network (beyond the directly connected
@@ -52,7 +53,7 @@
             <p>For further reading on the protocol, see the <a
                 href="https://github.com/NanoTools/wiki/blob/master/Rebroadcasting-Elections.md">NanoTools
                 wiki</a> or the <a href="https://docs.nano.org/glossary/#open-representative-voting-orv">
-                  nano.org documentation</a>.</p>
+                nano.org documentation</a>.</p>
             <p>See <a href="https://mynano.ninja/">My Nano Ninja</a> for a list of reliable Representatives that require
               voting weight.</p>
             <p>See <a href="https://nanocharts.info/">Nano Charts</a> for a list of Representative weights.</p>
@@ -66,8 +67,16 @@
       <div class="col-lg-5 video-top">
         <div class="header-content mx-auto">
           <h3>NANOODLE Representative</h3>
-          <p>The NANOODLE Representative can be selected by using the below identifier:</p>
-          <p><a class="account"
+          <p>The NANOODLE Representative can be selected by using the below QR code or identifier:</p>
+          <p>
+            <a [href]="repUrl">
+              <qrcode
+                [qrdata]="'nanorep:nano_1e6e41up4x5e4jke6wy4k6nnuagagspfx4tjafghub6cw46ueimqt657nx4a?label=NANOODLE&message=Thank%20you%20for%20changing%20your%20representative.'"
+                [size]="128" [level]="'M'"></qrcode>
+            </a>
+          </p>
+          <p>
+            <a class="account"
               routerLink="/account/nano_1e6e41up4x5e4jke6wy4k6nnuagagspfx4tjafghub6cw46ueimqt657nx4a">nano_1e6e41up4x5e4jke6wy4k6nnuagagspfx4tjafghub6cw46ueimqt657nx4a</a>
           </p>
           <h4>Node Details</h4>

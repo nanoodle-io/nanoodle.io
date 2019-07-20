@@ -10,6 +10,7 @@ import { AccountComponent } from './account/account.component';
 import { HomeComponent } from './home/home.component';
 import { LiveComponent } from './live/live.component';
 import { ProductComponent } from './products/products.component';
+import { RatesComponent } from './rates/rates.component';
 import { DecentralisationComponent } from './decentralisation/decentralisation.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { MessagesComponent } from './messages/messages.component';
@@ -33,6 +34,7 @@ import { PrivacyComponent, PrivacyComponentDialog } from './privacy/privacy.comp
 import { AccountWatchComponent, AccountWatchComponentDialog  } from './accountWatch/accountWatch.component';
 import { UnsubscribeComponent  } from './unsubscribe/unsubscribe.component';
 import { VerifyComponent } from './verify/verify.component';
+import { MarketComponent } from './market/market.component';
 import { TransactionGraphComponent } from './transactionGraph/transactionGraph.component';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 
@@ -52,6 +54,7 @@ const appRoutes: Routes = [
   { path: 'block/:id', component: BlockComponent },
   { path: 'live', component: LiveComponent },
   { path: 'products', component: ProductComponent },
+  { path: 'rates', component: RatesComponent },
   { path: 'decentralisation', component: DecentralisationComponent },
   { path: 'verify/:id', component: VerifyComponent },
   { path: 'unsubscribe/:id', component: UnsubscribeComponent },
@@ -62,7 +65,7 @@ const appRoutes: Routes = [
   imports: [BrowserModule, ChartsModule, MatDialogModule, FormsModule, BrowserAnimationsModule, MatButtonModule, MatSelectModule, MatDividerModule, MatInputModule, QRCodeModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
     appRoutes//,{ enableTracing: true } // <-- debugging purposes only
   )],
-  declarations: [App, NavbarComponent, TransactionRowComponent, TransactionGraphComponent, UnsubscribeComponent, VerifyComponent, AccountWatchComponent, AccountWatchComponentDialog, AccountInvoiceComponent, AccountInvoiceComponentDialog,AccountDownloadComponent,AccountDownloadComponentDialog, PrivacyComponent, PrivacyComponentDialog, TACComponent, TACComponentDialog, DonateComponent, DonateComponentDialog, AccountComponent, HomeComponent, LiveComponent, ProductComponent, DecentralisationComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
+  declarations: [App, NavbarComponent, TransactionRowComponent, TransactionGraphComponent, UnsubscribeComponent, VerifyComponent, MarketComponent, AccountWatchComponent, AccountWatchComponentDialog, AccountInvoiceComponent, AccountInvoiceComponentDialog,AccountDownloadComponent,AccountDownloadComponentDialog, PrivacyComponent, PrivacyComponentDialog, TACComponent, TACComponentDialog, DonateComponent, DonateComponentDialog, AccountComponent, HomeComponent, LiveComponent, RatesComponent, ProductComponent, DecentralisationComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
   entryComponents: [ AccountDownloadComponentDialog, PrivacyComponentDialog, TACComponentDialog, DonateComponentDialog, AccountWatchComponentDialog, AccountInvoiceComponentDialog ],
   bootstrap: [App]
 })

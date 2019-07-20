@@ -96,7 +96,7 @@ export class TransactionRowComponent implements OnInit {
     }
   }
 
-  displayAccountIdentifier(account: string): string
+  displayAccountAddress(account: string): string
   {
       if (account in this.alias)
       {
@@ -368,7 +368,7 @@ export class TransactionRowComponent implements OnInit {
 
   formatDate(rawDate: number): string {
     let myDate = new Date(rawDate);
-    return myDate.toLocaleString();
+    return myDate.toLocaleString('en-GB', { timeZone: 'UTC' });
   }
 
   private log(message: string) {

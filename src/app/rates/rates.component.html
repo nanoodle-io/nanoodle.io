@@ -1,0 +1,147 @@
+<header class="masthead">
+  <div class="section-heading text-center">
+    <img src="../../assets/nanoodle_logo.svg" width="50px" class="img-fluid" alt="">
+    <br>
+    <h3>Rates / Invoice</h3>
+    <br>
+  </div>
+</header>
+<section class="features" id="features">
+  <div class="container h-100">
+    <div class="row h-100">
+      <div class="col-lg-4 my-auto invoice">
+        <h4>Currency and Rate</h4>
+        <p>
+          <mat-form-field>
+            <mat-select name="currencyType" [(ngModel)]="currencyType" placeholder="Currency" required #last="ngModel"
+              (selectionChange)="getPrice()">
+              <mat-option value="GBP">GBP - British Pound Sterling</mat-option>
+              <mat-option value="EUR">EUR - Euro</mat-option>
+              <mat-option value="USD">USD - United States Dollar</mat-option>
+              <mat-option value="BTC">BTC - Bitcoin </mat-option>
+              <mat-option value="ETH">ETH - Etherium</mat-option>
+              <mat-divider></mat-divider>
+              <mat-option value="ARS">ARS - Argentine Peso</mat-option>
+              <mat-option value="AUD">AUD - Australian Dollar</mat-option>
+              <mat-option value="BRL">BRL - Brazilian Real</mat-option>
+              <mat-option value="CAD">CAD - Canadian Dollar</mat-option>
+              <mat-option value="CHF">CHF - Swiss Franc</mat-option>
+              <mat-option value="CNY">CNY - Chinese Yuan</mat-option>
+              <mat-option value="COP">COP - Columbian Peso</mat-option>
+              <mat-option value="GHS">GHS - Ghanaian Cedi</mat-option>
+              <mat-option value="INR">INR - Indian Rupee</mat-option>
+              <mat-option value="JPY">JPY - Japanese Yen</mat-option>
+              <mat-option value="MXN">MXN - Mexican Peso</mat-option>
+              <mat-option value="NGN">NGN - Nigerian Naira</mat-option>
+              <mat-option value="PEN">PEN - Peruvian Sol</mat-option>
+              <mat-option value="SEK">SEK - Swedish Krona</mat-option>
+              <mat-option value="TRY">TRY - Turkish Lira</mat-option>
+              <mat-option value="VES">VES - Venezuelan Bolívar</mat-option>
+              <mat-option value="VND">VND - Vietnamese Dong</mat-option>
+              <mat-option value="ZAR">ZAR - South African Rand</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </p>
+        <p>
+          Current rate of {{ priceResults }} {{ currencyType}} against 1 Nano
+        </p>
+        <p class="qrelement">
+          <mat-form-field>
+            <input matInput [(ngModel)]="overrideRate" placeholder="Override rate" [formControl]="rateFormControl"
+              [errorStateMatcher]="matcher">
+            <mat-error *ngIf="rateFormControl.hasError('pattern')">
+              Please enter a valid new rate against Nano here (if required). Excluded from QR Code until valid.
+            </mat-error>
+            <mat-hint>Optional override rate against Nano for the invoice</mat-hint>
+          </mat-form-field>
+        </p>
+        <h4>Currency Amount</h4>
+        <p class="qrelement">
+          <mat-form-field>
+            <input matInput [(ngModel)]="invoiceAmount" placeholder="Currency Amount" [formControl]="amountFormControl"
+              [errorStateMatcher]="matcher">
+            <mat-error *ngIf="amountFormControl.hasError('pattern')">
+              Please enter a valid amount in the selected currency. Excluded from QR Code until valid.
+            </mat-error>
+            <mat-hint>Currency amount for the invoice</mat-hint>
+          </mat-form-field>
+        </p>
+        <ng-container
+          *ngIf="invoiceAmount&&!amountFormControl.hasError('pattern')&&!rateFormControl.hasError('pattern'); then Message;">
+        </ng-container>
+        <ng-template #Message>
+          <ng-container *ngIf="overrideRate; then OverrideMessage; else RateMessage">
+          </ng-container>
+          <ng-template #OverrideMessage>
+            <p>
+              Based on the overridden rate, your request for {{ invoiceAmount }} {{ currencyType}} will result in a
+              {{ invoiceAmount / overrideRate }} Nano invoice
+            </p>
+          </ng-template>
+          <ng-template #RateMessage>
+            <p>
+              Based on the current rate, your request for {{ invoiceAmount }} {{ currencyType}} will result in a
+              {{ invoiceAmount / priceResults }} Nano invoice
+            </p>
+          </ng-template>
+        </ng-template>
+      </div>
+      <div class="col-lg-4 my-auto invoice">
+        <h4>Account Address</h4>
+        <p class="qrelement">
+          <mat-form-field>
+            <input matInput [(ngModel)]="invoiceAddress" placeholder="Address" [formControl]="addressFormControl"
+              [errorStateMatcher]="matcher">
+            <mat-error *ngIf="addressFormControl.hasError('pattern')">
+              Please enter a valid Nano address.
+            </mat-error>
+            <mat-hint>Nano Address for the invoice</mat-hint>
+          </mat-form-field>
+        </p>
+        <h4>Additional Details </h4>
+        <p class="qrelement">
+          <mat-form-field>
+            <input matInput [(ngModel)]="invoiceLabel" placeholder="Label" [formControl]="stringFormControl"
+              [errorStateMatcher]="matcher">
+            <mat-error *ngIf="stringFormControl.hasError('pattern')">
+              Please enter a valid label. Excluded from QR Code until valid.
+            </mat-error>
+            <mat-hint>Label for the invoice</mat-hint>
+          </mat-form-field>
+        </p>
+        <p class="qrelement">
+          <mat-form-field>
+            <input matInput [(ngModel)]="invoiceMessage" placeholder="Message" [formControl]="stringFormControl"
+              [errorStateMatcher]="matcher">
+            <mat-error *ngIf="stringFormControl.hasError('pattern')">
+              Please enter a message. Excluded from QR Code until valid.
+            </mat-error>
+            <mat-hint>Message for the invoice</mat-hint>
+          </mat-form-field>
+        </p>
+      </div>
+      <div class="col-lg-4 my-auto invoice">
+        <h4>Invoice QR Code</h4>
+        <ng-container
+          *ngIf="invoiceAddress&&!addressFormControl.hasError('pattern'); then addressLoadedInvoice; else placeholderInvoice">
+        </ng-container>
+        <ng-template #addressLoadedInvoice>
+          <p>Note: Not all products/services can utilise all of the information within the QR code. The QR code PNG
+            image can be saved.</p>
+          <div class="qr1">
+            <div class="qr2">
+              <a [href]="invoiceUrl">
+                <qrcode [qrdata]="invoiceString(invoiceAmount,invoiceAddress,invoiceLabel,invoiceMessage)" [size]="128"
+                  [level]="'M'">
+                </qrcode>
+              </a>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #placeholderInvoice>
+          <p>Invoice will appear here once a valid Nano address has been provided.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</section>

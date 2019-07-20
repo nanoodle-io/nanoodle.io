@@ -51,7 +51,7 @@ export class BlockComponent implements OnInit {
 
   formatDate(rawDate: number): string {
     let myDate = new Date(rawDate);
-    return myDate.toLocaleString();
+    return myDate.toLocaleString('en-GB', { timeZone: 'UTC' });
   }
 
   getBlock(blockParam: string): void {

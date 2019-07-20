@@ -38,14 +38,12 @@ export class AccountComponent implements OnInit {
   alias: Object;
   temp: Object;
   balanceResults: Balance;
-  blockCountResults: BlockCountResults;
   keys: string[];
   identifier: string;
   //param
   paramsub: any;
   error: string;
   reg = new RegExp('"error"');
-  lastPriceTime: string;
 
   constructor(private sanitizer: DomSanitizer, private messageService: MessageService, private myNanoNinjaService: MyNanoNinjaService, private marketService: MarketService, private NodeService: NodeService, private route: ActivatedRoute, private accountService: AccountService, private blockService: BlockService) { }
 
@@ -53,8 +51,8 @@ export class AccountComponent implements OnInit {
     this.paramsub = this.route.params.subscribe(sub => {
       this.identifier = sub['id'].replace(/^xrb/, 'nano');
       //check if the local storage has the currency set
-      let storedCurrency = localStorage.getItem('currencyType'); 
-      if(storedCurrency) 
+      let storedCurrency = localStorage.getItem('currencyType');
+      if(storedCurrency != null) 
       {
         this.currencyType = storedCurrency;
       }
@@ -80,12 +78,10 @@ export class AccountComponent implements OnInit {
       this.balanceResults = null;
       this.blockResults = null;
       this.unprocessedBlocksResults = null;
-      this.blockCountResults = null;
       this.repScore = null;
       this.repDelegators = null;
       this.repLastVoted = null;
       this.repUptime = null;
-      this.getBlockCount();
       this.getPrice();
       this.getAliases();
       this.getAccount(this.identifier, 20);
@@ -94,8 +90,6 @@ export class AccountComponent implements OnInit {
       this.getWeight(this.identifier);
       this.getBalance(this.identifier);
       this.nanoUrl = this.sanitizer.bypassSecurityTrustResourceUrl("nano:" + this.identifier);
-      this.lastPriceTime = null;
-      this.getLastPrice();
     });
   }
 
@@ -137,18 +131,6 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  getLastPrice(): void {
-    this.marketService.getLastMarketPrice()
-      .subscribe(data => {
-        let tempDate = new Date(data[0]['log']['epochTimeStamp']['$date']);
-        this.lastPriceTime = this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + "-" + this.pad2(tempDate.getFullYear()) + " " + this.pad2(tempDate.getHours()) + ":" + this.pad2(tempDate.getMinutes());
-      });
-  }
-
-  //date helper functions
-  pad2(n) { return n < 10 ? '0' + n : n }
-
-
   getPrice() {
     localStorage.setItem('currencyType',this.currencyType);
     this.priceResults = null;
@@ -175,16 +157,6 @@ export class AccountComponent implements OnInit {
     else {
       return false;
     }
-  }
-
-  getBlockCount(): void {
-    this.NodeService.getBlockCount()
-      .subscribe(data => {
-        this.blockCountResults = data;
-        if (this.reg.test(JSON.stringify(this.blockCountResults))) {
-          this.error = JSON.stringify(this.blockCountResults['error']);
-        }
-      });
   }
 
   formatDecimals(input: number, places: number): string {
@@ -588,12 +560,6 @@ interface Content {
   link_as_account: string;
   signature: string;
   work: string;
-}
-
-interface BlockCountResults {
-  error?: string;
-  count?: number;
-  unchecked?: number;
 }
 
 interface FiatResults {

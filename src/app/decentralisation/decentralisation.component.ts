@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { MessageService } from '../message.service';
 import { NodeService } from '../node.service';
 import { AccountService } from '../account.service';
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
+
 @Component({
   selector: 'app-reps',
   templateUrl: './decentralisation.component.html',
@@ -13,10 +15,11 @@ export class DecentralisationComponent implements OnInit {
   error: string;
   reg = new RegExp('"error"');
   blockCountResults: BlockCountResults;
+  repUrl: SafeUrl;
   weightResults: WeightResult;
   versionResults: NodeVersion;
 
-  constructor(private messageService: MessageService, private nodeService: NodeService, private accountService: AccountService, private route: ActivatedRoute) { }
+  constructor(private sanitizer: DomSanitizer, private messageService: MessageService, private nodeService: NodeService, private accountService: AccountService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.blockCountResults = null;
@@ -26,6 +29,7 @@ export class DecentralisationComponent implements OnInit {
     this.weightResults = null;
     //NANOODLE Representative
     this.getWeight('nano_1e6e41up4x5e4jke6wy4k6nnuagagspfx4tjafghub6cw46ueimqt657nx4a');
+    this.repUrl = this.sanitizer.bypassSecurityTrustResourceUrl("nanorep:nano_1e6e41up4x5e4jke6wy4k6nnuagagspfx4tjafghub6cw46ueimqt657nx4a?label=NANOODLE&message=Thank%20you%20for%20changing%20your%20representative.");
   }
   
   formatDecimals(input: number, places: number): string {

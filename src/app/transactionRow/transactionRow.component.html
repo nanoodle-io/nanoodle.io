@@ -47,7 +47,7 @@
         <ng-container *ngIf="alias; then aliasLoaded; else aliasLoading">
         </ng-container>
         <ng-template #aliasLoaded>
-            {{ displayAccountIdentifier(account) }}
+            {{ displayAccountAddress(account) }}
         </ng-template>
         <ng-template #aliasLoading>
             {{ account }}
