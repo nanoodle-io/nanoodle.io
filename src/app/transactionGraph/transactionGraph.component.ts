@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BlockService } from '../block.service';
 import * as d3 from 'd3';
-import { balancePreviousStylesIntoKeyframes } from '@angular/animations/browser/src/util';
 
 @Component({
   selector: 'app-transactionGraph',
@@ -35,12 +34,12 @@ export class TransactionGraphComponent implements OnInit {
           return 0
         })
       }
-    }
+    };
 
     var x = d3.scaleTime()
       .domain([Date.now() - (limit - 2), Date.now() - duration])
       .range([0, width])
-
+      
     var y = d3.scaleLinear()
       .domain([0, max])
       .range([height, 0])
@@ -77,6 +76,7 @@ export class TransactionGraphComponent implements OnInit {
 
     // Add the X Axis
     x.axis = d3.axisBottom(x)
+    
     var xaxis = svg.append('g')
       .attr('class', 'axis')
       .attr('transform', 'translate(35,' + height + ')')
@@ -119,8 +119,6 @@ export class TransactionGraphComponent implements OnInit {
           .ease(d3.easeLinear)
           .call(y.axis)
         }
-      });
-      blockService.getBlockCountDetails(15, true).subscribe(data => {
       });
     }
 

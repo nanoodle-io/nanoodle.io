@@ -179,9 +179,9 @@ export class LiveComponent implements OnInit {
         ];
 
         this.currencyDatasets = [
-          { data: nanoTemp, label: 'Nano' },
-          { data: gbpTemp, label: 'GBP' },
           { data: usdTemp, label: 'USD' },
+          { data: nanoTemp, label: 'Nano' },
+          { data: gbpTemp, label: 'GBP', hidden: true },
           { data: cnyTemp, label: 'CNY', hidden: true },
           { data: jpyTemp, label: 'JPY', hidden: true },
           { data: eurTemp, label: 'EUR', hidden: true },

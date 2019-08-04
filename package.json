@@ -14,7 +14,7 @@
     "@angular/animations": "^7.2.14",
     "@angular/cdk": "^7.3.7",
     "@angular/common": "^7.2.14",
-    "@angular/compiler": "^7.2.14",
+    "@angular/compiler": "^7.2.15",
     "@angular/core": "^7.2.14",
     "@angular/flex-layout": "^7.0.0-beta.24",
     "@angular/forms": "^7.2.14",
@@ -32,6 +32,7 @@
     "clean-css": "^4.2.1",
     "core-js": "^3.0.1",
     "d3": "^5.7.0",
+    "dotenv": "^8.0.0",
     "font-awesome": "^4.7.0",
     "fork-awesome": "^1.1.1",
     "jquery": "^3.4.1",
@@ -44,9 +45,9 @@
     "zone.js": "^0.8.29"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.13.8",
+    "@angular-devkit/build-angular": "^0.13.9",
     "@angular/cli": "~7.3.8",
-    "@angular/compiler-cli": "^7.2.14",
+    "@angular/compiler-cli": "^7.2.15",
     "@angular/language-service": "^7.2.14",
     "@types/jasmine": "^3.3.12",
     "@types/jasminewd2": "~2.0.3",
@@ -64,7 +65,7 @@
     "rxjs-tslint": "^0.1.7",
     "ts-node": "~5.0.1",
     "tslint": "^5.16.0",
-    "typescript": "~3.2.4",
-    "webpack": "^4.30.0"
+    "typescript": "^3.2.4",
+    "webpack": "^4.36.1"
   }
 }
