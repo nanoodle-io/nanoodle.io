@@ -6,6 +6,7 @@
     <br>
   </div>
 </header>
+<app-market></app-market>
 <section class="features" id="features">
   <ng-container *ngIf="error; then errorPresent; else results">
   </ng-container>
@@ -158,7 +159,7 @@
       <p>Receive an email when transactions are detected on this account</p>
       <app-accountWatch [identifier]=identifier></app-accountWatch>
       <h4>NANOODLE Invoice</h4>
-      <p>QR code generator for this account</p>
+      <p>Basic QR code generator for this account</p>
       <app-accountInvoice [identifier]=identifier></app-accountInvoice>
     </div>
     <div class="container">

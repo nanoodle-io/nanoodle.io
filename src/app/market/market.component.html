@@ -1,3 +1,64 @@
-<div class="container">
-  <p>24 Hours X% | 7 Days X% | 28 Days X%</p>
+<div class="container topper">
+  <ng-container
+    *ngIf="priceResultsNowUSD && priceResultsNowBTC && priceResultsDayUSD && priceResultsDayBTC && priceResultsWeekUSD && priceResultsWeekBTC; then display; else loading">
+  </ng-container>
+  <ng-template #display>
+    <div class="container">
+      <div class="block_container">
+        <div class="info">
+          Price $: {{priceResultsNowUSD.toFixed(2) }}
+        </div>
+        <ng-container *ngIf="(priceResultsNowUSD - priceResultsDayUSD) > 0; then positiveUSD; else negativeUSD">
+        </ng-container>
+        <ng-template #positiveUSD>
+          <div class="positive info">(24 Hours:
+            {{ (((priceResultsNowUSD - priceResultsDayUSD)/priceResultsDayUSD)*100).toFixed(2) }}%)</div>
+        </ng-template>
+        <ng-template #negativeUSD>
+          <div class="negative info">(24 Hours:
+            {{ (((priceResultsNowUSD - priceResultsDayUSD)/priceResultsDayUSD)*100).toFixed(2) }}%)</div>
+        </ng-template>
+          <ng-container
+            *ngIf="(priceResultsNowUSD - priceResultsWeekUSD) > 0; then positiveUSDWeek; else negativeUSDWeek">
+          </ng-container>
+          <ng-template #positiveUSDWeek>
+            <div class="positive info"> (7 Days:
+              {{ (((priceResultsNowUSD - priceResultsWeekUSD)/priceResultsWeekUSD)*100).toFixed(2) }}%)</div>
+          </ng-template>
+          <ng-template #negativeUSDWeek>
+            <div class="negative info"> (7 Days:
+              {{ (((priceResultsNowUSD - priceResultsWeekUSD)/priceResultsWeekUSD)*100).toFixed(2) }}%)</div>
+          </ng-template>
+      </div>
+      <div class="block_container">
+        <div class="info">
+          Price ₿: {{priceResultsNowBTC.toFixed(6) }}
+        </div>
+        <ng-container *ngIf="(priceResultsNowBTC - priceResultsDayBTC) > 0; then positiveBTC; else negativeBTC">
+        </ng-container>
+        <ng-template #positiveBTC>
+          <div class="positive info">(24 Hours:
+            {{ (((priceResultsNowBTC - priceResultsDayBTC)/priceResultsDayBTC)*100).toFixed(2) }}%)</div>
+        </ng-template>
+        <ng-template #negativeBTC>
+          <div class="negative info">(24 Hours:
+            {{ (((priceResultsNowBTC - priceResultsDayBTC)/priceResultsDayBTC)*100).toFixed(2) }}%)</div>
+        </ng-template>
+        <ng-container
+          *ngIf="(priceResultsNowBTC - priceResultsWeekBTC) > 0; then positiveBTCWeek; else negativeBTCWeek">
+        </ng-container>
+        <ng-template #positiveBTCWeek>
+          <div class="positive info"> (7 Days:
+            {{ (((priceResultsNowBTC - priceResultsWeekBTC)/priceResultsWeekBTC)*100).toFixed(2) }}%)</div>
+        </ng-template>
+        <ng-template #negativeBTCWeek>
+          <div class="negative info"> (7 Days:
+            {{ (((priceResultsNowBTC - priceResultsWeekBTC)/priceResultsWeekBTC)*100).toFixed(2) }}%)</div>
+        </ng-template>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #loading>
+    <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+  </ng-template>
 </div>

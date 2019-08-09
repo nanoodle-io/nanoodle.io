@@ -1,4 +1,4 @@
-p
+div
 {
   font-size: 14px;
   font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
@@ -6,8 +6,25 @@ p
   letter-spacing: 1.5px;
 }
 
+.positive {
+  color: green;
+}
 
-div {
-  padding: 15px 0;
-  text-align: center;
+.negative {
+  color: red;
+}
+
+.block_container
+{
+    text-align:center;
+    margin-top: 5px;
+}
+.info
+{
+    display:inline;
+}
+
+.topper
+{
+  margin-top: 15px;
 }
