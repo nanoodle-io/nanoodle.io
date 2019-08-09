@@ -27,7 +27,7 @@ import { AccountDownloadComponent  } from './accountDownload/accountDownload.com
 import { TransactionRowComponent  } from './transactionRow/transactionRow.component';
 import { AccountDownloadComponentDialog  } from './accountDownload/accountDownload.component';
 import { AccountInvoiceComponent, AccountInvoiceComponentDialog  } from './accountInvoice/accountInvoice.component';
-import { MatDialogModule } from '@angular/material';
+import { MatDialogModule } from '@angular/material/dialog';
 import { DonateComponent, DonateComponentDialog } from './donate/donate.component';
 import { TACComponent, TACComponentDialog } from './tac/tac.component';
 import { PrivacyComponent, PrivacyComponentDialog } from './privacy/privacy.component';
@@ -36,7 +36,7 @@ import { UnsubscribeComponent  } from './unsubscribe/unsubscribe.component';
 import { VerifyComponent } from './verify/verify.component';
 import { MarketComponent } from './market/market.component';
 import { TransactionGraphComponent } from './transactionGraph/transactionGraph.component';
-import { ChartsModule } from 'ng2-charts/ng2-charts';
+import { ChartsModule } from 'ng2-charts';
 
 @Component({
   selector: 'my-app',
@@ -62,7 +62,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [BrowserModule, ChartsModule, MatDialogModule, FormsModule, BrowserAnimationsModule, MatButtonModule, MatSelectModule, MatDividerModule, MatInputModule, QRCodeModule, ReactiveFormsModule, HttpClientModule, NgbModule.forRoot(), RouterModule.forRoot(
+  imports: [BrowserModule, ChartsModule, MatDialogModule, FormsModule, BrowserAnimationsModule, MatButtonModule, MatSelectModule, MatDividerModule, MatInputModule, QRCodeModule, ReactiveFormsModule, HttpClientModule, NgbModule, RouterModule.forRoot(
     appRoutes//,{ enableTracing: true } // <-- debugging purposes only
   )],
   declarations: [App, NavbarComponent, TransactionRowComponent, TransactionGraphComponent, UnsubscribeComponent, VerifyComponent, MarketComponent, AccountWatchComponent, AccountWatchComponentDialog, AccountInvoiceComponent, AccountInvoiceComponentDialog,AccountDownloadComponent,AccountDownloadComponentDialog, PrivacyComponent, PrivacyComponentDialog, TACComponent, TACComponentDialog, DonateComponent, DonateComponentDialog, AccountComponent, HomeComponent, LiveComponent, RatesComponent, ProductComponent, DecentralisationComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],

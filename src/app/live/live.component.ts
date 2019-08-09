@@ -3,7 +3,7 @@ import { MessageService } from '../message.service';
 import { NodeService } from '../node.service';
 import { NetworkService } from '../network.service';
 import { MarketService } from '../market.service';
-import { BaseChartDirective } from 'ng2-charts/ng2-charts';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'app-live-component',
@@ -22,13 +22,13 @@ export class LiveComponent implements OnInit {
   transactionDatasets = [
     { data: [1, 1, 1, 1], label: 'Hourly Value Transactions' }
   ];
-  transactionLabels = [1, 2, 3, 4];
-  transactionLabelsExtended = [1, 2, 3, 4];
+  transactionLabels = ["1", "2", "3", "4"];
+  transactionLabelsExtended = ["1", "2", "3", "4"];
 
   transactionDayDatasets = [
     { data: [1, 1, 1, 1], label: 'Daily Value Transactions' }
   ];
-  transactionDayLabels = [1, 2, 3, 4];
+  transactionDayLabels = ["1", "2", "3", "4"];
 
   chartOptions = {
     responsive: true
@@ -198,7 +198,7 @@ export class LiveComponent implements OnInit {
   reloadHourlyChart() {
     if (this.chart !== undefined) {
       this.chart.chart.destroy();
-      this.chart.chart = 0;
+      this.chart.chart = null;
 
       this.chart.datasets = this.transactionDatasets;
       this.chart.labels = this.transactionLabels;
@@ -207,7 +207,7 @@ export class LiveComponent implements OnInit {
 
     if (this.chart1 !== undefined) {
       this.chart1.chart.destroy();
-      this.chart1.chart = 0;
+      this.chart1.chart = null;
 
       this.chart1.datasets = this.currencyDatasets;
       this.chart1.labels = this.transactionLabels;
@@ -216,7 +216,7 @@ export class LiveComponent implements OnInit {
 
     if (this.chart2 !== undefined) {
       this.chart2.chart.destroy();
-      this.chart2.chart = 0;
+      this.chart2.chart = null;
 
       this.chart2.datasets = this.priceDatasets;
       this.chart2.labels = this.transactionLabelsExtended;
@@ -225,7 +225,7 @@ export class LiveComponent implements OnInit {
 
     if (this.chart3 !== undefined) {
       this.chart3.chart.destroy();
-      this.chart3.chart = 0;
+      this.chart3.chart = null;
       this.chart3.labels = this.doughnutChartLabels;
       this.chart3.data = this.doughnutChartData;
       this.chart3.ngOnInit();
@@ -236,7 +236,7 @@ export class LiveComponent implements OnInit {
   reloadDailyChart() {
     if (this.chart4 !== undefined) {
       this.chart4.chart.destroy();
-      this.chart4.chart = 0;
+      this.chart4.chart = null;
 
       this.chart4.datasets = this.transactionDayDatasets;
       this.chart4.labels = this.transactionDayLabels;

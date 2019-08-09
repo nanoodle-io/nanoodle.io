@@ -1,6 +1,6 @@
 import { Component, Inject, Input } from '@angular/core';
 import { forkJoin, of } from 'rxjs';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { saveAs } from 'file-saver/FileSaver';
 import { AccountService } from '../account.service';
 import { BlockService } from '../block.service';
