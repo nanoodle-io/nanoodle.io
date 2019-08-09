@@ -11,11 +11,11 @@ import { BaseChartDirective } from 'ng2-charts/ng2-charts';
   styleUrls: ['./live.component.css']
 })
 export class LiveComponent implements OnInit {
-  @ViewChild("transactionChart") chart: BaseChartDirective;
-  @ViewChild("currencyChart") chart1: BaseChartDirective;
-  @ViewChild("priceChart") chart2: BaseChartDirective;
-  @ViewChild("sizeChart") chart3: BaseChartDirective;
-  @ViewChild("transactionDayChart") chart4: BaseChartDirective;
+  @ViewChild("transactionChart", { static: true }) chart: BaseChartDirective;
+  @ViewChild("currencyChart", { static: true }) chart1: BaseChartDirective;
+  @ViewChild("priceChart", { static: true }) chart2: BaseChartDirective;
+  @ViewChild("sizeChart", { static: true }) chart3: BaseChartDirective;
+  @ViewChild("transactionDayChart", { static: true }) chart4: BaseChartDirective;
 
   blockCountResults: BlockCountResults;
 
