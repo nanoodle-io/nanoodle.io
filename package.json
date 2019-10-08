@@ -41,7 +41,7 @@
     "nodemailer": "^6.3.0",
     "popper.js": "^1.15.0",
     "require-from-string": "^2.0.2",
-    "rxjs": "^6.5.1",
+    "rxjs": "^6.5.3",
     "simple-line-icons": "^2.4.1",
     "tslib": "^1.10.0"
   },
