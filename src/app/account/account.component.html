@@ -170,8 +170,8 @@
         <ng-container *ngIf="keys.length > 0; then blocksShow; else blocksEmpty">
         </ng-container>
         <ng-template #blocksShow>
-          <p>Showing up to the last 20 incoming blocks, in no order, for which this account has not processed a block
-            to complete the transaction</p>
+          <p>Showing up to the last 20 received transactions, in no order, for which this account has not processed a receive block
+            to claim the funds and add them into the account balance (the funds will become spendable). A receive block is added automatically by many Nano wallets.</p>
           <div class="row">
             <div class="col-lg-12 my-auto">
               <table class="table table-hover">
@@ -198,7 +198,7 @@
         </ng-template>
       </ng-template>
       <ng-template #blocksEmpty>
-        <p>No incoming blocks to process</p>
+        <p>No received blocks to process</p>
       </ng-template>
       <ng-template #blocksloading>
         <div>
@@ -207,14 +207,14 @@
       </ng-template>
     </div>
     <div class="container">
-      <h3>Transactions</h3>
+      <h3>Spent/Claimed Transactions</h3>
       <ng-container *ngIf="accountResults; then transactionLoaded; else transactionLoading">
       </ng-container>
       <ng-template #transactionLoaded>
         <ng-container *ngIf="accountResults['history'].length > 0; then transactionsShow; else transactionsEmpty">
         </ng-container>
         <ng-template #transactionsShow>
-          <p>Showing up to the last 20 processed transactions</p>
+          <p>Showing up to the last 20 spent/claimed transactions</p>
           <div class="row">
             <div class="col-lg-12 my-auto">
               <table class="table table-hover">
@@ -239,7 +239,7 @@
           </div>
         </ng-template>
         <ng-template #transactionsEmpty>
-          <p>No processed transactions in account history</p>
+          <p>No spent/claimed transactions in account history</p>
         </ng-template>
       </ng-template>
       <ng-template #transactionLoading>

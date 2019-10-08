@@ -33,7 +33,7 @@ priceResultsWeekBTC: number;
     this.marketService.getMarketPrice(this.nowDate.getTime(), 'USD')
       .subscribe(data => {
         let returnRate = 0;
-        if (data.length > 0) {
+        if (data && data.length > 0) {
           for (var i = 0; i < data.length; i++) {
             this.tempRate = data[i];
             returnRate = returnRate + this.tempRate['USD'];
@@ -47,7 +47,7 @@ priceResultsWeekBTC: number;
       this.marketService.getMarketPrice(this.nowDate.getTime(), 'BTC')
       .subscribe(data => {
         let returnRate = 0;
-        if (data.length > 0) {
+        if (data && data.length > 0) {
           for (var i = 0; i < data.length; i++) {
             this.tempRate = data[i];
             returnRate = returnRate + this.tempRate['BTC'];
@@ -66,7 +66,7 @@ priceResultsWeekBTC: number;
     this.marketService.getMarketPrice(this.nowDate.getTime()-(1*24*60*60*1000), 'USD')
       .subscribe(data => {
         let returnRate = 0;
-        if (data.length > 0) {
+        if (data && data.length > 0) {
           for (var i = 0; i < data.length; i++) {
             this.tempRate = data[i];
             returnRate = returnRate + this.tempRate['USD'];
@@ -80,7 +80,7 @@ priceResultsWeekBTC: number;
       this.marketService.getMarketPrice(this.nowDate.getTime()-(1*24*60*60*1000), 'BTC')
       .subscribe(data => {
         let returnRate = 0;
-        if (data.length > 0) {
+        if (data && data.length > 0) {
           for (var i = 0; i < data.length; i++) {
             this.tempRate = data[i];
             returnRate = returnRate + this.tempRate['BTC'];
@@ -99,7 +99,7 @@ priceResultsWeekBTC: number;
     this.marketService.getMarketPrice(this.nowDate.getTime()-(7*24*60*60*1000), 'USD')
       .subscribe(data => {
         let returnRate = 0;
-        if (data.length > 0) {
+        if (data && data.length > 0) {
           for (var i = 0; i < data.length; i++) {
             this.tempRate = data[i];
             returnRate = returnRate + this.tempRate['USD'];
@@ -113,7 +113,7 @@ priceResultsWeekBTC: number;
       this.marketService.getMarketPrice(this.nowDate.getTime()-(7*24*60*60*1000), 'BTC')
       .subscribe(data => {
         let returnRate = 0;
-        if (data.length > 0) {
+        if (data && data.length > 0) {
           for (var i = 0; i < data.length; i++) {
             this.tempRate = data[i];
             returnRate = returnRate + this.tempRate['BTC'];

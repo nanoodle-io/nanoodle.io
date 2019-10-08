@@ -68,7 +68,7 @@
       <div class="col-lg-5 video-top">
         <div class="header-content mx-auto">
           <h3>NANOODLE Representative</h3>
-          <p>The NANOODLE Representative can be selected by using the below QR code or identifier:</p>
+          <p>The NANOODLE Representative can be selected by using the below QR code (in compatible applications) or representative address:</p>
           <p>
             <a [href]="repUrl">
               <qrcode
@@ -112,10 +112,10 @@
           <ng-template #weightLoaded>
             <p>Voting Weight: {{ formatAmount(weightResults['weight']) }}</p>
             <ng-container
-              *ngIf="+formatDecimals(+formatAmount(weightResults['weight'])) < 133248.289; then displayProgress; else displayThanks">
+              *ngIf="+formatDecimals(+formatAmount(weightResults['weight'])) < 115000; then displayProgress; else displayThanks">
             </ng-container>
             <ng-template #displayProgress>
-              <p>The NANOODLE Representative is {{formatDecimals(+formatAmount(weightResults['weight']) / 133248.289 *
+              <p>The NANOODLE Representative is {{formatDecimals(+formatAmount(weightResults['weight']) / 115000 *
                 100)}}% toward becoming a Principal Representative</p>
             </ng-template>
             <ng-template #displayThanks>

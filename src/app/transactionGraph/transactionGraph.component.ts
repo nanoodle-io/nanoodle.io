@@ -29,7 +29,7 @@ export class TransactionGraphComponent implements OnInit {
     var groups = {
       current: {
         value: 0,
-        color: 'orange',
+        color: 'red',
         data: d3.range(limit).map(function () {
           return 0
         })
