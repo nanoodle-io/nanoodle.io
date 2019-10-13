@@ -6,6 +6,7 @@ var Twitter = require('/root/scripts/node_modules/twitter');
 var twitterConfig = require('/root/scripts/twitterConfig.js');
 var twitterClient = new Twitter(twitterConfig);
 var Discord = require('/root/scripts/node_modules/discord.js');
+var client = new Discord.Client();
 
 //buffer
 global.Buffer = global.Buffer || require('/root/scripts/node_modules/buffer').Buffer;
@@ -30,7 +31,6 @@ var paramDate;
 var priceDate;
 var contents;
 var representative;
-var old_representative;
 var account;
 var blockURL;
 var marketURL;
@@ -122,7 +122,6 @@ key = [];
 summary = [];
 contents = "";
 representative = "";
-old_representative = "";
 
 getNewBlocks().then(data => {
     response = data;
@@ -154,41 +153,28 @@ getNewBlocks().then(data => {
                             contents = JSON.parse(formatContent(summary['contents']));
                             //find change blocks
                             if (summary.subtype == "change") {
-                                if (+summary.balance >= 5000000000000000000000000000000000) {
+                                console.log("change: " + (+summary.amount / 1000000000000000000000000000000).toFixed());
+                                if (+summary.balance >= 1000000000000000000000000000000000) {
                                     //tweet if large delegation changes are detected
-                                    start = 'NANOODLE Watch Decentralisation Alert 🎉 - ' + (+summary.balance / 1000000000000000000000000000000).toFixed() + ' $NANO redelegated';
+                                    start = 'NANOODLE Watch Decentralisation Alert 🎉 - ' + (+summary.amount / 1000000000000000000000000000000).toFixed() + ' $NANO redelegated';
                                     if (contents['representative'] in aliasHash) {
                                         representative = ' to ' + aliasHash[contents['representative']];
                                     }
                                     else {
                                         representative = ' to ' + contents['representative'];
                                     }
-                                    let tempArray = [];
-                                    tempArray.push(contents.previous);
-                                    getBlockData(tempArray).then(data => {
-                                        //breakout block content
-                                        summary = data['blocks'][contents.previous];
-                                        contents = JSON.parse(formatContent(summary['contents']));
-
-
-                                        if (contents['representative'] in aliasHash) {
-                                            old_representative = ' from ' + aliasHash[contents['representative']];
-                                        }
-                                        else {
-                                            old_representative = ' from ' + contents['representative'];
-                                        }
-                                        try {
-                                            console.log("Twitter Alert");
-                                            twitterClient.post('statuses/update', { status: start + old_representative + representative + ' - https://nanoodle.io/block/' + keyValue });
-                                        }
-                                        catch (err) {
-                                            console.log(err);
-                                        }
-                                    });
+                                    try {
+                                        console.log("Twitter Alert");
+                                        twitterClient.post('statuses/update', { status: start + representative + ' - https://nanoodle.io/block/' + keyValue });
+                                    }
+                                    catch (err) {
+                                        console.log(err);
+                                    }
                                 }
                             }
                             //if large enough, post message
                             else if (summary.subtype == "send") {
+                                console.log("send");
                                 if (summary.amount >= 25000000000000000000000000000000000) {
                                     from = " from Unknown Account - ";
                                     to = " to Unknown Account - ";
@@ -289,7 +275,6 @@ getNewBlocks().then(data => {
     .catch(error => console.log(error));
 
 function discordMessage(start, from, to, keyValue, amount, usdRate) {
-    let client = new Discord.Client();
     client.login(process.env.DISCORD_TOKEN).then(function () {
         let temp = start + from + to + (+amount / 1000000000000000000000000000000).toFixed() + ' $NANO transfer ($' + (+amount * +usdRate / 1000000000000000000000000000000).toFixed() + ') -  https://nanoodle.io/block/' + keyValue;
         //nanoodle discord
