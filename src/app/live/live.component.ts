@@ -93,7 +93,7 @@ export class LiveComponent implements OnInit {
         for (var i = 0; i < data.length; i++) {
           trxTemp.push(data[i]['dailyTransactions']);
           let tempDate = new Date(data[i]['log']['epochTimeStamp']['$date']);
-          timestampTemp.push(this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + "-" + this.pad2(tempDate.getFullYear() + 1));
+          timestampTemp.push(this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + "-" + this.pad2(tempDate.getFullYear()));
         }
         this.transactionDayLabels = timestampTemp;
         this.transactionDayDatasets = [

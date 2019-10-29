@@ -112,14 +112,14 @@
           <ng-template #weightLoaded>
             <p>Voting Weight: {{ formatAmount(weightResults['weight']) }}</p>
             <ng-container
-              *ngIf="+formatDecimals(+formatAmount(weightResults['weight'])) < 115000; then displayProgress; else displayThanks">
+              *ngIf="+formatDecimals(+formatAmount(weightResults['weight'])) < onlineRepResults; then displayProgress; else displayThanks">
             </ng-container>
             <ng-template #displayProgress>
-              <p>The NANOODLE Representative is {{formatDecimals(+formatAmount(weightResults['weight']) / 115000 *
+              <p>The NANOODLE Representative is {{formatDecimals(+formatAmount(weightResults['weight']) / onlineRepResults *
                 100)}}% toward becoming a Principal Representative</p>
             </ng-template>
             <ng-template #displayThanks>
-              <p>The NANOODLE Representative is a Principal Representative! Thank you</p>
+              <p>The NANOODLE Representative is a Principal Representative having passed the threshold of {{ onlineRepResults }} Nano. Thank you!</p>
             </ng-template>
           </ng-template>
           <ng-template #weightLoading>

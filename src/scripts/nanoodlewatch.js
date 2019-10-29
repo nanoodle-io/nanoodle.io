@@ -152,98 +152,97 @@ getNewBlocks().then(data => {
                             keyValue = key[i];
                             summary = data['blocks'][keyValue];
                             contents = JSON.parse(formatContent(summary['contents']));
-			    //find change blocks
-			    if (summary.subtype == "change") {
-if (+summary.balance >= 10000000000000000000000000000000000){
-				//tweet if large delegation changes are detected
-				start = 'NANOODLE Watch Decentralisation Alert 🎉 - ' + (+summary.balance / 1000000000000000000000000000000).toFixed() + ' $NANO redelegated';
-				if (contents['representative'] in aliasHash) {
-                                    representative  = ' to ' + aliasHash[contents['representative']];
-                                }
-				else
-				{
-				    representative = ' to ' + contents['representative'].substring(0, 12) + "...";
-				}
-let tempArray = [];
-tempArray.push(contents.previous);
-getBlockData(tempArray).then(data => {
-                            //breakout block content
-summary = data['blocks'][contents.previous];
-                            contents = JSON.parse(formatContent(summary['contents']));
+                            //find change blocks
+                            if (summary.subtype == "change") {
+                                if (+summary.balance >= 10000000000000000000000000000000000) {
+                                    //tweet if large delegation changes are detected
+                                    start = 'NANOODLE Watch Decentralisation Alert 🎉 - ' + numberWithCommas((+summary.balance / 1000000000000000000000000000000).toFixed()) + ' $NANO redelegated';
+                                    if (contents['representative'] in aliasHash) {
+                                        representative = ' to ' + aliasHash[contents['representative']];
+                                    }
+                                    else {
+                                        representative = ' to ' + contents['representative'].substring(0, 12) + "...";
+                                    }
+                                    let tempArray = [];
+                                    tempArray.push(contents.previous);
+                                    getBlockData(tempArray).then(data => {
+                                        //breakout block content
+                                        summary = data['blocks'][contents.previous];
+                                        contents = JSON.parse(formatContent(summary['contents']));
 
 
-if (contents['representative'] in aliasHash) {
-                                    old_representative  = ' from ' + aliasHash[contents['representative']];
+                                        if (contents['representative'] in aliasHash) {
+                                            old_representative = ' from ' + aliasHash[contents['representative']];
+                                        }
+                                        else {
+                                            old_representative = ' from ' + contents['representative'].substring(0, 12) + "...";
+                                        }
+                                        try {
+                                            console.log("Twitter Alert");
+                                            twitterClient.post('statuses/update', { status: start + old_representative + representative + ' - https://nanoodle.io/block/' + keyValue });
+                                        }
+                                        catch (err) {
+                                            console.log(err);
+                                        }
+                                    });
                                 }
-                                else
-                                {
-                                    old_representative = ' from ' + contents['representative'].substring(0, 12) + "...";
-                                }
-				try {
-                                    console.log("Twitter Alert");
-                                    twitterClient.post('statuses/update', { status: start + old_representative + representative + ' - https://nanoodle.io/block/' + keyValue });
-                                }
-                                catch (err) {
-                                    console.log(err);
-                                }
-});
-}
-			    }
+                            }
                             //if large enough, post message
                             else if (summary.subtype == "send") {
                                 if (summary.amount >= 25000000000000000000000000000000000) {
-				from = " from Unknown Account - ";
-                                to = " to Unknown Account - ";
-                                //if recognised then add to message
-                                if (contents['account'] in aliasHash) {
-                                    from = ' from ' + aliasHash[contents['account']] + ' - ';
-                                }
+                                    from = " from Unknown Account - ";
+                                    to = " to Unknown Account - ";
+                                    //if recognised then add to message
+                                    if (contents['account'] in aliasHash) {
+                                        from = ' from ' + aliasHash[contents['account']] + ' - ';
+                                    }
 
-                                if (contents['link_as_account'] in aliasHash) {
-                                    to = ' to ' + aliasHash[contents['link_as_account']] + ' - ';
-                                }
+                                    if (contents['link_as_account'] in aliasHash) {
+                                        to = ' to ' + aliasHash[contents['link_as_account']] + ' - ';
+                                    }
 
-                                //tweet based on size
-                                if (+summary.amount >= 200000000000000000000000000000000000) {
-                                    start = 'NANOODLE Watch Quadruple Whale Alert 🐳🐳🐳🐳 - ';
-                                }
-                                else if (+summary.amount >= 150000000000000000000000000000000000) {
-                                    start = 'NANOODLE Watch Triple Whale Alert 🐳🐳🐳 - ';
+                                    //tweet based on size
+                                    if (+summary.amount >= 200000000000000000000000000000000000) {
+                                        start = 'NANOODLE Watch Quadruple Whale Alert 🐳🐳🐳🐳 - ';
+                                    }
+                                    else if (+summary.amount >= 150000000000000000000000000000000000) {
+                                        start = 'NANOODLE Watch Triple Whale Alert 🐳🐳🐳 - ';
 
-                                }
-                                else if (+summary.amount >= 100000000000000000000000000000000000) {
-                                    start = 'NANOODLE Watch Double Whale Alert 🐳🐳 - ';
+                                    }
+                                    else if (+summary.amount >= 100000000000000000000000000000000000) {
+                                        start = 'NANOODLE Watch Double Whale Alert 🐳🐳 - ';
 
-                                }
-                                else if (+summary.amount >= 50000000000000000000000000000000000) {
-                                    start = 'NANOODLE Watch Whale Alert 🐳 - ';
+                                    }
+                                    else if (+summary.amount >= 50000000000000000000000000000000000) {
+                                        start = 'NANOODLE Watch Whale Alert 🐳 - ';
 
+                                    }
+                                    else {
+                                        //should be in this range if not others
+                                        start = 'NANOODLE Watch Dolphin Alert 🐬 - ';
+                                    }
+                                    try {
+                                        console.log("Twitter Alert");
+                                        twitterClient.post('statuses/update', { status: start + from + to + numberWithCommas((+summary.amount / 1000000000000000000000000000000).toFixed()) + ' $NANO transfer ($' + numberWithCommas((+summary.amount * +usdRate / 1000000000000000000000000000000).toFixed()) + ') -  https://nanoodle.io/block/' + keyValue });
+                                    }
+                                    catch (err) {
+                                        console.log(err);
+                                    }
+                                    try {
+                                        console.log("Discord Alert");
+                                        discordMessage(start, from, to, keyValue, summary.amount, usdRate);
+                                    }
+                                    catch (err) {
+                                        console.log(err);
+                                    }
                                 }
-                                else {
-                                    //should be in this range if not others
-                                    start = 'NANOODLE Watch Dolphin Alert 🐬 - ';
+                                //build message up for watched accounts
+                                if (contents['account'] in primaryAccount) {
+                                    primaryAccount[contents['account']] = primaryAccount[contents['account']] + "\n<tr><td><right><a href=\"https://nanoodle.io/block/" + key[i] + "\">View Block<a></right></td><td><font color=\"red\">-" + formatAmount(+summary['amount']) + "</font></td>\n<tr>\n";
                                 }
-                                try {
-                                    console.log("Twitter Alert");
-                                    twitterClient.post('statuses/update', { status: start + from + to + (+summary.amount / 1000000000000000000000000000000).toFixed() + ' $NANO transfer ($' + (+summary.amount * +usdRate / 1000000000000000000000000000000).toFixed() + ') -  https://nanoodle.io/block/' + keyValue });
+                                if (contents['link_as_account'] in primaryAccount) {
+                                    primaryAccount[contents['link_as_account']] = primaryAccount[contents['link_as_account']] + "\n<tr><td><right><a href=\"https://nanoodle.io/block/" + key[i] + "\">View Block<a></right></td><td><font color=\"green\">+" + formatAmount(+summary['amount']) + "</font></td>\n<tr>\n";
                                 }
-                                catch (err) {
-                                    console.log(err);
-                                }
-                                try {
-                                    console.log("Discord Alert");
-                                    discordMessage(start, from, to, keyValue, summary.amount, usdRate);
-                                }
-                                catch (err) {
-                                    console.log(err);
-                                }
-                            }
-                            //build message up for watched accounts
-                            if (contents['account'] in primaryAccount) {
-                                primaryAccount[contents['account']] = primaryAccount[contents['account']] + "\n<tr><td><right><a href=\"https://nanoodle.io/block/" + key[i] + "\">View Block<a></right></td><td><font color=\"red\">-" + formatAmount(+summary['amount']) + "</font></td>\n<tr>\n";
-                            }
-                            if (contents['link_as_account'] in primaryAccount) {
-                                primaryAccount[contents['link_as_account']] = primaryAccount[contents['link_as_account']] + "\n<tr><td><right><a href=\"https://nanoodle.io/block/" + key[i] + "\">View Block<a></right></td><td><font color=\"green\">+" + formatAmount(+summary['amount']) + "</font></td>\n<tr>\n";
                             }
                         }
                         //go through each account and see if there is a message to publish
@@ -277,7 +276,6 @@ if (contents['representative'] in aliasHash) {
                                 }
                             }
                         }
-}
                     })
                         .catch(error => console.log(error));
                 })
@@ -291,9 +289,9 @@ if (contents['representative'] in aliasHash) {
     .catch(error => console.log(error));
 
 function discordMessage(start, from, to, keyValue, amount, usdRate) {
-        let client = new Discord.Client();
-        client.login(process.env.DISCORD_TOKEN).then(function () {
-        let temp = start + from + to + (+amount / 1000000000000000000000000000000).toFixed() + ' $NANO transfer ($' + (+amount * +usdRate / 1000000000000000000000000000000).toFixed() + ') -  https://nanoodle.io/block/' + keyValue;
+    let client = new Discord.Client();
+    client.login(process.env.DISCORD_TOKEN).then(function () {
+        let temp = start + from + to + numberWithCommas((+amount / 1000000000000000000000000000000).toFixed()) + ' $NANO transfer ($' + numberWithCommas((+amount * +usdRate / 1000000000000000000000000000000).toFixed()) + ') -  https://nanoodle.io/block/' + keyValue;
         //nanoodle discord
         alertChannel = client.channels.get("604744766722408458");
         alertChannel.send(temp);
@@ -365,6 +363,10 @@ function getAccounts(accountUrl) {
         // Make the request
         xhr.send();
     });
+}
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 function getNewBlocks() {

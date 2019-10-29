@@ -16,6 +16,27 @@ export class NodeService {
 
   constructor(private messageService: MessageService, private http: HttpClient) { }
 
+  getOnlineRepresentatives(): Observable<Quorum> {
+
+    let httpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    let options = {
+      headers: httpHeaders
+    };
+
+    let body = JSON.stringify({  
+      "action": "confirmation_quorum"  
+    });
+
+
+    return this.http.post<Quorum>(environment.serverUrl, body, options).pipe(
+      //tap(_ => this.log(`found account matching "${params}"`)),
+      catchError(this.handleError<Quorum>('getOnlineRepresentatives', null))
+    );
+  };
+
   getBlockCount(): Observable<BlockCountResults> {
 
     let httpHeaders = new HttpHeaders({
@@ -88,7 +109,11 @@ interface NodeVersion {
   node_vendor : string
 }
 
-interface FrontierResults {
-  error?: string;
-  count?: number;
+interface Quorum {
+  quorum_delta: number,
+  online_weight_quorum_percent: number,
+  online_weight_minimum: number,
+  online_stake_total: number,
+  peers_stake_total: number,
+  peers_stake_required: number 
 }

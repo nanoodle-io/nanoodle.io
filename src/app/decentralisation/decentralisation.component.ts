@@ -18,12 +18,15 @@ export class DecentralisationComponent implements OnInit {
   repUrl: SafeUrl;
   weightResults: WeightResult;
   versionResults: NodeVersion;
+  onlineRepResults: number;
 
   constructor(private sanitizer: DomSanitizer, private messageService: MessageService, private nodeService: NodeService, private accountService: AccountService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.blockCountResults = null;
     this.getBlockCount();
+    this.onlineRepResults = 115000;
+    this.calculatePR();
     this.versionResults = null;
     this.getVersion();
     this.weightResults = null;
@@ -38,6 +41,14 @@ export class DecentralisationComponent implements OnInit {
 
   formatVersion(input: string): string {
     return input.match(/[\d.]+/g)[0];
+  }
+
+  calculatePR() {
+    this.nodeService.getOnlineRepresentatives()
+    .subscribe(data => {
+      let results = data;
+      this.onlineRepResults = +this.formatAmount(+results['online_stake_total']/1000)
+    });
   }
 
   formatAmount(mRai: number): string {
@@ -93,4 +104,13 @@ interface NodeVersion {
 
 interface WeightResult {
   weight: string;
+}
+
+interface Quorum {
+  quorum_delta: number,
+  online_weight_quorum_percent: number,
+  online_weight_minimum: number,
+  online_stake_total: number,
+  peers_stake_total: number,
+  peers_stake_required: number 
 }
