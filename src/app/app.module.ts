@@ -11,7 +11,6 @@ import { HomeComponent } from './home/home.component';
 import { LiveComponent } from './live/live.component';
 import { ProductComponent } from './products/products.component';
 import { RatesComponent } from './rates/rates.component';
-import { DecentralisationComponent } from './decentralisation/decentralisation.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { MessagesComponent } from './messages/messages.component';
 import { FooterComponent } from './footer/footer.component';
@@ -55,7 +54,6 @@ const appRoutes: Routes = [
   { path: 'live', component: LiveComponent },
   { path: 'products', component: ProductComponent },
   { path: 'rates', component: RatesComponent },
-  { path: 'decentralisation', component: DecentralisationComponent },
   { path: 'verify/:id', component: VerifyComponent },
   { path: 'unsubscribe/:id', component: UnsubscribeComponent },
   { path: '**', component: PageNotFoundComponent },
@@ -65,7 +63,7 @@ const appRoutes: Routes = [
   imports: [BrowserModule, ChartsModule, MatDialogModule, FormsModule, BrowserAnimationsModule, MatButtonModule, MatSelectModule, MatDividerModule, MatInputModule, QRCodeModule, ReactiveFormsModule, HttpClientModule, NgbModule, RouterModule.forRoot(
     appRoutes//,{ enableTracing: true } // <-- debugging purposes only
   )],
-  declarations: [App, NavbarComponent, TransactionRowComponent, TransactionGraphComponent, UnsubscribeComponent, VerifyComponent, MarketComponent, AccountWatchComponent, AccountWatchComponentDialog, AccountInvoiceComponent, AccountInvoiceComponentDialog,AccountDownloadComponent,AccountDownloadComponentDialog, PrivacyComponent, PrivacyComponentDialog, TACComponent, TACComponentDialog, DonateComponent, DonateComponentDialog, AccountComponent, HomeComponent, LiveComponent, RatesComponent, ProductComponent, DecentralisationComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
+  declarations: [App, NavbarComponent, TransactionRowComponent, TransactionGraphComponent, UnsubscribeComponent, VerifyComponent, MarketComponent, AccountWatchComponent, AccountWatchComponentDialog, AccountInvoiceComponent, AccountInvoiceComponentDialog,AccountDownloadComponent,AccountDownloadComponentDialog, PrivacyComponent, PrivacyComponentDialog, TACComponent, TACComponentDialog, DonateComponent, DonateComponentDialog, AccountComponent, HomeComponent, LiveComponent, RatesComponent, ProductComponent, PageNotFoundComponent, MessagesComponent, FooterComponent, SocialComponent, BlockComponent],
   entryComponents: [ AccountDownloadComponentDialog, PrivacyComponentDialog, TACComponentDialog, DonateComponentDialog, AccountWatchComponentDialog, AccountInvoiceComponentDialog ],
   bootstrap: [App]
 })
