@@ -9,9 +9,6 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 Once installed you need to import the NG Boostrap main module.
 
 @NgModule({
-  ...
-  `imports: [NgbModule, ...],`
-  ...
 })
 
 ## Development server
