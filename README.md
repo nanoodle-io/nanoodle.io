@@ -8,8 +8,6 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Once installed you need to import the NG Boostrap main module.
 
-`import {NgbModule} from '@ng-bootstrap/ng-bootstrap';`
-
 @NgModule({
   ...
   `imports: [NgbModule, ...],`
