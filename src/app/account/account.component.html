@@ -65,10 +65,6 @@
           (including
           {{formatAmount('XRB',balanceResults['pending'],true)}} NANO
           unprocessed)</p>
-        <p>XNO: {{ formatAmount('XNO',+balanceResults['balance'] + +balanceResults['pending'],true) }}
-          (including
-          {{formatAmount('XNO',balanceResults['pending'],true)}}
-          unprocessed)</p>
         <ng-container *ngIf="priceResults; then priceLoaded; else priceLoading">
         </ng-container>
         <ng-template #priceLoaded>
@@ -179,7 +175,6 @@
                   <tr>
                     <th scope="col">Time (UTC{{utcOffset}})</th>
                     <th scope="col">XRB</th>
-                    <th scope="col">XNO</th>
                     <th scope="col">{{currencyType}} Now</th>
                     <th scope="col">{{currencyType}} Then</th>
                     <th scope="col">Associated Account</th>
@@ -222,7 +217,6 @@
                   <tr>
                     <th scope="col">Time (UTC{{utcOffset}})</th>
                     <th scope="col">XRB</th>
-                    <th scope="col">XNO</th>
                     <th scope="col">{{currencyType}} Now</th>
                     <th scope="col">{{currencyType}} Then</th>
                     <th scope="col">Associated Account</th>

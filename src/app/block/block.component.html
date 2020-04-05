@@ -45,10 +45,8 @@
             <p>Block Account: <a class="account" [routerLink]="['/account',detail['block_account']]">{{
                 detail['block_account'] }}</a></p>
             <p>Block Account XRB Balance: {{ formatAmount('XRB',contents['balance'],true) }} NANO</p>
-            <p>Block Account XNO Balance: {{ formatAmount('XNO',contents['balance'],true) }}</p>
             <p>({{contents['balance']}} raw)</p>
             <p>Transaction XRB Amount: {{ formatAmount('XRB',detail['amount'],true) }} NANO</p>
-            <p>Transaction XNO Amount: {{ formatAmount('XNO',detail['amount'],true) }}</p>
             <p>({{detail['amount']}} raw)</p>
             <p>Block Type: {{ contents['type'] }}</p>
             <p>Previous: <a [routerLink]="['/block',contents['previous']]">{{ contents['previous'] }}</a></p>
