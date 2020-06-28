@@ -19,9 +19,13 @@ button:focus {
   border: 0 !important;
 }
 
-qrcode
+button
 {
-  border:4px solid white;
+  font-size: 14px;
+  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+  letter-spacing: 1.5px;
+  position: relative;
+  background-color: white;
 }
 
 .mat-form-field

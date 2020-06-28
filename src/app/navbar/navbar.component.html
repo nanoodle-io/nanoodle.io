@@ -16,17 +16,29 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link js-scroll-trigger donateHover" (click)="openDonate()">Donate</a>
+          <a class="nav-link js-scroll-trigger hover" (click)="openDonate()">Donate</a>
         </li>
         <li class="nav-item">
           <a class="nav-link js-scroll-trigger" routerLink="products">Products</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link js-scroll-trigger" routerLink="rates">Rates/Invoice</a>
+          <a class="nav-link js-scroll-trigger" routerLink="api">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link js-scroll-trigger" routerLink="invoice">Invoice</a>
         </li>
         <li class="nav-item">
           <a class="nav-link js-scroll-trigger" routerLink="live">Live!</a>
         </li>
+        <ng-container *ngIf="checkLocalStorage(); then accountNav; else accountHide">
+        </ng-container>
+        <ng-template #accountNav>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger hover" (click)="this.search(getSavedAccount())">Account</a>
+          </li>
+        </ng-template>
+        <ng-template #accountHide>
+        </ng-template>
       </ul>
       <form>
         <input type="search" [(ngModel)]="searchTerm" name="searchTerm" autocomplete="off" placeholder="Account, Block or Alias">

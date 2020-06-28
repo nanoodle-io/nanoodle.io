@@ -2,57 +2,59 @@
     <ng-container *ngIf="timeFetch==true; then blockTimeLoading; else blockTimeLoaded">
     </ng-container>
     <ng-template #blockTimeLoaded>
-        <ng-container *ngIf="blockTime.length > 0; then blockTimeResults; else blockTimeEmpty">
+        <ng-container *ngIf="blockTime.Items.length > 0; then blockTimeResults; else blockTimeEmpty">
         </ng-container>
         <ng-template #blockTimeResults>
-            <a
-                [routerLink]="['/block',hash]">{{ formatDate(+(+blockTime[0]['log']['epochTimeStamp'].$date + (+utcOffset * 3600000))) }}</a>
+            <a [routerLink]="['/block',this.transactions[this.index]['hash']]">{{ formatDate(blockTime['Items'][0]['blockTimestamp'], utcOffset) }}</a>
         </ng-template>
         <ng-template #blockTimeEmpty>
-            <a [routerLink]="['/block',hash]"> Not Recorded</a>
+            <a [routerLink]="['/block',this.transactions[this.index]['hash']]"> Not Recorded</a>
         </ng-template>
     </ng-template>
     <ng-template #blockTimeLoading>
         <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
     </ng-template>
 </td>
-<td [attr.id]="hash+'a'">{{addType()}}{{formatAmount('XRB',this.amount,true)}} NANO</td>
-<td [attr.id]="hash+'c'">
+<td [attr.id]="this.transactions[this.index]['hash']+'a'">{{addType()}}{{nanoodleService.formatAmount('XRB',this.transactions[this.index]['amount'],true)}}<sup>{{addNotation()}}</sup></td>
+<td [attr.id]="this.transactions[this.index]['hash']+'c'">
     <ng-container *ngIf="rate; then priceLoaded; else priceLoading">
     </ng-container>
     <ng-template #priceLoaded>
-        {{ formatAmount(currencyType, +rate * +formatAmount('XRB',this.amount,false),true) }}
+        {{ nanoodleService.formatAmount(currencyType, +rate * +nanoodleService.formatAmount('XRB',this.transactions[this.index]['amount'],false),true) }}
     </ng-template>
     <ng-template #priceLoading>
         <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
     </ng-template>
 </td>
-<td [attr.id]="hash+'d'">
-    <ng-container *ngIf="pastRateFetch==true; then pastShow;">
+<td [attr.id]="this.transactions[this.index]['hash']+'d'">
+    <ng-container *ngIf="pastRateFetch==true;  then pastRateLoading; else pastRateLoaded;">
     </ng-container>
-    <ng-template #pastShow>
-        <ng-container *ngIf="pastRate; then pastRateLoaded; else pastRateLoading">
+    <ng-template #pastRateLoaded>
+        <ng-container *ngIf="pastRate; then pastRateLoaded; else pastRateEmpty">
         </ng-container>
         <ng-template #pastRateLoaded>
-            {{ formatAmount(currencyType, pastRate * +formatAmount('XRB',this.amount,false),true) }}
+            <a>{{ nanoodleService.formatAmount(currencyType, pastRate * +nanoodleService.formatAmount('XRB',this.transactions[this.index]['amount'],false),true) }}</a>
         </ng-template>
-        <ng-template #pastRateLoading>
-            <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+        <ng-template #pastRateEmpty>
+            <a> Not Recorded</a>
         </ng-template>
+    </ng-template>
+    <ng-template #pastRateLoading>
+        <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
     </ng-template>
 </td>
 <td>
-    <a [routerLink]="['/account',account]">
+    <a [routerLink]="['/account',this.transactions[this.index]['account']]">
         <ng-container *ngIf="alias; then aliasLoaded; else aliasLoading">
         </ng-container>
         <ng-template #aliasLoaded>
-            {{ displayAccountAddress(account) }}
+            {{ displayAccountAddress(this.transactions[this.index]['account']) }}
         </ng-template>
         <ng-template #aliasLoading>
-            {{ account }}
+            {{ this.transactions[this.index]['account'] }}
         </ng-template>
     </a>
 </td>
-{{ formatType(type, hash+"a") }}
-{{ formatType(type, hash+"c") }}
-{{ formatType(type, hash+"d") }}
+{{ formatType(this.transactions[this.index]['type'], this.transactions[this.index]['hash']+"a") }}
+{{ formatType(this.transactions[this.index]['type'], this.transactions[this.index]['hash']+"c") }}
+{{ formatType(this.transactions[this.index]['type'], this.transactions[this.index]['hash']+"d") }}

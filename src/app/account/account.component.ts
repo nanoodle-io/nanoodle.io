@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AccountService } from '../account.service';
-import { BlockService } from '../block.service';
+import { NanoodleService } from '../nanoodle.service';
 import { MessageService } from '../message.service';
-import { MarketService } from '../market.service';
 import { MyNanoNinjaService } from '../mynanoninja.service';
 import { NodeService } from '../node.service';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
+const accountAmount = 50;
+const receiveAmount = 50;
 
 @Component({
   selector: "app-account",
@@ -25,15 +25,20 @@ export class AccountComponent implements OnInit {
   weightResults: Weight;
   currencyType: string;
   pastRate: number;
+  receiveAmount: number = receiveAmount;
+  accountAmount: number = accountAmount;
   copied: boolean;
+  votingWeight: number;
   nanoUrl: SafeUrl;
   tempRate: FiatResults;
   repScore: string;
   utcOffset: string;
   repDelegators: string;
   repLastVoted: string;
+  error: string;
   repUptime: number;
   blockTime: BlockTime;
+  transactions: Transaction[];
   priceResults: number;
   alias: Object;
   temp: Object;
@@ -42,32 +47,30 @@ export class AccountComponent implements OnInit {
   identifier: string;
   //param
   paramsub: any;
-  error: string;
   reg = new RegExp('"error"');
 
-  constructor(private sanitizer: DomSanitizer, private messageService: MessageService, private myNanoNinjaService: MyNanoNinjaService, private marketService: MarketService, private NodeService: NodeService, private route: ActivatedRoute, private accountService: AccountService, private blockService: BlockService) { }
+  constructor(private sanitizer: DomSanitizer, private messageService: MessageService, private myNanoNinjaService: MyNanoNinjaService, private nanoodleService: NanoodleService, private nodeService: NodeService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.paramsub = this.route.params.subscribe(sub => {
       this.identifier = sub['id'].replace(/^xrb/, 'nano');
       //check if the local storage has the currency set
       let storedCurrency = localStorage.getItem('currencyType');
-      if(storedCurrency != null) 
-      {
+      if (storedCurrency != null) {
         this.currencyType = storedCurrency;
       }
-      else
-      {
+      else {
         this.currencyType = 'GBP';
       }
       this.accountResults = null;
       this.representativeResults = null;
       this.weightResults = null;
       this.keys = null;
+      this.error = null;
+      this.votingWeight = null;
       this.temp = new Object();
       this.alias = null;
       this.copied = false;
-      this.error = null;
       let tz = Math.floor(new Date().getTimezoneOffset() / -60);
       if (tz > -1) {
         this.utcOffset = "+" + tz;
@@ -82,15 +85,23 @@ export class AccountComponent implements OnInit {
       this.repDelegators = null;
       this.repLastVoted = null;
       this.repUptime = null;
+      this.transactions = [];
       this.getPrice();
       this.getAliases();
-      this.getAccount(this.identifier, 20);
-      this.getUnprocessedBlocks(this.identifier, 20);
+      this.getAccount(this.identifier, this.accountAmount);
+      this.getUnprocessedBlocks(this.identifier, this.receiveAmount);
       this.getRepresentative(this.identifier);
-      this.getWeight(this.identifier);
       this.getBalance(this.identifier);
       this.nanoUrl = this.sanitizer.bypassSecurityTrustResourceUrl("nano:" + this.identifier);
     });
+  }
+
+  clearSavedAccount(): void {
+    localStorage.removeItem('account');
+  }
+
+  saveAccount(): void {
+  localStorage.setItem('account', this.identifier);
   }
 
   getAliases(): void {
@@ -113,6 +124,9 @@ export class AccountComponent implements OnInit {
     try {
       this.myNanoNinjaService.getAccountDetails(account)
         .subscribe(data => {
+          if (data.hasOwnProperty('votingweight')) {
+            this.votingWeight = data['votingweight'];
+          }
           if (data.hasOwnProperty('score')) {
             this.repScore = data['score'];
           }
@@ -132,23 +146,26 @@ export class AccountComponent implements OnInit {
   }
 
   getPrice() {
-    localStorage.setItem('currencyType',this.currencyType);
+    localStorage.setItem('currencyType', this.currencyType);
     this.priceResults = null;
-    this.marketService.getMarketPrice(Date.now(), this.currencyType)
+    this.nanoodleService.getPrice(new Date())
       .subscribe(data => {
+        var results = data['Items'];
         let returnRate = 0;
-        if (data.length > 0) {
-          for (var i = 0; i < data.length; i++) {
-            this.tempRate = data[i];
+        if (results.length > 0) {
+          for (var i = 0; i < results.length; i++) {
+            this.tempRate = results[i]['priceData'];
             returnRate = returnRate + this.tempRate[this.currencyType];
           }
-          this.priceResults = returnRate / data.length;
+          this.priceResults = returnRate / results.length;
         }
         else {
           this.log("Cannot Retrieve Price Data");
         }
       });
   }
+
+
 
   hasAlias(account: string): boolean {
     if (account in this.alias) {
@@ -169,284 +186,65 @@ export class AccountComponent implements OnInit {
   }
 
   getAccount(accountParam: string, size: number): void {
-    this.accountService.getAccount(accountParam, size)
+    this.nodeService.getAccount(accountParam, size)
       .subscribe(data => {
         this.accountResults = data;
+        for (var i = 0; i < this.accountResults['history'].length; i++) {
+          let tempTransaction = {
+            "timestamp": 0,
+            "hash": this.accountResults['history'][i]['hash'],
+            "type": this.accountResults['history'][i]['type'],
+            "account": this.accountResults['history'][i]['account'],
+            "amount": this.accountResults['history'][i]['amount']
+          }
+          this.transactions.push(tempTransaction);
+        }
+      })
+  }
 
-      });
+  checkAccountStored(): boolean {
+    if (localStorage.hasOwnProperty('account') && localStorage['account'] && localStorage['account']==this.identifier)
+    {
+      return true;
+    }
+    return false;
   }
 
   getUnprocessedBlocks(accountParam: string, size: number): void {
-    this.accountService.getUnprocessedBlocks(accountParam, size)
+    this.nodeService.getUnprocessedBlocks(accountParam, size)
       .subscribe(data => {
         this.unprocessedBlocksResults = data;
-        this.blockService.getBlocks(this.unprocessedBlocksResults['blocks'])
+        this.nodeService.getBlocks(this.unprocessedBlocksResults['blocks'])
           .subscribe(data => {
             this.blockResults = JSON.parse(this.formatContents(JSON.stringify(data)));
-            if (this.reg.test(JSON.stringify(this.blockResults))) {
-              this.error = JSON.stringify(this.blockResults['error']);
-            }
             this.keys = Object.keys(this.blockResults['blocks']);
+            for (var i = 0; i < this.keys.length; i++) {
+              let tempTransaction = {
+                "timestamp": 0,
+                "hash": this.keys[i],
+                "type": "unprocessed",
+                "account": this.blockResults["blocks"][this.keys[i]]["block_account"],
+                "amount": this.blockResults["blocks"][this.keys[i]]["amount"]
+              }
+              this.transactions.push(tempTransaction);
+            }
           });
       });
   }
 
-  getWeight(accountParam: string): void {
-    this.accountService.getWeight(accountParam)
-      .subscribe(data => {
-        this.weightResults = data;
-      });
-  }
-
   getBalance(accountParam: string): void {
-    this.accountService.getBalance(accountParam)
+    this.nodeService.getBalance(accountParam)
       .subscribe(data => {
         this.balanceResults = data;
       });
   }
 
   getRepresentative(accountParam: string): void {
-    this.accountService.getRepresentative(accountParam)
+    this.nodeService.getRepresentative(accountParam)
       .subscribe(data => {
         this.representativeResults = data;
         this.getAccountDetails(this.representativeResults['representative']);
       });
-  }
-
-  formatAmount(type: string, amount: number, returnSymbol: boolean): string {
-    //Mnano
-    if (type == 'XRB') {
-      let raw = 1000000000000000000000000000000;
-
-      let temp = amount / raw;
-      if (returnSymbol) {
-        return temp.toFixed(2);
-      }
-      else {
-        return temp.toFixed(2);
-
-      }
-    }
-    //nano
-    else if (type == 'XNO') {
-      let raw = 1000000000000000000000000000;
-      let temp = amount / raw;
-      if (returnSymbol) {
-        return '₦' + temp.toFixed(0);
-      }
-      else {
-        return temp.toFixed(0);
-      }
-    }
-    else if (type == 'ETH') {
-      if (returnSymbol) {
-        return 'Ξ' + amount.toFixed(6);
-      }
-      else {
-        return amount.toFixed(6);
-      }
-    }
-    else if (type == 'BTC') {
-      if (returnSymbol) {
-        return '₿' + amount.toFixed(6);
-      }
-      else {
-        return amount.toFixed(6);
-      }
-    }
-    else if (type == 'JPY') {
-      if (returnSymbol) {
-
-        return '¥' + amount.toFixed(0);
-      }
-      else {
-        return amount.toFixed(0);
-      }
-    }
-    else if (type == 'CNY') {
-      if (returnSymbol) {
-
-        return '¥' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'GHS') {
-      if (returnSymbol) {
-
-        return 'Gh₵' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'NGN') {
-      if (returnSymbol) {
-
-        return '₦' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'USD') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'SEK') {
-      if (returnSymbol) {
-
-        return amount.toFixed(2) + 'kr';
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'CHF') {
-      if (returnSymbol) {
-
-        return '₣' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'ZAR') {
-      if (returnSymbol) {
-
-        return 'R' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'EUR') {
-      if (returnSymbol) {
-
-        return '€' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'GBP') {
-      if (returnSymbol) {
-
-        return '£' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'CAD') {
-      if (returnSymbol) {
-
-        return 'C$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'MXN') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'AUD') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'BRL') {
-      if (returnSymbol) {
-
-        return 'R$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'VES') {
-      if (returnSymbol) {
-
-        return 'Bs.' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'PEN') {
-      if (returnSymbol) {
-
-        return 'S/.' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'VND') {
-      if (returnSymbol) {
-
-        return amount.toFixed(2) + '₫';
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'TRY') {
-      if (returnSymbol) {
-
-        return '₺' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'INR') {
-      if (returnSymbol) {
-
-        return '₹' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'COP') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'ARS') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else {
-      return amount.toFixed(2);
-    }
   }
 
   ngOnDestroy() {
@@ -455,6 +253,11 @@ export class AccountComponent implements OnInit {
 
   formatDate(rawDate: string): string {
     return rawDate.match(/\d{2}\/[A-Za-z]{3}\/\d{4}/) + " " + ("" + rawDate.match(/\d{2}:\d{2}:\d{2} /)).trim();
+  }
+
+  formatDateLocal(rawDate: string, offset: number): string {
+    let myDate = new Date(new Date(rawDate).getTime() + (offset * 3600000));
+    return myDate.toLocaleString('en-GB', { timeZone: 'UTC' });
   }
 
   private log(message: string) {
@@ -506,10 +309,11 @@ export class AccountComponent implements OnInit {
 }
 
 interface Transaction {
+  timestamp?: number;
+  hash: string;
   type: string;
   account: string;
   amount: number;
-  hash: string;
 }
 
 interface Account {

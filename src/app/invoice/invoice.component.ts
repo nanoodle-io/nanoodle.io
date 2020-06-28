@@ -2,15 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { MarketService } from '../market.service';
+import { NanoodleService } from '../nanoodle.service';
 import { MessageService } from '../message.service';
 
 @Component({
-  selector: 'app-rates',
-  templateUrl: './rates.component.html',
-  styleUrls: ['./rates.component.css']
+  selector: 'app-invoice',
+  templateUrl: './invoice.component.html',
+  styleUrls: ['./invoice.component.css']
 })
-export class RatesComponent implements OnInit {
+export class InvoiceComponent implements OnInit {
   invoiceAddress: string;
   invoiceUrl: SafeUrl;
   invoiceMessage: string;
@@ -21,7 +21,7 @@ export class RatesComponent implements OnInit {
   tempRate: FiatResults;
   currencyType: string;
 
-  constructor(private sanitizer: DomSanitizer, private marketService: MarketService, private messageService: MessageService) { }
+  constructor(private sanitizer: DomSanitizer, private nanoodleService: NanoodleService, private messageService: MessageService) { }
 
   ngOnInit() {
     let storedCurrency = localStorage.getItem('currencyType');
@@ -56,15 +56,16 @@ export class RatesComponent implements OnInit {
   getPrice() {
     localStorage.setItem('currencyType', this.currencyType);
     this.priceResults = null;
-    this.marketService.getMarketPrice(Date.now(), this.currencyType)
+    this.nanoodleService.getPrice(new Date())
       .subscribe(data => {
+        var results = data['Items']
         let returnRate = 0;
-        if (data.length > 0) {
-          for (var i = 0; i < data.length; i++) {
-            this.tempRate = data[i];
+        if (results.length > 0) {
+          for (var i = 0; i < results.length; i++) {
+            this.tempRate = results[i]['priceData'];
             returnRate = returnRate + this.tempRate[this.currencyType];
           }
-          this.priceResults = returnRate / data.length;
+          this.priceResults = returnRate / results.length;
         }
         else {
           this.log("Cannot Retrieve Price Data");

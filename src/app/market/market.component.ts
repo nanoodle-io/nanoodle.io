@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MarketService } from '../market.service';
+import { NanoodleService } from '../nanoodle.service';
 import { MessageService } from '../message.service';
 
 @Component({
@@ -18,7 +18,7 @@ priceResultsDayBTC: number;
 priceResultsWeekUSD: number;
 priceResultsWeekBTC: number;
 
-  constructor(private marketService: MarketService, private messageService: MessageService) { }
+  constructor(private nanoodleService: NanoodleService, private messageService: MessageService) { }
 
   ngOnInit() {
     this.nowDate = new Date();
@@ -30,29 +30,31 @@ priceResultsWeekBTC: number;
   getPriceNow() {
     this.priceResultsNowUSD = null;
     this.priceResultsNowBTC = null;
-    this.marketService.getMarketPrice(this.nowDate.getTime(), 'USD')
+    this.nanoodleService.getPrice(this.nowDate)
       .subscribe(data => {
+        var results = data['Items'];
         let returnRate = 0;
-        if (data && data.length > 0) {
-          for (var i = 0; i < data.length; i++) {
-            this.tempRate = data[i];
+        if (results && results.length > 0) {
+          for (var i = 0; i < results.length; i++) {
+            this.tempRate = results[i]['priceData'];
             returnRate = returnRate + this.tempRate['USD'];
           }
-          this.priceResultsNowUSD = returnRate / data.length;
+          this.priceResultsNowUSD = returnRate / results.length;
         }
         else {
           this.log("Cannot Retrieve Price Data");
         }
       });
-      this.marketService.getMarketPrice(this.nowDate.getTime(), 'BTC')
+      this.nanoodleService.getPrice(this.nowDate)
       .subscribe(data => {
+        var results = data['Items'];
         let returnRate = 0;
-        if (data && data.length > 0) {
-          for (var i = 0; i < data.length; i++) {
-            this.tempRate = data[i];
+        if (results && results.length > 0) {
+          for (var i = 0; i < results.length; i++) {
+            this.tempRate = results[i]['priceData'];
             returnRate = returnRate + this.tempRate['BTC'];
           }
-          this.priceResultsNowBTC = returnRate / data.length;
+          this.priceResultsNowBTC = returnRate / results.length;
         }
         else {
           this.log("Cannot Retrieve Price Data");
@@ -63,29 +65,31 @@ priceResultsWeekBTC: number;
   getPriceDay() {
     this.priceResultsDayUSD = null;
     this.priceResultsDayBTC = null;
-    this.marketService.getMarketPrice(this.nowDate.getTime()-(1*24*60*60*1000), 'USD')
+    this.nanoodleService.getPrice(new Date(this.nowDate.getTime()-(1*24*60*60*1000)))
       .subscribe(data => {
+        var results = data['Items'];
         let returnRate = 0;
-        if (data && data.length > 0) {
-          for (var i = 0; i < data.length; i++) {
-            this.tempRate = data[i];
+        if (results && results.length > 0) {
+          for (var i = 0; i < results.length; i++) {
+            this.tempRate = results[i]['priceData'];
             returnRate = returnRate + this.tempRate['USD'];
           }
-          this.priceResultsDayUSD = returnRate / data.length;
+          this.priceResultsDayUSD = returnRate / results.length;
         }
         else {
           this.log("Cannot Retrieve Price Data");
         }
       });
-      this.marketService.getMarketPrice(this.nowDate.getTime()-(1*24*60*60*1000), 'BTC')
+      this.nanoodleService.getPrice(new Date(this.nowDate.getTime()-(1*24*60*60*1000)))
       .subscribe(data => {
+        var results = data['Items'];
         let returnRate = 0;
-        if (data && data.length > 0) {
-          for (var i = 0; i < data.length; i++) {
-            this.tempRate = data[i];
+        if (results && results.length > 0) {
+          for (var i = 0; i < results.length; i++) {
+            this.tempRate = results[i]['priceData'];
             returnRate = returnRate + this.tempRate['BTC'];
           }
-          this.priceResultsDayBTC = returnRate / data.length;
+          this.priceResultsDayBTC = returnRate / results.length;
         }
         else {
           this.log("Cannot Retrieve Price Data");
@@ -96,29 +100,31 @@ priceResultsWeekBTC: number;
   getPriceWeek() {
     this.priceResultsWeekUSD = null;
     this.priceResultsWeekBTC = null;
-    this.marketService.getMarketPrice(this.nowDate.getTime()-(7*24*60*60*1000), 'USD')
+    this.nanoodleService.getPrice(new Date(this.nowDate.getTime()-(7*24*60*60*1000)))
       .subscribe(data => {
+        var results = data['Items'];
         let returnRate = 0;
-        if (data && data.length > 0) {
-          for (var i = 0; i < data.length; i++) {
-            this.tempRate = data[i];
+        if (results && results.length > 0) {
+          for (var i = 0; i < results.length; i++) {
+            this.tempRate = results[i]['priceData'];
             returnRate = returnRate + this.tempRate['USD'];
           }
-          this.priceResultsWeekUSD = returnRate / data.length;
+          this.priceResultsWeekUSD = returnRate / results.length;
         }
         else {
           this.log("Cannot Retrieve Price Data");
         }
       });
-      this.marketService.getMarketPrice(this.nowDate.getTime()-(7*24*60*60*1000), 'BTC')
+      this.nanoodleService.getPrice(new Date(this.nowDate.getTime()-(7*24*60*60*1000)))
       .subscribe(data => {
+        var results = data['Items'];
         let returnRate = 0;
-        if (data && data.length > 0) {
-          for (var i = 0; i < data.length; i++) {
-            this.tempRate = data[i];
+        if (results && results.length > 0) {
+          for (var i = 0; i < results.length; i++) {
+            this.tempRate = results[i]['priceData'];
             returnRate = returnRate + this.tempRate['BTC'];
           }
-          this.priceResultsWeekBTC = returnRate / data.length;
+          this.priceResultsWeekBTC = returnRate / results.length;
         }
         else {
           this.log("Cannot Retrieve Price Data");

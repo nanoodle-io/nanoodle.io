@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BlockService } from '../block.service';
 import { MessageService } from '../message.service';
+import { NanoodleService } from '../nanoodle.service';
 import { NodeService } from '../node.service';
 
 @Component({
@@ -12,67 +12,86 @@ import { NodeService } from '../node.service';
 
 export class BlockComponent implements OnInit {
   paramsub: any;
-  //Results
-  blockResults: BlockResults;
-  blockTime: BlockTime[];
-  detail: Detail;
-  blockCountResults: BlockCountResults;
-  contents: Content;
-  key: string;
+  utcOffset: string;
   error: string;
-  reg = new RegExp('"error"');
 
-  constructor(private messageService: MessageService, private NodeService: NodeService, private route: ActivatedRoute, private blockService: BlockService) { }
+  //Results
+  key: string;
+  blockTime: BlockTime;
+  blockResults: BlockResults;
+  detail: Detail;
+  contents: Content;
+
+  linkKey: string;
+  linkBlockTime: BlockTime;
+  linkBlockResults: BlockResults;
+  linkDetail: Detail;
+  linkContents: Content;
+
+  constructor(private messageService: MessageService, private NodeService: NodeService, private route: ActivatedRoute, private nanoodleService: NanoodleService) { }
 
   ngOnInit(): void {
     this.key = null;
     this.detail = null;
     this.contents = null;
     this.blockResults = null;
-    this.error = null;
-    this.blockCountResults = null;
     this.blockTime = null;
-    this.getBlockCount();
+    this.error = null;
+    this.linkKey = null;
+    this.linkDetail = null;
+    this.linkContents = null;
+    this.linkBlockResults = null;
+    this.linkBlockTime = null;
+
     this.paramsub = this.route.params.subscribe(sub => {
       this.getBlock(sub['id']);
       this.getBlockTime(sub['id']);
     });
+    let tz = Math.floor(new Date().getTimezoneOffset() / -60);
+    if (tz > -1) {
+      this.utcOffset = "+" + tz;
+    }
+    else {
+      this.utcOffset = "" + tz;
+    }
   }
 
   getBlockTime(blockParam: string): void {
-    this.blockService.getBlockTime(blockParam)
+    this.nanoodleService.getBlockTime(blockParam)
       .subscribe(data => {
         this.blockTime = data;
-        if (this.reg.test(JSON.stringify(this.blockResults))) {
-          this.error = JSON.stringify(this.blockResults['error']);
-        }
       });
   }
 
-  formatDate(rawDate: number): string {
-    let myDate = new Date(rawDate);
+  getLinkBlockTime(blockParam: string): void {
+    this.nanoodleService.getBlockTime(blockParam)
+      .subscribe(data => {
+        this.linkBlockTime = data;
+      });
+  }
+
+  formatDate(rawDate: string, offset: number): string {
+    let myDate = new Date(new Date(rawDate).getTime() + (offset * 3600000));
     return myDate.toLocaleString('en-GB', { timeZone: 'UTC' });
   }
 
   getBlock(blockParam: string): void {
-    this.blockService.getBlock(blockParam)
+    this.NodeService.getBlock(blockParam)
       .subscribe(data => {
         this.blockResults = JSON.parse(this.formatContents(JSON.stringify(data)));
-        if (this.reg.test(JSON.stringify(this.blockResults))) {
-          this.error = JSON.stringify(this.blockResults['error']);
-        }
         this.key = JSON.stringify(Object.keys(this.blockResults['blocks'])[0]).replace(/\"/g, '');
         this.detail = this.blockResults['blocks'][this.key];
         this.contents = this.detail['contents'];
-      });
-  }
-
-  getBlockCount(): void {
-    this.NodeService.getBlockCount()
-      .subscribe(data => {
-        this.blockCountResults = data;
-        if (this.reg.test(JSON.stringify(this.blockCountResults))) {
-          this.error = JSON.stringify(this.blockCountResults['error']);
+        if (this.detail['subtype'] == 'receive') {
+          this.getLinkBlockTime(this.contents['link']);
+          this.NodeService.getBlock(this.contents['link'])
+            .subscribe(data => {
+              this.getLinkBlockTime(this.contents['link']);
+              this.linkBlockResults = JSON.parse(this.formatContents(JSON.stringify(data)));
+              this.linkKey = JSON.stringify(Object.keys(this.linkBlockResults['blocks'])[0]).replace(/\"/g, '');
+              this.linkDetail = this.linkBlockResults['blocks'][this.linkKey];
+              this.linkContents = this.linkDetail['contents'];
+            });
         }
       });
   }
@@ -81,7 +100,7 @@ export class BlockComponent implements OnInit {
     const dec = 3;
     return input.toFixed(dec);
   }
-  
+
   formatAmount(type: string, amount: number, returnSymbol: boolean): string {
     if (type == 'XRB') {
       let raw = 1000000000000000000000000000000;
@@ -150,18 +169,13 @@ interface Content {
 interface BlockCountResults {
   error?: string;
   count?: number;
-  unchecked?: number;  
+  unchecked?: number;
 }
 
 interface BlockTime {
-  _id?: string;
-  log: Time;
+  Items: Time[];
 }
 
 interface Time {
-  epochTimeStamp: DateTime;
-}
-
-interface DateTime {
-  $date: DateTime;
+  blockTimeStamp: string;
 }

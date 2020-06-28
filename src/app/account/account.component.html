@@ -36,11 +36,9 @@
       <ng-container *ngIf="accountResults; then accountLoaded; else accountLoading">
       </ng-container>
       <ng-template #accountLoaded>
-        <p>
-          <a [href]="nanoUrl">
-            <qrcode [qrdata]="'nano:' + accountResults['account']" [size]="128" [level]="'M'"></qrcode>
-          </a>
-        </p>
+        <a [href]="nanoUrl">
+          <qrcode [qrdata]="'nano:' + accountResults['account']" [size]="128" [level]="'M'"></qrcode>
+        </a>
         <p id="identifier">{{ accountResults['account'] }} <i (click)="copyToClipboard(accountResults['account'])"
             class="fa fa-clipboard fa-1"></i></p>
       </ng-template>
@@ -61,16 +59,16 @@
       <ng-container *ngIf="balanceResults; then balanceLoaded; else balanceLoading">
       </ng-container>
       <ng-template #balanceLoaded>
-        <p>XRB: {{ formatAmount('XRB',+balanceResults['balance'] + +balanceResults['pending'],true) }} NANO
+        <p>NANO: {{ nanoodleService.formatAmount('XRB',+balanceResults['balance'] + +balanceResults['pending'],true) }}
           (including
-          {{formatAmount('XRB',balanceResults['pending'],true)}} NANO
+          {{nanoodleService.formatAmount('XRB',balanceResults['pending'],true)}}
           unprocessed)</p>
         <ng-container *ngIf="priceResults; then priceLoaded; else priceLoading">
         </ng-container>
         <ng-template #priceLoaded>
-          <p>{{ currencyType }}: {{ formatAmount(currencyType, +formatAmount('XRB',+balanceResults['balance'] +
+          <p>{{ currencyType }}: {{ nanoodleService.formatAmount(currencyType, +nanoodleService.formatAmount('XRB',+balanceResults['balance'] +
             +balanceResults['pending']) * +priceResults,true) }} (including
-            {{ formatAmount(currencyType, +formatAmount('XRB', +balanceResults['pending']) * +priceResults,true) }}
+            {{ nanoodleService.formatAmount(currencyType, +nanoodleService.formatAmount('XRB', +balanceResults['pending']) * +priceResults,true) }}
             unprocessed)</p>
         </ng-template>
         <ng-template #priceLoading>
@@ -84,8 +82,7 @@
       </ng-template>
     </div>
     <div class="container">
-      <h3>Options</h3>
-      <h4>Customise Results</h4>
+      <h3>Customise Results</h3>
       <p>
         <mat-form-field>
           <mat-select name="currencyType" [(ngModel)]="currencyType" placeholder="Currency" required #last="ngModel"
@@ -147,93 +144,59 @@
           </mat-select>
         </mat-form-field>
       </p>
-      <h4>NANOODLE Books</h4>
-      <p>Download this account's transactions in a variety of formats (unprocessed transactions are included)</p>
-      <app-accountDownload [identifier]=identifier [currencyType]=currencyType [utcOffset]=utcOffset>
-      </app-accountDownload>
-      <h4>NANOODLE Watch</h4>
-      <p>Receive an email when transactions are detected on this account</p>
-      <app-accountWatch [identifier]=identifier></app-accountWatch>
-      <h4>NANOODLE Invoice</h4>
-      <p>Basic QR code generator for this account</p>
-      <app-accountInvoice [identifier]=identifier></app-accountInvoice>
     </div>
     <div class="container">
-      <h3>Received Transactions</h3>
-      <ng-container *ngIf="keys; then blocksloaded; else blocksloading">
-      </ng-container>
-      <ng-template #blocksloaded>
-        <ng-container *ngIf="keys.length > 0; then blocksShow; else blocksEmpty">
-        </ng-container>
-        <ng-template #blocksShow>
-          <p>Showing up to the last 20 received transactions, in no order, for which this account has not processed a receive block
-            to claim the funds and add them into the account balance (the funds will then become spendable). A receive block is added automatically by many Nano wallets.</p>
-          <div class="row">
-            <div class="col-lg-12 my-auto">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th scope="col">Time (UTC{{utcOffset}})</th>
-                    <th scope="col">XRB</th>
-                    <th scope="col">{{currencyType}} Now</th>
-                    <th scope="col">{{currencyType}} Then</th>
-                    <th scope="col">Associated Account</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr app-transactionRow *ngFor="let key of keys;" [alias]=this.alias [rate]=this.priceResults
-                    [hash]=key [type]='"receive"' [utcOffset]=utcOffset [currencyType]=currencyType
-                    [account]='blockResults["blocks"][key]["block_account"]'
-                    [amount]='blockResults["blocks"][key]["amount"]'>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </ng-template>
-      </ng-template>
-      <ng-template #blocksEmpty>
-        <p>No received blocks to process</p>
-      </ng-template>
-      <ng-template #blocksloading>
-        <div>
-          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
-        </div>
-      </ng-template>
-    </div>
-    <div class="container">
-      <h3>Spent/Claimed Transactions</h3>
-      <ng-container *ngIf="accountResults; then transactionLoaded; else transactionLoading">
+      <h3>Transactions</h3>
+      <ng-container *ngIf="accountResults && unprocessedBlocksResults; then transactionLoaded; else transactionLoading">
       </ng-container>
       <ng-template #transactionLoaded>
-        <ng-container *ngIf="accountResults['history'].length > 0; then transactionsShow; else transactionsEmpty">
+        <ng-container *ngIf="transactions.length > 0; then transactionsShow; else transactionsEmpty">
         </ng-container>
         <ng-template #transactionsShow>
-          <p>Showing up to the last 20 spent/claimed transactions.</p>
           <div class="row">
             <div class="col-lg-12 my-auto">
               <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th scope="col">Time (UTC{{utcOffset}})</th>
-                    <th scope="col">XRB</th>
+                    <th scope="col">Time (UTC{{utcOffset}})<sup>†</sup></th>
+                    <th scope="col">NANO</th>
                     <th scope="col">{{currencyType}} Now</th>
                     <th scope="col">{{currencyType}} Then</th>
                     <th scope="col">Associated Account</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr app-transactionRow *ngFor="let transaction of accountResults['history']" [alias]=this.alias
-                    [rate]=this.priceResults [type]=transaction.type [utcOffset]=utcOffset [currencyType]=currencyType
-                    [hash]=transaction.hash [account]=transaction.account [amount]=transaction.amount>
+                  <tr app-transactionRow *ngFor="let transaction of transactions; index as i;" [alias]=this.alias
+                    [rate]=this.priceResults [index]=i [transactions]=transactions [utcOffset]=utcOffset
+                    [currencyType]=currencyType>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
+          <p><sup>†</sup> Where recorded, the transaction time shown is from when the funds were sent to this account
+            i.e. claiming
+            funds with a receive block will not update the time shown</p>
+          <p><sup>*</sup> Indicates that a receive block has not yet been processed for the transaction on this
+            account's chain to
+            claim the funds into the balance</p>
+          <ng-container *ngIf="this.unprocessedBlocksResults['blocks'].length==this.receiveAmount; then receiveLimit; else noReceiveLimit;">
+          </ng-container>
+          <ng-template #receiveLimit>
+            <p>! The limit of 50 send blocks to this account was reached</p>
+          </ng-template>
+          <ng-template #noReceiveLimit>
+          </ng-template>
+          <ng-container *ngIf="this.accountResults['history'].length==this.accountAmount; then accountLimit; else noAccountLimit;">
+          </ng-container>
+          <ng-template #accountLimit>
+            <p>! The limit of 50 account transactions was reached</p>
+          </ng-template>
+          <ng-template #noAccountLimit>
+          </ng-template>
         </ng-template>
         <ng-template #transactionsEmpty>
-          <p>No spent/claimed transactions in account history</p>
+          <p>No transactions in account history</p>
         </ng-template>
       </ng-template>
       <ng-template #transactionLoading>
@@ -283,11 +246,14 @@
           <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </div>
       </ng-template>
-      <ng-container *ngIf="weightResults; then weightLoaded; else weightloading">
+      <ng-container *ngIf="votingWeight; then weightLoaded; else weightloading">
       </ng-container>
       <ng-template #weightLoaded>
-        <p>XRB: {{formatAmount('XRB',weightResults['weight'],true)}} NANO voting weight</p>
-        <p>XNO: {{formatAmount('XNO',weightResults['weight'],true)}} voting weight</p>
+        <p><a href="https://mynano.ninja/account/{{representativeResults['representative']}}"><img
+              src="../../assets/ninja-icon.png" width="30px"></a>
+          {{nanoodleService.formatAmount('XRB',votingWeight,true)}} NANO voting weight is delegated to this
+          representative
+        </p>
       </ng-template>
       <ng-template #weightloading>
         <div>
@@ -298,26 +264,62 @@
       </ng-container>
       <ng-template #repScoreLoaded>
         <p><a href="https://mynano.ninja/account/{{representativeResults['representative']}}"><img
-              src="../../assets/ninja-icon.png" width="30px"></a>Ninja Score of {{ repScore }} out of 100</p>
+              src="../../assets/ninja-icon.png" width="30px"></a> Ninja Score of {{ repScore }} out of 100</p>
       </ng-template>
       <ng-container *ngIf="repDelegators; then repDelegatorsLoaded;">
       </ng-container>
       <ng-template #repDelegatorsLoaded>
         <p><a href="https://mynano.ninja/account/{{representativeResults['representative']}}"><img
-              src="../../assets/ninja-icon.png" width="30px"></a>{{ repDelegators }} Delegators</p>
+              src="../../assets/ninja-icon.png" width="30px"></a> {{ repDelegators }} Delegators</p>
       </ng-template>
       <ng-container *ngIf="repLastVoted; then repLastVotedLoaded;">
       </ng-container>
       <ng-template #repLastVotedLoaded>
         <p><a href="https://mynano.ninja/account/{{representativeResults['representative']}}"><img
-              src="../../assets/ninja-icon.png" width="30px"></a>Last voted on {{ repLastVoted }}</p>
+              src="../../assets/ninja-icon.png" width="30px"></a> Last voted on
+          {{ formatDateLocal(repLastVoted, utcOffset) }}</p>
       </ng-template>
       <ng-container *ngIf="repUptime; then repUptimeLoaded;">
       </ng-container>
       <ng-template #repUptimeLoaded>
         <p><a href="https://mynano.ninja/account/{{representativeResults['representative']}}"><img
-              src="../../assets/ninja-icon.png" width="30px"></a>{{ repUptime.toFixed(2) }}% Uptime</p>
+              src="../../assets/ninja-icon.png" width="30px"></a> {{ repUptime.toFixed(2) }}% Uptime</p>
       </ng-template>
+    </div>
+    <div class="container">
+      <h3>Tools</h3>
+      <h4>NANOODLE Books</h4>
+      <p>Download this account's transactions in a variety of formats (unprocessed transactions are included)</p>
+      <app-accountDownload [identifier]=identifier [currencyType]=currencyType [utcOffset]=utcOffset>
+      </app-accountDownload>
+      <p>Being updated</p>
+      <h4>NANOODLE Watch</h4>
+      <p>Receive an email when transactions are detected on this account</p>
+      <app-accountWatch [identifier]=identifier></app-accountWatch>
+      <p>Being updated</p>
+      <h4>NANOODLE Invoice</h4>
+      <p>Basic QR code generator for this account</p>
+      <app-accountInvoice [identifier]=identifier></app-accountInvoice>
+      <h4>Local Storage</h4>
+      <ng-container *ngIf="checkAccountStored(); then disableSave; else allowSave">
+      </ng-container>
+      <ng-template #disableSave>
+        <p>This account is already stored in local storage.</p>
+        <button disabled mat-raised-button (click)="saveAccount()">
+          Save Account
+        </button>
+      </ng-template>
+      <ng-template #allowSave>
+        <p>Save this account into local storage</p>
+        <button mat-raised-button (click)="saveAccount()">
+          Save Account
+        </button>
+      </ng-template>
+      <p></p>
+      <p>Clear local storage of account information</p>
+      <button mat-raised-button (click)="clearSavedAccount()">
+        Clear Account
+      </button>
     </div>
   </ng-template>
 </section>

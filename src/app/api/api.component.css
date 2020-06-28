@@ -1,0 +1,104 @@
+/* Structure */
+table {
+  width: 100%;
+  font-size: 14px;
+  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+  letter-spacing: 1.5px;
+}
+
+td{
+  word-wrap:  break-word;
+}
+
+.account {
+  text-transform: lowercase;
+}
+
+button:focus {
+outline: 0 !important;
+border: 0 !important;
+}
+
+button
+{
+font-size: 14px;
+font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+letter-spacing: 1.5px;
+position: relative;
+background-color: white;
+}
+
+.mat-form-field
+{
+  font-size: 12px;
+  font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+  letter-spacing: 1.5px;
+  width: 350px;
+}
+
+.fa-clipboard
+{
+cursor: pointer;
+}
+
+.success
+{
+  margin-top: 10px;
+  color: green;
+}
+
+p
+{
+font-size: 14px;
+font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+word-wrap:  break-word;
+letter-spacing: 1.5px;
+margin-bottom: 7px;
+}
+
+h3 {
+width: 100%;
+font-size: 20px;
+font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+letter-spacing: 2px;
+text-transform: uppercase;
+margin-bottom: 15px;
+margin-top: 30px;
+}
+
+/* Tooltip container */
+.tooltip {
+position: relative;
+display: inline-block;
+border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+visibility: hidden;
+width: 120px;
+background-color: black;
+color: #fff;
+text-align: center;
+padding: 5px 0;
+border-radius: 6px;
+
+/* Position the tooltip text - see examples below! */
+position: absolute;
+z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+visibility: visible;
+}
+
+h4 {
+width: 100%;
+font-size: 16px;
+font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
+letter-spacing: 2px;
+text-transform: uppercase;
+margin-bottom: 15px;
+margin-top: 20px;
+}

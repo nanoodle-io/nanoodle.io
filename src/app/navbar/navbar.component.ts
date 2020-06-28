@@ -17,13 +17,24 @@ export class NavbarComponent implements OnInit {
 
   //in your constructor
   constructor(public router: Router, public donate: DonateComponent, private myNanoNinjaService: MyNanoNinjaService) {
-
   }
 
   ngOnInit(): void {
     this.temp = new Object();
     this.alias = null;
     this.getAliases();
+  }
+
+  checkLocalStorage(): boolean {
+    if (localStorage.hasOwnProperty('account') && localStorage['account'])
+    {
+      return true;
+    }
+    return false;
+  }
+
+  getSavedAccount(): string {
+    return localStorage.getItem('account');
   }
 
   search(param: string) {
@@ -55,7 +66,6 @@ export class NavbarComponent implements OnInit {
           this.alias = this.temp;
         });
     } catch (error) {
-
     }
   }
 

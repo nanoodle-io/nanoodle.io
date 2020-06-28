@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from '../message.service';
-import { WatchService } from '../watch.service';
+import { NanoodleService } from '../nanoodle.service';
 
 @Component({
   selector: 'verify',
@@ -12,7 +12,7 @@ export class VerifyComponent implements OnInit {
   identifier: string;
   paramsub: any;
 
-  constructor(private messageService: MessageService, private watchService: WatchService, private route: ActivatedRoute) { }
+  constructor(private messageService: MessageService, private nanoodleService: NanoodleService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.paramsub = this.route.params.subscribe(sub => {
@@ -22,7 +22,7 @@ export class VerifyComponent implements OnInit {
 
   verifyWatcher(unsubscribe: string)
   {
-    this.watchService.verifyWatcher(unsubscribe).subscribe(data => {
+    this.nanoodleService.verifyWatcher(unsubscribe).subscribe(data => {
       
     });
   }

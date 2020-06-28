@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { TACComponent } from '../tac/tac.component'
 import { PrivacyComponent } from '../privacy/privacy.component'
-import { MarketService } from '../market.service';
 import { NodeService } from '../node.service';
 import { MessageService } from '../message.service';
+import { NanoodleService } from '../nanoodle.service';
 
 @Component({
   selector: 'app-footer',
@@ -12,10 +12,12 @@ import { MessageService } from '../message.service';
 })
 export class FooterComponent {
   blockCountResults: BlockCountResults;
+  networkMedianResults: number;
+  networkMaxResults: number;
   lastPriceTime: string;
   reg = new RegExp('"error"');
 
-  constructor(public tac: TACComponent, private messageService: MessageService, public privacy: PrivacyComponent, private nodeService: NodeService, private marketService: MarketService) { }
+  constructor(public tac: TACComponent, private messageService: MessageService, public privacy: PrivacyComponent, private nodeService: NodeService, private nanoodleService: NanoodleService) { }
 
   openTAC() {
     this.tac.openTACDialog();
@@ -28,17 +30,9 @@ export class FooterComponent {
   openServiceMessages() {
     this.lastPriceTime = null;
     this.blockCountResults = null;
-    this.getLastPrice();
+    this.networkMedianResults = null;
+    this.networkMaxResults = null;
     this.getBlockCount();
-  }
-
-  getLastPrice(): void {
-    this.marketService.getLastMarketPrice()
-      .subscribe(data => {
-        let tempDate = new Date(data[0]['log']['epochTimeStamp']['$date']);
-        this.lastPriceTime = this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + "-" + this.pad2(tempDate.getFullYear()) + " " + this.pad2(tempDate.getHours()) + ":" + this.pad2(tempDate.getMinutes());
-        this.messageService.add('The last receipt of price data from CryptoCompare was at ' + this.lastPriceTime);
-      });
   }
 
   formatDecimals(input: number): string {
@@ -53,12 +47,12 @@ export class FooterComponent {
     this.nodeService.getBlockCount()
       .subscribe(data => {
         this.blockCountResults = data;
-        if (this.reg.test(JSON.stringify(this.blockCountResults))) {
-          this.messageService.add(JSON.stringify(this.blockCountResults['error']));
-        }
-        else {
-          this.messageService.add('The NANOODLE node is ' + this.formatDecimals(+(+this.blockCountResults['count'] / (+this.blockCountResults['count'] + +this.blockCountResults['unchecked'])) * 100) + '% in sync with the Nano network');
-        }
+        this.nanoodleService.getNetworkStats(new Date())
+          .subscribe(data => {
+            this.networkMedianResults = +data['Items'][data['Count']-1]['networkData']['blockCountMedian'];
+            this.networkMaxResults = +data['Items'][data['Count']-1]['networkData']['blockCountMax'];
+            this.messageService.add('The NANOODLE node is at ' + this.blockCountResults['count'] + ' (compared to a max of ' + this.networkMaxResults + ' and a median of ' + this.networkMedianResults + ' in the Nano network, sourced from NanoTicker).');
+          });
       });
   }
 }

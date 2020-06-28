@@ -2,10 +2,9 @@ import { Component, Inject, Input } from '@angular/core';
 import { forkJoin, of } from 'rxjs';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { saveAs } from 'file-saver/FileSaver';
-import { AccountService } from '../account.service';
-import { BlockService } from '../block.service';
+import { NodeService } from '../node.service';
 import { MessageService } from '../message.service';
-import { MarketService } from '../market.service';
+import { NanoodleService } from '../nanoodle.service';
 
 export interface DialogData {
   format: string;
@@ -42,8 +41,6 @@ export class AccountDownloadComponent {
   transactionString: string[];
   //param
   paramsub: any;
-  error: string;
-  reg = new RegExp('"error"');
 
   @Input()
   identifier: string;
@@ -52,7 +49,7 @@ export class AccountDownloadComponent {
 
   @Input() utcOffset: string;
 
-  constructor(public dialog: MatDialog, private marketService: MarketService, private messageService: MessageService, private accountService: AccountService, private blockService: BlockService) { }
+  constructor(public dialog: MatDialog, private nanoodleService: NanoodleService, private nodeService: NodeService, private messageService: MessageService) { }
 
   openDialog(): void {
     this.selection = {
@@ -99,10 +96,10 @@ export class AccountDownloadComponent {
     let memo = "";
     this.downloadString = [];
     this.transactionString = [];
-    this.accountService.getUnprocessedBlocks(accountParam, size)
+    this.nodeService.getUnprocessedBlocks(accountParam, size)
       .subscribe(data => {
         this.unprocessedBlocksResults = data;
-        this.accountService.getAccount(accountParam, size - this.unprocessedBlocksResults['blocks'].length)
+        this.nodeService.getAccount(accountParam, size - this.unprocessedBlocksResults['blocks'].length)
           .subscribe(data => {
             this.accountResults = data;
             var y;
@@ -115,8 +112,8 @@ export class AccountDownloadComponent {
               }
             }
             hashes.forEach((item) => {
-              queryTimes.push(this.blockService.getBlockTime(item));
-              queryBlocks.push(this.blockService.getBlock(item));
+              queryTimes.push(this.nanoodleService.getBlockTime(item));
+              queryBlocks.push(this.nodeService.getBlock(item));
             });
             //wait for returns
             const combinedBlocks = forkJoin(
@@ -135,7 +132,7 @@ export class AccountDownloadComponent {
                   this.blockTimes = this.blockTimeResults[i];
                   if (this.blockTimes.length > 0) {
                     if (this.blockTimes[0]['log'].hasOwnProperty('epochTimeStamp')) {
-                      queryPrice.push(this.marketService.getMarketPrice(+this.blockTimes[0]['log']['epochTimeStamp'].$date, currencyType));
+                      queryPrice.push(this.nanoodleService.getPrice(new Date(+this.blockTimes[0]['log']['epochTimeStamp'].$date)));
                     }
                     else {
                       queryPrice.push(of([]));
@@ -185,7 +182,7 @@ export class AccountDownloadComponent {
                         this.tempPrice = data[i][x];
                         returnPrice = returnPrice + this.tempPrice[currencyType];
                       }
-                      this.pastPrice = "" + this.formatAmount(currencyType, returnPrice / data[i].length * +this.formatAmount('XRB', +this.detail.amount, false), true);
+                      this.pastPrice = "" + this.nanoodleService.formatAmount(currencyType, returnPrice / data[i].length * +this.nanoodleService.formatAmount('XRB', +this.detail.amount, false), true);
                     }
                     else {
                       this.pastPrice = "not recorded";
@@ -222,7 +219,7 @@ export class AccountDownloadComponent {
                           name = accountParam;
                         }
                       }
-                      this.transactionString.push("\"" + time + "\"," + direction + "," + this.contents.type + "," + status + "," + name + "," + memo + "," + this.formatAmount('XRB', +this.detail.amount, true) + "," + this.pastPrice + "," + this.key + "\n");
+                      this.transactionString.push("\"" + time + "\"," + direction + "," + this.contents.type + "," + status + "," + name + "," + memo + "," + this.nanoodleService.formatAmount('XRB', +this.detail.amount, true) + "," + this.pastPrice + "," + this.key + "\n");
                     }
                     else {
                       this.transactionString.push("<STMTTRN>\n");
@@ -241,7 +238,7 @@ export class AccountDownloadComponent {
                           useGrouping: false,
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 6
-                        }).format(+this.formatAmount('XRB', +this.detail.amount, false)));
+                        }).format(+this.nanoodleService.formatAmount('XRB', +this.detail.amount, false)));
 
                       }
                       else {
@@ -250,7 +247,7 @@ export class AccountDownloadComponent {
                           useGrouping: false,
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 6
-                        }).format(+this.formatAmount('XRB', +this.detail.amount, false)));
+                        }).format(+this.nanoodleService.formatAmount('XRB', +this.detail.amount, false)));
 
                       }
                       this.transactionString.push("<FITID>" + this.key + "\n");
@@ -290,7 +287,7 @@ export class AccountDownloadComponent {
                     saveAs(blob, "nanoodle_" + this.identifier + "." + this.selection.format);
                   }
                   else {
-                    this.accountService.getBalance(accountParam)
+                    this.nodeService.getBalance(accountParam)
                       .subscribe(data => {
                         this.balanceResults = data;
 
@@ -351,14 +348,14 @@ export class AccountDownloadComponent {
 
                         this.downloadString.push("</BANKTRANLIST>\n");
                         this.downloadString.push("<LEDGERBAL>\n");
-                        this.downloadString.push("<BALAMT>" + this.formatAmount('XRB', (+this.balanceResults.balance + +this.balanceResults.pending), false) + "\n");
+                        this.downloadString.push("<BALAMT>" + this.nanoodleService.formatAmount('XRB', (+this.balanceResults.balance + +this.balanceResults.pending), false) + "\n");
                         //current datetime
                         this.date = new Date(Date.now() + (+utcOffset * 3600000));
                         time = this.date.getFullYear().toString() + this.pad2(this.date.getMonth() + 1) + this.pad2(this.date.getDate()) + this.pad2(this.date.getHours()) + this.pad2(this.date.getMinutes()) + this.pad2(this.date.getSeconds());
                         this.downloadString.push("<DTASOF>" + time + "[" + utcOffset + "]\n");
                         this.downloadString.push("</LEDGERBAL>\n");
                         this.downloadString.push("<AVAILBAL>\n");
-                        this.downloadString.push("<BALAMT>" + this.formatAmount('XRB', +this.balanceResults.balance, false) + "\n");
+                        this.downloadString.push("<BALAMT>" + this.nanoodleService.formatAmount('XRB', +this.balanceResults.balance, false) + "\n");
                         //re-use current datetime
                         this.downloadString.push("<DTASOF>" + time + "[" + utcOffset + "]\n");
                         this.downloadString.push("</AVAILBAL>\n");
@@ -388,243 +385,6 @@ export class AccountDownloadComponent {
 
   //date helper functions
   pad2(n) { return n < 10 ? '0' + n : n }
-
-  formatAmount(type: string, amount: number, returnSymbol: boolean): string {
-    //Mnano
-    if (type == 'XRB') {
-      let raw = 1000000000000000000000000000000;
-
-      let temp = amount / raw;
-      //more dp as download might be for accounting software
-      if (returnSymbol) {
-        return temp.toFixed(10);
-      }
-      else {
-        return temp.toFixed(10);
-
-      }
-    }
-    //nano
-    else if (type == 'XNO') {
-      let raw = 1000000000000000000000000000;
-      let temp = amount / raw;
-      if (returnSymbol) {
-        return '₦' + temp.toFixed(0);
-      }
-      else {
-        return temp.toFixed(0);
-      }
-    }
-    else if (type == 'ETH') {
-      if (returnSymbol) {
-        return 'Ξ' + amount.toFixed(6);
-      }
-      else {
-        return amount.toFixed(6);
-      }
-    }
-    else if (type == 'BTC') {
-      if (returnSymbol) {
-        return '₿' + amount.toFixed(6);
-      }
-      else {
-        return amount.toFixed(6);
-      }
-    }
-    else if (type == 'JPY') {
-      if (returnSymbol) {
-
-        return '¥' + amount.toFixed(0);
-      }
-      else {
-        return amount.toFixed(0);
-      }
-    }
-    else if (type == 'CNY') {
-      if (returnSymbol) {
-
-        return '¥' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'VND') {
-      if (returnSymbol) {
-
-        return amount.toFixed(2) + '₫';
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'TRY') {
-      if (returnSymbol) {
-
-        return '₺' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'INR') {
-      if (returnSymbol) {
-
-        return '₹' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'GHS') {
-      if (returnSymbol) {
-
-        return 'Gh₵' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'NGN') {
-      if (returnSymbol) {
-
-        return '₦' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'USD') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'SEK') {
-      if (returnSymbol) {
-
-        return amount.toFixed(2) + 'kr';
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'CHF') {
-      if (returnSymbol) {
-
-        return '₣' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'ZAR') {
-      if (returnSymbol) {
-
-        return 'R' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'EUR') {
-      if (returnSymbol) {
-
-        return '€' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'GBP') {
-      if (returnSymbol) {
-
-        return '£' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'CAD') {
-      if (returnSymbol) {
-
-        return 'C$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'MXN') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'AUD') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'BRL') {
-      if (returnSymbol) {
-
-        return 'R$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'VES') {
-      if (returnSymbol) {
-
-        return 'Bs.' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'PEN') {
-      if (returnSymbol) {
-
-        return 'S/.' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'COP') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'ARS') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else {
-      return amount.toFixed(2);
-    }
-  }
 
   private log(message: string) {
     this.messageService.add(`Account Download Component: ${message}`);

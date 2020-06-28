@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from '../message.service';
-import { WatchService } from '../watch.service';
+import { NanoodleService } from '../nanoodle.service';
 
 @Component({
   selector: 'unsubscribe',
@@ -12,7 +12,7 @@ export class UnsubscribeComponent implements OnInit {
   identifier: string;
   paramsub: any;
 
-  constructor(private messageService: MessageService, private watchService: WatchService, private route: ActivatedRoute) { }
+  constructor(private messageService: MessageService, private nanoodleService: NanoodleService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.paramsub = this.route.params.subscribe(sub => {
@@ -22,8 +22,7 @@ export class UnsubscribeComponent implements OnInit {
 
   removeWatcher(unsubscribe: string)
   {
-    this.watchService.removeWatcher(unsubscribe).subscribe(data => {
-      
+    this.nanoodleService.removeWatcher(unsubscribe).subscribe(data => {
     });
   }
 }

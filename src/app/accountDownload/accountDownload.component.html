@@ -1,4 +1,4 @@
-<button mat-raised-button (click)="openDialog()">
+<button disabled mat-raised-button (click)="openDialog()">
     <ng-container *ngIf="processing; then processingResults; else processed">
     </ng-container>
     <ng-template #processingResults>

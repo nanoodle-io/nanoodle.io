@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { MessageService } from '../message.service';
 import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { WatchService } from '../watch.service';
+import { NanoodleService } from '../nanoodle.service';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 
 export interface DialogData {
@@ -25,7 +25,7 @@ export class AccountWatchComponent {
   @Input()
   identifier: string;
 
-  constructor(public dialog: MatDialog, private messageService: MessageService, private watchService: WatchService) { }
+  constructor(public dialog: MatDialog, private messageService: MessageService, private nanoodleService: NanoodleService) { }
 
   openDialog(): void {
     this.addWatcherError = "";
@@ -39,7 +39,7 @@ export class AccountWatchComponent {
     dialogRef.afterClosed().subscribe(data => {
       this.result = data;
       if (this.result != null) {
-        this.watchService.putWatch(this.identifier, this.result.email).subscribe(res => {
+        this.nanoodleService.putWatch(this.identifier, this.result.email).subscribe(res => {
           this.addWatcher = "Success";
         },
           (err: HttpErrorResponse) => {

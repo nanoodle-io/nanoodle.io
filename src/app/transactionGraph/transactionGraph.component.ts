@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BlockService } from '../block.service';
+import { NanoodleService } from '../nanoodle.service';
 import * as d3 from 'd3';
 
 @Component({
@@ -11,11 +11,11 @@ export class TransactionGraphComponent implements OnInit {
   now = new Date();
   transactions = [];
 
-  constructor(private blockService: BlockService) {
+  constructor(private nanoodleService: NanoodleService) {
   }
 
   ngOnInit() {
-    var blockService = this.blockService;
+    var nanoodleService = this.nanoodleService;
 
     var limit = 90,
       duration = 750
@@ -105,10 +105,10 @@ export class TransactionGraphComponent implements OnInit {
     }
 
     function getValues() {
-      blockService.getBlockCount(15, true).subscribe(data => {
-        groups['current'].value = data['_size'];
-        if (data['_size'] >= max) {
-          max = data['_size'];
+      nanoodleService.getBlockCount(15).subscribe(data => {
+        groups['current'].value = data['Count'];
+        if (data['Count'] >= max) {
+          max = data['Count'];
 
           y.domain([0, max * 1.2])
 

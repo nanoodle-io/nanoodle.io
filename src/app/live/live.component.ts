@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from '../message.service';
 import { NodeService } from '../node.service';
-import { NetworkService } from '../network.service';
-import { MarketService } from '../market.service';
+import { NanoodleService } from '../nanoodle.service';
 import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
@@ -16,8 +15,6 @@ export class LiveComponent implements OnInit {
   @ViewChild("priceChart", { static: true }) chart2: BaseChartDirective;
   @ViewChild("sizeChart", { static: true }) chart3: BaseChartDirective;
   @ViewChild("transactionDayChart", { static: true }) chart4: BaseChartDirective;
-
-  blockCountResults: BlockCountResults;
 
   transactionDatasets = [
     { data: [1, 1, 1, 1], label: 'Hourly Value Transactions' }
@@ -59,26 +56,18 @@ export class LiveComponent implements OnInit {
     { data: [1, 1, 1, 1], label: 'BTC', hidden: true }
   ];
 
-  constructor(private messageService: MessageService, private NodeService: NodeService, private marketService: MarketService, private NetworkService: NetworkService) { }
+  constructor(private messageService: MessageService, private nodeService: NodeService, private nanoodleService: NanoodleService) { }
 
   ngOnInit() {
-    this.getBlockCount();
     this.getHourlyChartData();
     this.getDailyChartData();
     this.getLastPrice();
   }
 
-  getBlockCount(): void {
-    this.NodeService.getBlockCount()
-      .subscribe(data => {
-        this.blockCountResults = data;
-      });
-  }
-
   getLastPrice(): void {
-    this.marketService.getLastMarketPrice()
+    this.nanoodleService.getPrice(new Date())
       .subscribe(data => {
-        let tempDate = new Date(data[0]['log']['epochTimeStamp']['$date']);
+        let tempDate = new Date(data['Items'][data['Count']-1]['priceTimestamp']);
         this.lastPriceTime = this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + "-" + this.pad2(tempDate.getFullYear()) + " " + this.pad2(tempDate.getHours()) + ":" + this.pad2(tempDate.getMinutes());
       });
   }
@@ -88,16 +77,18 @@ export class LiveComponent implements OnInit {
     let timestampTemp = [];
 
     //get up to a years worth of daily data
-    this.NetworkService.getDailyChartData(365)
+    this.nanoodleService.getDailyChartData()
       .subscribe(data => {
-        for (var i = 0; i < data.length; i++) {
-          trxTemp.push(data[i]['dailyTransactions']);
-          let tempDate = new Date(data[i]['log']['epochTimeStamp']['$date']);
+        var results = data['Items'];
+        for (var i = 0; i < results.length; i++) {
+          trxTemp.push(results[i]['value transactions total']);
+          let tempDate = new Date(results[i]['endDate']);
           timestampTemp.push(this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + "-" + this.pad2(tempDate.getFullYear()));
         }
         this.transactionDayLabels = timestampTemp;
+        this.transactionDayLabels.reverse();
         this.transactionDayDatasets = [
-          { data: trxTemp, label: 'Daily Value Transactions' }
+          { data: trxTemp.reverse(), label: 'Daily Value Transactions' }
         ];
         this.reloadDailyChart();
       });
@@ -127,67 +118,71 @@ export class LiveComponent implements OnInit {
     let nanoNormal = 0;
     let nanoLarge = 0;
 
-    this.NetworkService.getHourlyChartData(672)
+    this.nanoodleService.getHourlyChartData()
       .subscribe(data => {
+        var results = data['Items'];
+
         //4 weeks hourly price data
-        for (var i = 0; i < data.length; i++) {
-          let tempDate = new Date(data[i]['log']['epochTimeStamp']['$date']);
+        for (var i = 0; i < results.length; i++) {
+          let tempDate = new Date(results[i]['endDate']);
           timestampTemp.push(this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + " " + this.pad2(tempDate.getHours()) + ":" + this.pad2(tempDate.getMinutes()));
        
-          gbpPriceTemp.push(this.formatAmount('GBP', +data[i]['GBP'], false));
-          usdPriceTemp.push(this.formatAmount('USD', +data[i]['USD'], false));
-          cnyPriceTemp.push(this.formatAmount('CNY', +data[i]['CNY'], false));
-          jpyPriceTemp.push(this.formatAmount('JPY', +data[i]['JPY'], false));
-          eurPriceTemp.push(this.formatAmount('EUR', +data[i]['EUR'], false));
-          btcPriceTemp.push(this.formatAmount('BTC', +data[i]['BTC'], false));
+          gbpPriceTemp.push(this.nanoodleService.formatAmount('GBP', +results[i]['averageGBP'], false));
+          usdPriceTemp.push(this.nanoodleService.formatAmount('USD', +results[i]['averageUSD'], false));
+          cnyPriceTemp.push(this.nanoodleService.formatAmount('CNY', +results[i]['averageCNY'], false));
+          jpyPriceTemp.push(this.nanoodleService.formatAmount('JPY', +results[i]['averageJPY'], false));
+          eurPriceTemp.push(this.nanoodleService.formatAmount('EUR', +results[i]['averageEUR'], false));
+          btcPriceTemp.push(this.nanoodleService.formatAmount('BTC', +results[i]['averageBTC'], false));
         }
         this.priceDatasets = [
-          { data: gbpPriceTemp, label: 'GBP' },
-          { data: usdPriceTemp, label: 'USD' },
-          { data: cnyPriceTemp, label: 'CNY', hidden: true },
-          { data: jpyPriceTemp, label: 'JPY', hidden: true },
-          { data: eurPriceTemp, label: 'EUR', hidden: true },
-          { data: btcPriceTemp, label: 'BTC', hidden: true }
+          { data: gbpPriceTemp.reverse(), label: 'GBP' },
+          { data: usdPriceTemp.reverse(), label: 'USD' },
+          { data: cnyPriceTemp.reverse(), label: 'CNY', hidden: true },
+          { data: jpyPriceTemp.reverse(), label: 'JPY', hidden: true },
+          { data: eurPriceTemp.reverse(), label: 'EUR', hidden: true },
+          { data: btcPriceTemp.reverse(), label: 'BTC', hidden: true }
         ];
         this.transactionLabelsExtended = timestampTemp;
+        this.transactionLabelsExtended.reverse();
+
         //reset
         timestampTemp = [];
 
         //get last week size and value
-        for (var i = data.length - 168; i < data.length; i++) {
-          trxTemp.push(data[i]['transactions']);
+        for (var i = 0; i < results.length; i++) {
+          trxTemp.push(results[i]['value transactions total']);
           //work out values
-          nanoTemp.push(this.formatAmount('XRB', +data[i]['rawTotal'], false));
-          gbpTemp.push(this.formatAmount('GBP', +this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['GBP'], false));
-          usdTemp.push(this.formatAmount('USD', +this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['USD'], false));
-          cnyTemp.push(this.formatAmount('CNY', +this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['CNY'], false));
-          jpyTemp.push(this.formatAmount('JPY', +this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['JPY'], false));
-          eurTemp.push(this.formatAmount('EUR', +this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['EUR'], false));
-          btcTemp.push(this.formatAmount('BTC', +this.formatAmount('XRB', +data[i]['rawTotal'], false) * +data[i]['BTC'], false));
+          nanoTemp.push(this.nanoodleService.formatAmount('XRB', +results[i]['raw total'], false));
+          gbpTemp.push(this.nanoodleService.formatAmount('GBP', +this.nanoodleService.formatAmount('XRB', +results[i]['raw total'], false) * +results[i]['averageGBP'], false));
+          usdTemp.push(this.nanoodleService.formatAmount('USD', +this.nanoodleService.formatAmount('XRB', +results[i]['raw total'], false) * +results[i]['averageUSD'], false));
+          cnyTemp.push(this.nanoodleService.formatAmount('CNY', +this.nanoodleService.formatAmount('XRB', +results[i]['raw total'], false) * +results[i]['averageCNY'], false));
+          jpyTemp.push(this.nanoodleService.formatAmount('JPY', +this.nanoodleService.formatAmount('XRB', +results[i]['raw total'], false) * +results[i]['averageJPY'], false));
+          eurTemp.push(this.nanoodleService.formatAmount('EUR', +this.nanoodleService.formatAmount('XRB', +results[i]['raw total'], false) * +results[i]['averageEUR'], false));
+          btcTemp.push(this.nanoodleService.formatAmount('BTC', +this.nanoodleService.formatAmount('XRB', +results[i]['raw total'], false) * +results[i]['averageBTC'], false));
 
-          nanoMicro = nanoMicro + +data[i]['nanoMicro'];
-          nanoSmall = nanoSmall + +data[i]['nanoSmall'];
-          nanoNormal = nanoNormal + +data[i]['nanoNormal'];
-          nanoLarge = nanoLarge + +data[i]['nanoLarge'];
+          nanoMicro = nanoMicro + +results[i]['micro total'];
+          nanoSmall = nanoSmall + +results[i]['small total'];
+          nanoNormal = nanoNormal + +results[i]['normal total'];
+          nanoLarge = nanoLarge + +results[i]['large total'];
 
-          let tempDate = new Date(data[i]['log']['epochTimeStamp']['$date']);
+          let tempDate = new Date(results[i]['endDate']);
           timestampTemp.push(this.pad2(tempDate.getDate()) + "-" + this.pad2(tempDate.getMonth() + 1) + " " + this.pad2(tempDate.getHours()) + ":" + this.pad2(tempDate.getMinutes()));
         }
         this.transactionLabels = timestampTemp;
+        this.transactionLabels.reverse()
         this.transactionDatasets = [
-          { data: trxTemp, label: 'Hourly Value Transactions' }
+          { data: trxTemp.reverse(), label: 'Hourly Value Transactions' }
         ];
 
         this.currencyDatasets = [
-          { data: usdTemp, label: 'USD' },
-          { data: nanoTemp, label: 'Nano' },
-          { data: gbpTemp, label: 'GBP', hidden: true },
-          { data: cnyTemp, label: 'CNY', hidden: true },
-          { data: jpyTemp, label: 'JPY', hidden: true },
-          { data: eurTemp, label: 'EUR', hidden: true },
-          { data: btcTemp, label: 'BTC', hidden: true }
+          { data: usdTemp.reverse(), label: 'USD' },
+          { data: nanoTemp.reverse(), label: 'NANO' },
+          { data: gbpTemp.reverse(), label: 'GBP', hidden: true },
+          { data: cnyTemp.reverse(), label: 'CNY', hidden: true },
+          { data: jpyTemp.reverse(), label: 'JPY', hidden: true },
+          { data: eurTemp.reverse(), label: 'EUR', hidden: true },
+          { data: btcTemp.reverse(), label: 'BTC', hidden: true }
         ];
-
         this.doughnutChartData = [+nanoMicro, +nanoSmall, +nanoNormal, +nanoLarge];
 
         this.reloadHourlyChart();
@@ -262,246 +257,4 @@ export class LiveComponent implements OnInit {
   // event on pie chart slice hover
   public chartHovered(e: any): void {
   }
-
-  formatAmount(type: string, amount: number, returnSymbol: boolean): string {
-    //Mnano
-    if (type == 'XRB') {
-      let raw = 1000000000000000000000000000000;
-
-      let temp = amount / raw;
-      if (returnSymbol) {
-        return temp.toFixed(2);
-      }
-      else {
-        return temp.toFixed(2);
-
-      }
-    }
-    //nano
-    else if (type == 'XNO') {
-      let raw = 1000000000000000000000000000;
-      let temp = amount / raw;
-      if (returnSymbol) {
-        return '₦' + temp.toFixed(0);
-      }
-      else {
-        return temp.toFixed(0);
-      }
-    }
-    else if (type == 'ETH') {
-      if (returnSymbol) {
-        return 'Ξ' + amount.toFixed(6);
-      }
-      else {
-        return amount.toFixed(6);
-      }
-    }
-    else if (type == 'BTC') {
-      if (returnSymbol) {
-        return '₿' + amount.toFixed(6);
-      }
-      else {
-        return amount.toFixed(6);
-      }
-    }
-    else if (type == 'JPY') {
-      if (returnSymbol) {
-
-        return '¥' + amount.toFixed(0);
-      }
-      else {
-        return amount.toFixed(0);
-      }
-    }
-    else if (type == 'CNY') {
-      if (returnSymbol) {
-
-        return '¥' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'VND') {
-      if (returnSymbol) {
-
-        return amount.toFixed(2) + '₫';
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'TRY') {
-      if (returnSymbol) {
-
-        return '₺' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'INR') {
-      if (returnSymbol) {
-
-        return '₹' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'GHS') {
-      if (returnSymbol) {
-
-        return 'Gh₵' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'NGN') {
-      if (returnSymbol) {
-
-        return '₦' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'USD') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'SEK') {
-      if (returnSymbol) {
-
-        return amount.toFixed(2) + 'kr';
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'CHF') {
-      if (returnSymbol) {
-
-        return '₣' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'ZAR') {
-      if (returnSymbol) {
-
-        return 'R' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'EUR') {
-      if (returnSymbol) {
-
-        return '€' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'GBP') {
-      if (returnSymbol) {
-
-        return '£' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'CAD') {
-      if (returnSymbol) {
-
-        return 'C$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'MXN') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'AUD') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'BRL') {
-      if (returnSymbol) {
-
-        return 'R$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'VES') {
-      if (returnSymbol) {
-
-        return 'Bs.' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'PEN') {
-      if (returnSymbol) {
-
-        return 'S/.' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'COP') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'ARS') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else {
-      return amount.toFixed(2);
-    }
-  }
-}
-
-interface BlockCountResults {
-  error?: string;
-  count?: number;
-  unchecked?: number;
 }

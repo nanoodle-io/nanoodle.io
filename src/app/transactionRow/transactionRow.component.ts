@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { BlockService } from '../block.service';
-import { MarketService } from '../market.service';
+import { NodeService } from '../node.service';
 import { MessageService } from '../message.service';
+import { NanoodleService } from '../nanoodle.service';
 
 @Component({
   selector: '[app-transactionRow]',
@@ -11,29 +11,21 @@ import { MessageService } from '../message.service';
 
 export class TransactionRowComponent implements OnInit {
   //Results
-  blockTime: BlockTime[] = [];
+  blockTime: BlockTime;
+  blockDetails: BlockResults;
   pastRate: number;
   timeFetch: boolean;
   pastRateFetch: boolean;
   tempRate: FiatResults;
 
-  error: string;
-  reg = new RegExp('"error"');
-
-  @Input()
-  hash: string;
-
   @Input()
   utcOffset: string;
 
   @Input()
-  account: string;
+  index: number;
 
   @Input()
-  amount: number;
-
-  @Input()
-  type: string;
+  transactions: Transaction[];
 
   @Input()
   rate: number;
@@ -46,7 +38,14 @@ export class TransactionRowComponent implements OnInit {
   @Input() set currencyType(value: string) {
     this._currencyType = value;
     this.pastRate = null;
-    this.pastRateFetch = false;
+    if (this.blockTime) {
+      if (this.blockTime['Count'] > 0) {
+        this.pastRateFetch = true;
+      }
+      else {
+        this.pastRateFetch = false;
+      }
+    }
     this.getMarketRate();
   }
 
@@ -54,320 +53,129 @@ export class TransactionRowComponent implements OnInit {
     return this._currencyType;
   }
 
-  constructor(private messageService: MessageService, private blockService: BlockService, private marketService: MarketService) { }
+  constructor(private messageService: MessageService, private nodeService: NodeService, private nanoodleService: NanoodleService) { }
 
   ngOnInit(): void {
-    this.blockTime = [];
+    this.blockTime = null;
     this.pastRate = null;
-    this.pastRateFetch = false;
+    this.pastRateFetch = true;
     this.timeFetch = true;
-    this.getBlockDetails(this.hash, this.currencyType);
+    this.blockDetails = null;
+    this.getBlockDetails(this.transactions[this.index]['hash']);
   }
 
-  getBlockDetails(blockParam: string, currencyType: string): void {
-    this.blockService.getBlockTime(blockParam)
-      .subscribe(data => {
-        this.blockTime = data;
-        this.timeFetch = false;
-        this.getMarketRate();
-      });
-  }
-
-  getMarketRate() {
-    if (this.blockTime.length > 0) {
-      if (this.blockTime[0]['log'].hasOwnProperty('epochTimeStamp')) {
-        this.pastRateFetch = true;
-        let timestamp = +this.blockTime[0]['log']['epochTimeStamp'].$date;
-        this.marketService.getMarketPrice(timestamp, this.currencyType)
-          .subscribe(data => {
-            let returnRate = 0;
-            if (data.length > 0) {
-              for (var i = 0; i < data.length; i++) {
-                this.tempRate = data[i];
-                returnRate = returnRate + this.tempRate[this.currencyType];
+  getBlockDetails(blockParam: string): void {
+    if (this.transactions[this.index]['type'] == "receive") {
+      this.nodeService.getBlock(blockParam)
+        .subscribe(data => {
+          this.blockDetails = data;
+          let blockContent = JSON.parse(this.blockDetails['blocks'][Object.keys(this.blockDetails['blocks'])[0]]['contents']);
+          this.nanoodleService.getBlockTime(blockContent['link'])
+            .subscribe(data => {
+              this.blockTime = data;
+              if (this.blockTime['Count'] > 0) {
+                this.transactions[this.index]['timestamp'] = new Date(this.blockTime['Items'][0]['blockTimestamp']).getTime();
+                this.getMarketRate();
+                this.sortTransactions();
               }
-              this.pastRate = returnRate / data.length;
-            }
-            else {
-              this.pastRateFetch = false;
-            }
-          });
-      }
+              else {
+                this.pastRateFetch = false;
+              }
+              this.timeFetch = false;
+            });
+        });
+    }
+    else {
+      this.nanoodleService.getBlockTime(blockParam)
+        .subscribe(data => {
+          this.blockTime = data;
+          if (this.blockTime['Count'] > 0) {
+            this.transactions[this.index]['timestamp'] = new Date(this.blockTime['Items'][0]['blockTimestamp']).getTime();
+            this.getMarketRate();
+            this.sortTransactions();
+          }
+          else {
+            this.pastRateFetch = false;
+          }
+          this.timeFetch = false;
+        });
     }
   }
 
-  displayAccountAddress(account: string): string
-  {
-      if (account in this.alias)
-      {
-        return this.alias[account];
+  sortTransactions() {
+    this.transactions.sort(this.predicateBy("timestamp"));
+  }
+
+  predicateBy(prop) {
+    return function (a, b) {
+      if (a[prop] > b[prop]) {
+        return -1;
+      } else if (a[prop] < b[prop]) {
+        return 1;
       }
-      else
-      {
-        return account;
-      }
+      return 0;
+    }
+  }
+
+  getMarketRate() {
+    this.nanoodleService.getPrice(new Date(this.transactions[this.index]['timestamp']))
+      .subscribe(data => {
+        var results = data['Items'];
+        let returnRate = 0;
+        if (results.length > 0) {
+          for (var i = 0; i < results.length; i++) {
+            this.tempRate = results[i]['priceData'];
+            returnRate = returnRate + this.tempRate[this.currencyType];
+          }
+          this.pastRate = returnRate / results.length;
+        }
+        this.pastRateFetch = false;
+      });
+  }
+
+  displayAccountAddress(account: string): string {
+    if (account in this.alias) {
+      return this.alias[account];
+    }
+    else {
+      return account;
+    }
   }
 
   formatType(type: string, cellID: string): void {
-    if (type == "receive") {
+    if (type == "send") {
       if (document.readyState != "loading") {
-        document.getElementById(cellID).classList.add('positive');
+        document.getElementById(cellID).classList.add('negative');
       }
     }
     else {
       if (document.readyState != "loading") {
-        document.getElementById(cellID).classList.add('negative');
+        document.getElementById(cellID).classList.add('positive');
       }
     }
   }
 
   addType(): string {
-    if (this.type == "receive") {
-      return '+'
-    }
-    else {
+    if (this.transactions[this.index]['type'] == "send") {
       return '-'
     }
+    else {
+      return '+'
+
+    }
   }
 
-  formatAmount(type: string, amount: number, returnSymbol: boolean): string {
-    //Mnano
-    if (type == 'XRB') {
-      let raw = 1000000000000000000000000000000;
-      
-      let temp = amount / raw;
-      if (returnSymbol) {
-        return temp.toFixed(2);
-      }
-      else {
-        return temp.toFixed(2);
-
-      }
-    }
-    //nano
-    else if (type == 'XNO') {
-      let raw = 1000000000000000000000000000;
-      let temp = amount / raw;
-      if (returnSymbol) {
-        return '₦' + temp.toFixed(0);
-      }
-      else {
-        return temp.toFixed(0);
-      }
-    }
-    else if (type == 'ETH') {
-      if (returnSymbol) {
-        return 'Ξ' + amount.toFixed(6);
-      }
-      else {
-        return amount.toFixed(6);
-      }
-    }
-    else if (type == 'BTC') {
-      if (returnSymbol) {
-        return '₿' + amount.toFixed(6);
-      }
-      else {
-        return amount.toFixed(6);
-      }
-    }
-    else if (type == 'JPY') {
-      if (returnSymbol) {
-
-        return '¥' + amount.toFixed(0);
-      }
-      else {
-        return amount.toFixed(0);
-      }
-    }
-    else if (type == 'VND') {
-      if (returnSymbol) {
-
-        return amount.toFixed(2) + '₫';
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'TRY') {
-      if (returnSymbol) {
-
-        return '₺' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'INR') {
-      if (returnSymbol) {
-
-        return '₹' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'CNY') {
-      if (returnSymbol) {
-
-        return '¥' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'GHS') {
-      if (returnSymbol) {
-
-        return 'Gh₵' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'NGN') {
-      if (returnSymbol) {
-
-        return '₦' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'USD') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'SEK') {
-      if (returnSymbol) {
-
-        return amount.toFixed(2) + 'kr';
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'CHF') {
-      if (returnSymbol) {
-
-        return '₣' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'ZAR') {
-      if (returnSymbol) {
-
-        return 'R' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'EUR') {
-      if (returnSymbol) {
-
-        return '€' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'GBP') {
-      if (returnSymbol) {
-
-        return '£' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'CAD') {
-      if (returnSymbol) {
-
-        return 'C$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'MXN') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'AUD') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'BRL') {
-      if (returnSymbol) {
-
-        return 'R$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'VES') {
-      if (returnSymbol) {
-
-        return 'Bs.' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'PEN') {
-      if (returnSymbol) {
-
-        return 'S/.' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'COP') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
-    }
-    else if (type == 'ARS') {
-      if (returnSymbol) {
-
-        return '$' + amount.toFixed(2);
-      }
-      else {
-        return amount.toFixed(2);
-      }
+  addNotation(): string {
+    if (this.transactions[this.index]['type'] == "unprocessed") {
+      return '*'
     }
     else {
-      return amount.toFixed(2);
+      return ''
     }
   }
 
-  formatDate(rawDate: number): string {
-    let myDate = new Date(rawDate);
+  formatDate(rawDate: string, offset: number): string {
+    let myDate = new Date(new Date(rawDate).getTime() + (offset * 3600000));
     return myDate.toLocaleString('en-GB', { timeZone: 'UTC' });
   }
 
@@ -376,19 +184,49 @@ export class TransactionRowComponent implements OnInit {
   }
 }
 
+interface Transaction {
+  timestamp: number;
+  hash: string;
+  type: string;
+  account: string;
+  amount: number;
+}
+
 interface BlockTime {
-  _id?: string;
-  log: Time;
+  Items: Time[];
 }
 
 interface Time {
-  epochTimeStamp: DateTime;
-}
-
-interface DateTime {
-  $date: DateTime;
+  blockTimeStamp: string;
 }
 
 interface FiatResults {
   [currencyType: string]: number;
+}
+
+interface Block {
+  [detail: string]: Detail;
+}
+
+interface Detail {
+  block_account: string;
+  amount: string;
+  contents: Content;
+}
+
+interface Content {
+  type: string;
+  account: string;
+  previous: string;
+  representative: string;
+  balance: string;
+  link: string;
+  link_as_account: string;
+  signature: string;
+  work: string;
+}
+
+interface BlockResults {
+  error?: string;
+  blocks?: Block[];
 }

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { environment } from '../environments/environment';
 import { catchError } from 'rxjs/operators';
 
 
@@ -10,21 +9,18 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class MyNanoNinjaService {
-  private sub: any;
   ninjaUrl = 'https://mynano.ninja/api/accounts'
 
   constructor(private messageService: MessageService, private http: HttpClient) { }
 
   getAliases() {
     return this.http.get(this.ninjaUrl+"/aliases").pipe(
-      //tap(_ => this.log(`found account matching "${params}"`)),
       catchError(this.handleError('getAliases', null))
     );
   };
 
   getAccountDetails(accountInput: string) {
     return this.http.get(this.ninjaUrl+"/"+accountInput).pipe(
-      //tap(_ => this.log(`found account matching "${params}"`)),
       catchError(this.handleError('getAliases', null))
     );
   };
